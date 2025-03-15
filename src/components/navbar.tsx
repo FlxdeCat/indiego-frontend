@@ -1,13 +1,33 @@
+import { useState, useEffect } from "react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { ProfilePopover } from "./profile-popover"
 import { NavMenu } from "./nav-menu"
+import { Button } from "./ui/button"
+import { Gamepad2 } from "lucide-react"
 
-export function Navbar(){
+export function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+
+  const auth = false // TEMP
+  const dev = false // TEMP
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 5)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   return (
-  <>
-    <nav className="p-4 flex justify-between">
-      <div>
-        <a href="/">
+    <nav
+      className={`px-4 py-3 flex justify-between sticky top-0 z-10 transition-colors transition-border duration-200 ${
+        scrolled ? "bg-background border-b border-foreground shadow-md" : "bg-transparent"
+      }`}
+    >
+      <div className="content-center">
+        <a href="/" className="text-xl">
           <u className="font-bold text-primary">Indie</u>go
         </a>
       </div>
@@ -16,9 +36,9 @@ export function Navbar(){
       </div>
       <div className="flex gap-4">
         <ModeToggle />
-        <ProfilePopover />
+        {auth && dev && <Button variant="outline"><Gamepad2 />Developer Hub</Button>}
+        {auth ? <ProfilePopover /> : <a href="/auth"><Button variant="outline">Login | Register</Button></a>}
       </div>
     </nav>
-  </>
   )
 }
