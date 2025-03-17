@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 
 export function BackgroundEffect() {
 
@@ -60,5 +60,5 @@ export function BackgroundEffect() {
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
     </div>
-  );
+  )
 }

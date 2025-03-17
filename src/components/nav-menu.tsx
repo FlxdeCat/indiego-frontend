@@ -4,7 +4,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu"
-import { cva } from "class-variance-authority";
+import { cva } from "class-variance-authority"
 
 const navigations: { title: string; href: string; }[] = [
   {

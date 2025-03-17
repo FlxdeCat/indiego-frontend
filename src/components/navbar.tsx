@@ -8,7 +8,7 @@ import { Gamepad2 } from "lucide-react"
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
 
-  const auth = false // TEMP
+  const auth = true // TEMP
   const dev = false // TEMP
 
   useEffect(() => {
@@ -22,8 +22,8 @@ export function Navbar() {
 
   return (
     <nav
-      className={`px-4 py-3 flex justify-between sticky top-0 z-10 transition-colors transition-border duration-200 ${
-        scrolled ? "bg-background border-b border-foreground shadow-md" : "bg-transparent"
+      className={`px-4 py-3 flex justify-between sticky top-0 z-10 bg-background transition-all duration-150 ${
+        scrolled && "shadow-md shadow-muted-foreground"
       }`}
     >
       <div className="content-center">
@@ -36,7 +36,7 @@ export function Navbar() {
       </div>
       <div className="flex gap-4">
         <ModeToggle />
-        {auth && dev && <Button variant="outline"><Gamepad2 />Developer Hub</Button>}
+        {auth && (dev ? <Button variant="outline"><Gamepad2 />Developer Hub</Button> : <Button variant="outline">Become a Developer</Button>)}
         {auth ? <ProfilePopover /> : <a href="/auth"><Button variant="outline">Login | Register</Button></a>}
       </div>
     </nav>

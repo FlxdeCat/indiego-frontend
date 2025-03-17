@@ -1,4 +1,3 @@
-import { BackgroundEffect } from "@/components/background-effect"
 import { BannerCarousel } from "@/components/banner-carousel"
 import { DevJoinMessage } from "@/components/dev-join-message"
 import { GameCarousel } from "@/components/game-carousel"
@@ -7,19 +6,21 @@ import { Navbar } from "@/components/navbar"
 
 function Home() {
 
+  const auth = true // TEMP
+  const dev = false // TEMP
+
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
       <Navbar />
-      <BackgroundEffect />
       <main className="flex-1 mx-16">
         <div className="flex mt-4 mb-4 justify-center">
           <BannerCarousel />
         </div>
-        <div className="mt-4 mb-4 flex justify-center">
+        {auth && !dev && <div className="mt-4 mb-4 flex justify-center">
           <div className="w-full max-w-5xl">
             <DevJoinMessage />
           </div>
-        </div>
+        </div>}
         <div className="flex flex-col items-center gap-2 my-4">
           <h1 className="font-bold text-3xl text-center">New Games</h1>
           <GameCarousel />
@@ -33,7 +34,7 @@ function Home() {
           <GameCarousel />
         </div>
       </main>
-      <footer className="mt-4 py-4 border-t-1 border-foreground bg-primary text-white text-center">
+      <footer className="mt-4 py-4 bg-primary text-white text-center">
         &copy; Indiego 2025
       </footer>
     </div>

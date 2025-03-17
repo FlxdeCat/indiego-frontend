@@ -20,7 +20,9 @@ export function ProfilePopover() {
           <User size={90} />
           <h4 className="font-medium leading-none text-center">Username</h4>
           <Button className="w-full">Edit Profile</Button>
-          <Button className="w-full" variant="destructive">Logout</Button>
+          <a className="w-full" href="/auth">
+            <Button className="w-full" variant="destructive">Logout</Button>
+          </a>
         </div>
       </PopoverContent>
     </Popover>

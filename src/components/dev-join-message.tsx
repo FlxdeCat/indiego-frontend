@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState } from "react"
 import {
   Alert,
   AlertDescription,
   AlertTitle,
-} from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+} from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { X } from "lucide-react"
 
 export function DevJoinMessage() {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(true)
 
-  if (!visible) return null;
+  if (!visible) return null
 
   return (
     <Alert className="bg-primary flex flex-col gap-2 relative p-4 mt-4">
@@ -38,5 +38,5 @@ export function DevJoinMessage() {
         </Button>
       </div>
     </Alert>
-  );
+  )
 }
