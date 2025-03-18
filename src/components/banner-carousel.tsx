@@ -10,8 +10,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { useNavigate } from "react-router"
 
 export function BannerCarousel() {
+  const nav = useNavigate()
+
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false })
   )
@@ -60,21 +63,19 @@ export function BannerCarousel() {
           <CarouselContent>
             {banners.map((banner, index) => (
               <CarouselItem key={index}>
-                <a href="/" className="p-0">
-                  <Card className="p-0 border-0">
-                    <CardContent className="relative flex rounded-sm aspect-[2/1] items-end justify-end bg-cover bg-center group overflow-hidden">
-                      <div
-                        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-105"
-                        style={{ backgroundImage: `url(${banner.image})` }}
-                      />
-                      <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 to-transparent pt-16 pb-8 px-10 text-right opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
-                        <span className="text-white text-3xl font-semibold">
-                          {banner.title} {index + 1}
-                        </span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </a>
+                <Card onClick={() => nav("/")} className="p-0 border-0">
+                  <CardContent className="relative flex rounded-sm aspect-[2/1] items-end justify-end bg-cover bg-center group overflow-hidden">
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-105"
+                      style={{ backgroundImage: `url(${banner.image})` }}
+                    />
+                    <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 to-transparent pt-16 pb-8 px-10 text-right opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+                      <span className="text-white text-3xl font-semibold">
+                        {banner.title} {index + 1}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
               </CarouselItem>
             ))}
           </CarouselContent>

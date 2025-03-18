@@ -4,9 +4,12 @@ import { ProfilePopover } from "./profile-popover"
 import { NavMenu } from "./nav-menu"
 import { Button } from "./ui/button"
 import { Gamepad2 } from "lucide-react"
+import { useNavigate } from "react-router"
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+
+    const nav = useNavigate()
 
   const auth = true // TEMP
   const dev = false // TEMP
@@ -28,7 +31,7 @@ export function Navbar() {
     >
       <div className="content-center">
         <a href="/" className="text-xl">
-          <u className="font-bold text-primary">Indie</u>go
+          <u onClick={() => nav("/")} className="font-bold text-primary">Indie</u>go
         </a>
       </div>
       <div>
@@ -37,7 +40,7 @@ export function Navbar() {
       <div className="flex gap-4">
         <ModeToggle />
         {auth && (dev ? <Button variant="outline"><Gamepad2 />Developer Hub</Button> : <Button variant="outline">Become a Developer</Button>)}
-        {auth ? <ProfilePopover /> : <a href="/auth"><Button variant="outline">Login | Register</Button></a>}
+        {auth ? <ProfilePopover /> : <Button onClick={() => nav("/auth")} variant="outline">Login | Register</Button>}
       </div>
     </nav>
   )

@@ -5,8 +5,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { User } from "lucide-react"
+import { useNavigate } from "react-router"
 
 export function ProfilePopover() {
+
+    const nav = useNavigate()
 
   return (
     <Popover>
@@ -19,10 +22,8 @@ export function ProfilePopover() {
         <div className="flex flex-col gap-4 items-center justify-center">
           <User size={90} />
           <h4 className="font-medium leading-none text-center">Username</h4>
-          <Button className="w-full">Edit Profile</Button>
-          <a className="w-full" href="/auth">
-            <Button className="w-full" variant="destructive">Logout</Button>
-          </a>
+          <Button onClick={() => nav("/profile")} className="w-full">My Profile</Button>
+          <Button onClick={() => nav("/auth")} className="w-full" variant="destructive">Logout</Button>
         </div>
       </PopoverContent>
     </Popover>

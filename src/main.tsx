@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { ThemeProvider } from './components/theme-provider.tsx'
 import Auth from './pages/auth.tsx'
+import Profile from './pages/profile.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>  
     </ThemeProvider>

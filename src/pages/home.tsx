@@ -1,5 +1,6 @@
 import { BannerCarousel } from "@/components/banner-carousel"
 import { DevJoinMessage } from "@/components/dev-join-message"
+import { Footer } from "@/components/footer"
 import { GameCarousel } from "@/components/game-carousel"
 import { GenreCarousel } from "@/components/genre-carousel"
 import { Navbar } from "@/components/navbar"
@@ -34,9 +35,7 @@ function Home() {
           <GameCarousel />
         </div>
       </main>
-      <footer className="mt-4 py-4 bg-primary text-white text-center">
-        &copy; Indiego 2025
-      </footer>
+      <Footer />
     </div>
   )
 }
