@@ -1,12 +1,28 @@
 import { Footer } from "@/components/footer"
 import { Navbar } from "@/components/navbar"
+import { Button } from "@/components/ui/button"
+import { Pencil, User } from "lucide-react"
 
 function Profile() {
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex-1 mx-16">
-        profile
+      <main className="flex-1 mx-4 flex flex-col items-center">
+        <div className="flex flex-row justify-between mt-8 border-b-2 px-4 py-8 w-full max-w-7xl">
+          <div className="flex flex-row items-center space-x-12">
+            <User className="rounded-md border-2" size={240}/>
+            <div className="flex flex-col space-y-2">
+              <div className="text-3xl font-bold">Username</div>
+              <div className="text-2xl">Email</div>
+              <div className="text-xl">DOB</div>
+            </div>
+          </div>
+          <Button size="icon"><Pencil /></Button>
+        </div>
+        <div className=" w-full max-w-7xl">
+          <h1 className="font-bold text-3xl p-4 mt-2">Your Favorites</h1>
+          
+        </div>
       </main>
       <Footer />
     </div>
