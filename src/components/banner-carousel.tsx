@@ -56,14 +56,14 @@ export function BannerCarousel() {
           setApi={setApi}
           opts={{ align: "start", loop: true }}
           plugins={[plugin.current]}
-          className="w-full max-w-5xl rounded-sm border-2 border-background shadow-[0px_0px_8px_0px_var(--foreground)] bg-background"
+          className="w-full max-w-5xl rounded-sm shadow-[0px_0px_8px_0px_var(--foreground)] bg-background"
           onMouseEnter={() => plugin.current.stop?.()}
           onMouseLeave={() => plugin.current.reset?.()}
         >
           <CarouselContent>
             {banners.map((banner, index) => (
               <CarouselItem key={index}>
-                <Card onClick={() => nav("/")} className="p-0 border-0">
+                <Card onClick={() => nav("/")} className="p-0 border-0 cursor-pointer">
                   <CardContent className="relative flex rounded-sm aspect-[2/1] items-end justify-end bg-cover bg-center group overflow-hidden">
                     <div
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-105"
