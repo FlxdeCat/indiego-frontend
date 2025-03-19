@@ -9,7 +9,7 @@ import { useNavigate } from "react-router"
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
 
-    const nav = useNavigate()
+  const nav = useNavigate()
 
   const auth = true // TEMP
   const dev = false // TEMP

@@ -9,7 +9,7 @@ import { cva } from "class-variance-authority"
 const navigations: { title: string; href: string; }[] = [
   {
     title: "Browse",
-    href: "/",
+    href: "/browse",
   },
   {
     title: "News",
@@ -33,7 +33,7 @@ export function NavMenu() {
         {navigations.map((navigation, index) => {
           return (
           <NavigationMenuItem key={index}>
-            <NavigationMenuLink href="/" className={navigationMenuTriggerStyle()}>
+            <NavigationMenuLink href={navigation.href} className={navigationMenuTriggerStyle()}>
               {navigation.title}
             </NavigationMenuLink>
           </NavigationMenuItem>
