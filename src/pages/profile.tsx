@@ -1,9 +1,22 @@
 import { Footer } from "@/components/footer"
+import { GameTable } from "@/components/game-table"
 import { Navbar } from "@/components/navbar"
 import { Button } from "@/components/ui/button"
 import { Pencil, User } from "lucide-react"
 
 function Profile() {
+
+  // const games: { title: string; image: string, genres: string[] }[] = []
+  const games: { title: string; image: string, genres: string[] }[] = [
+    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
+    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
+    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
+    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
+    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
+    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
+    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] }
+  ]
+
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
       <Navbar />
@@ -20,8 +33,8 @@ function Profile() {
           <Button size="icon"><Pencil /></Button>
         </div>
         <div className=" w-full max-w-7xl">
-          <h1 className="font-bold text-3xl p-4 mt-2">Your Favorites</h1>
-          
+          <h1 className="font-bold text-3xl p-4 mt-2">My Favorites</h1>
+          <GameTable games={games}/>
         </div>
       </main>
       <Footer />
