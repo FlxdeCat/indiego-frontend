@@ -1,8 +1,9 @@
+import { ChangePasswordForm } from "@/components/change-password-form"
+import { EditProfileForm } from "@/components/edit-profile-form"
 import { Footer } from "@/components/footer"
 import { GameTable } from "@/components/game-table"
 import { Navbar } from "@/components/navbar"
-import { Button } from "@/components/ui/button"
-import { Pencil, User } from "lucide-react"
+import { User } from "lucide-react"
 
 function Profile() {
 
@@ -30,7 +31,10 @@ function Profile() {
               <div className="text-xl">DOB</div>
             </div>
           </div>
-          <Button size="icon"><Pencil /></Button>
+          <div className="flex flex-col space-y-2 items-end">
+            <div><EditProfileForm /></div>
+            <div><ChangePasswordForm /></div>
+          </div>
         </div>
         <div className=" w-full max-w-7xl">
           <h1 className="font-bold text-3xl p-4 mt-2">My Favorites</h1>

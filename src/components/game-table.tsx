@@ -102,7 +102,7 @@ export function GameTable({ games }: GameTableProps) {
               </TableCell>
               <TableCell className="flex items-center justify-end">
                 <DropdownMenu>
-                  <DropdownMenuTrigger>
+                  <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="icon"><EllipsisVertical /></Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="ml-48 -mt-4">
