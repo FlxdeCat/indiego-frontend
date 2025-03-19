@@ -48,7 +48,7 @@ export function LoginForm(){
       </CardHeader>
       <CardContent className="space-y-4">
         <Form {...loginForm}>
-          <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+          <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4 flex flex-col">
             <FormField
               control={loginForm.control}
               name="email"
@@ -75,7 +75,7 @@ export function LoginForm(){
                 </FormItem>
               )}
             />
-            <Button type="submit">Login</Button>
+            <Button type="submit" className="mt-2">Login</Button>
           </form>
         </Form>
       </CardContent>

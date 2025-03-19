@@ -88,7 +88,7 @@ export function RegisterForm(){
       </CardHeader>
       <CardContent className="space-y-4">
         <Form {...registerForm}>
-          <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+          <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4 flex flex-col">
             <FormField
               control={registerForm.control}
               name="username"
@@ -228,7 +228,7 @@ export function RegisterForm(){
                 </FormItem>
               )}
             />
-            <Button type="submit">Register</Button>
+            <Button type="submit" className="mt-1">Register</Button>
           </form>
         </Form>
       </CardContent>
