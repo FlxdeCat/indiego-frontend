@@ -2,118 +2,86 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarGroupContent,
   SidebarHeader,
+  SidebarInput,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarRail,
 } from "@/components/ui/sidebar"
-import { Collapsible } from "./ui/collapsible"
-import { CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible"
-import { Minus, Plus } from "lucide-react"
-import { BrowseSearch } from "./browse-search"
+import { Search } from "lucide-react"
+import { Checkbox } from "./ui/checkbox"
 
 export function BrowseSidebar() {
 
-  const data = {
-    navMain: [
-      {
-        title: "Getting Started",
-        url: "#",
-        items: [
-          {
-            title: "Installation",
-            url: "#",
-          },
-          {
-            title: "Project Structure",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "Building Your Application",
-        url: "#",
-        items: [
-          {
-            title: "Routing",
-            url: "#",
-          },
-          {
-            title: "Data Fetching",
-            url: "#",
-          },
-          {
-            title: "Rendering",
-            url: "#",
-          },
-        ],
-      },
-      {
-        title: "API Reference",
-        url: "#",
-        items: [
-          {
-            title: "Components",
-            url: "#",
-          },
-          {
-            title: "File Conventions",
-            url: "#",
-          },
-        ],
-      },
-    ],
-  }
+  const genres = [
+    "Action",
+    "Adventure",
+    "RPG",
+    "Shooter",
+    "Fighting",
+    "Platformer",
+    "Survival",
+    "Horror",
+    "Stealth",
+    "Puzzle",
+    "Simulation",
+    "Strategy",
+    "Turn-Based Strategy",
+    "Real-Time Strategy",
+    "Card Game",
+    "MOBA",
+    "Battle Royale",
+    "MMORPG",
+    "Sandbox",
+    "Roguelike",
+    "Visual Novel",
+    "Rhythm",
+    "Sports",
+    "Racing",
+    "Party",
+    "Casual",
+    "Idle",
+    "Educational"
+  ]
 
   return (
-    <Sidebar>
+    <Sidebar className="top-[60px] !h-[calc(100svh-60px)] z-30 shadow-sm shadow-muted-foreground">
       <SidebarHeader>
-        <div className="font-bold text-2xl py-2 px-1">
+        <div className="font-bold text-2xl pt-2 px-1">
           Browse Games
         </div>
+        <SidebarGroup className="px-0">
+          <SidebarGroupContent className="relative">
+            <SidebarInput
+              id="search"
+              placeholder="Search for genre"
+              className="pl-8"
+            />
+            <Search className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none opacity-50" />
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarHeader>
       <SidebarContent>
-        <BrowseSearch />
         <SidebarGroup>
-          <SidebarMenu>
-            {data.navMain.map((item, index) => (
-              <Collapsible
-                key={item.title}
-                defaultOpen={index === 1}
-                className="group/collapsible"
-              >
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton>
-                      {item.title}{" "}
-                      <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
-                      <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {genres.map((genre, index) => (
+                <label key={index} htmlFor={genre}>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <div className="flex space-x-2">
+                        <Checkbox id={genre} />
+                        <div>{genre}</div>
+                      </div>
                     </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  {item.items?.length ? (
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {item.items.map((item) => (
-                          <SidebarMenuSubItem key={item.title}>
-                            <SidebarMenuSubButton asChild>
-                              <a href={item.url}>{item.title}</a>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  ) : null}
-                </SidebarMenuItem>
-              </Collapsible>
-            ))}
-          </SidebarMenu>
+                  </SidebarMenuItem>
+                </label>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarRail />
     </Sidebar>
   )
 }

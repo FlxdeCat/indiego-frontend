@@ -1,3 +1,4 @@
+import { BrowseGameSearch } from "@/components/browse-game-search"
 import { BrowseSidebar } from "@/components/browse-sidebar"
 import { Footer } from "@/components/footer"
 import { Navbar } from "@/components/navbar"
@@ -9,25 +10,32 @@ function Browse() {
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
       <Navbar />
-      <SidebarProvider>
+      <SidebarProvider className="min-h-[calc(100svh-60px)]">
         <BrowseSidebar />
-        <SidebarInset>
-          <div className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            Title
+        <SidebarInset className="flex flex-col">
+          <div className="flex h-12 shrink-0 items-center gap-2 px-4 sticky top-[60px] bg-background z-20 shadow-sm shadow-muted-foreground">
+            <SidebarTrigger className="-ml-2" />
+            <Separator orientation="vertical" className="mr-2" />
+            <BrowseGameSearch />
           </div>
-          <div className="flex flex-1 flex-col gap-4 p-4">
+          <div className="flex-1 p-4 pb-0">
             <div className="grid auto-rows-min gap-4 md:grid-cols-3">
               <div className="aspect-video rounded-xl bg-muted/50" />
               <div className="aspect-video rounded-xl bg-muted/50" />
               <div className="aspect-video rounded-xl bg-muted/50" />
+              <div className="aspect-video rounded-xl bg-muted/50" />
+              <div className="aspect-video rounded-xl bg-muted/50" />
+              <div className="aspect-video rounded-xl bg-muted/50" />
+              <div className="aspect-video rounded-xl bg-muted/50" />
+              <div className="aspect-video rounded-xl bg-muted/50" />
+              <div className="aspect-video rounded-xl bg-muted/50" />
+              <div className="aspect-video rounded-xl bg-muted/50" />
+              <div className="aspect-video rounded-xl bg-muted/50" />
             </div>
-            <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
           </div>
+          <Footer />
         </SidebarInset>
       </SidebarProvider>
-      <Footer />
     </div>
   )
 }
