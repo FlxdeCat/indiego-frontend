@@ -78,7 +78,7 @@ export function GameTable({ games }: GameTableProps) {
 
           return (
             <TableRow
-              onClick={() => nav("/")}
+              onClick={() => nav(`/game/${index + 1}`)}
               key={index}
               className="flex items-center justify-between cursor-pointer transition-all duration-200 p-2 hover:px-1"
             >
@@ -106,7 +106,10 @@ export function GameTable({ games }: GameTableProps) {
                     <Button variant="outline" size="icon"><EllipsisVertical /></Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="ml-48 -mt-4">
-                    <DropdownMenuItem>Remove from My Favorites</DropdownMenuItem>
+                    <DropdownMenuItem onClick={(e) => {
+                      e.stopPropagation()
+                      nav("/profile")
+                    }}>Remove from My Favorites</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

@@ -63,7 +63,7 @@ export function BannerCarousel() {
           <CarouselContent>
             {banners.map((banner, index) => (
               <CarouselItem key={index}>
-                <Card onClick={() => nav("/")} className="p-0 border-0 cursor-pointer">
+                <Card onClick={() => nav(`/game/${index + 1}`)} className="p-0 border-0 cursor-pointer">
                   <CardContent className="relative flex rounded-sm aspect-[2/1] items-end justify-end bg-cover bg-center group overflow-hidden">
                     <div
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-105"

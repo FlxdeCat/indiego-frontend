@@ -47,7 +47,7 @@ function Browse() {
                 const extraCount = game.genres.length - maxGenres
 
                 return (
-                  <Card onClick={() => nav("/")} key={index} className="p-0 bg-transparent border-0 shadow-transparent transition-transform duration-300 hover:-translate-y-2 cursor-pointer">
+                  <Card onClick={() => nav(`/game/${index + 1}`)} key={index} className="p-0 bg-transparent border-0 shadow-transparent transition-transform duration-300 hover:-translate-y-2 cursor-pointer">
                     <CardContent className="flex flex-col justify-center p-2">
                       <img src={game.image} alt={game.title} className="w-full aspect-[4/5] object-cover rounded-sm shadow-[0px_0px_8px_0px_var(--foreground)]" />
                       <div className="text-xl font-semibold mt-2 text-start line-clamp-1">{game.title} {index + 1}</div>

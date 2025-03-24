@@ -9,6 +9,7 @@ import { ThemeProvider } from './components/theme-provider.tsx'
 import Auth from './pages/auth.tsx'
 import Profile from './pages/profile.tsx'
 import Browse from './pages/browse.tsx'
+import Game from './pages/game.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/auth" element={<Auth />} />
           <Route path="/browse" element={<Browse />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/game/:id" element={<Game />} />
         </Routes>
       </BrowserRouter>  
     </ThemeProvider>
