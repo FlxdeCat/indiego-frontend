@@ -59,7 +59,7 @@ export function BrowseSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {filteredGenres.map((genre) => (
-                <label key={genre} htmlFor={genre}>
+                <label key={genre} htmlFor={genre} className="cursor-pointer">
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
                       <div className="flex space-x-2">
