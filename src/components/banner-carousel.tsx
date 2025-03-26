@@ -57,8 +57,6 @@ export function BannerCarousel() {
           opts={{ align: "start", loop: true }}
           plugins={[plugin.current]}
           className="w-full max-w-5xl rounded-sm shadow-[0px_0px_8px_0px_var(--foreground)] bg-background"
-          onMouseEnter={() => plugin.current.stop?.()}
-          onMouseLeave={() => plugin.current.reset?.()}
         >
           <CarouselContent>
             {banners.map((banner, index) => (

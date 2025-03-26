@@ -36,7 +36,7 @@ function Profile() {
             <div><ChangePasswordForm /></div>
           </div>
         </div>
-        <div className=" w-full max-w-7xl">
+        <div className="w-full max-w-7xl">
           <h1 className="font-bold text-3xl p-4 mt-2">My Favorites</h1>
           <GameTable games={games}/>
         </div>
