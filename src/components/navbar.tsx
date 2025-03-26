@@ -13,7 +13,7 @@ export function Navbar() {
   const nav = useNavigate()
 
   const auth = true // TEMP
-  const dev = false // TEMP
+  const dev = true // TEMP
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,7 +40,7 @@ export function Navbar() {
       </div>
       <div className="flex gap-4">
         <ModeToggle />
-        {auth && (dev ? <Button variant="outline"><Gamepad2 />Developer Hub</Button> : <Button variant="outline">Become a Developer</Button>)}
+        {auth && <Button variant="outline"><Gamepad2 /><span className="hidden sm:flex">{dev ? "Developer Hub" : "Become a Developer"}</span></Button>}
         {auth ? <ProfilePopover /> : <Button onClick={() => nav("/auth")} variant="outline">Login | Register</Button>}
         <Sheet>
             <SheetTrigger asChild>
@@ -54,7 +54,7 @@ export function Navbar() {
                 <SheetDescription></SheetDescription>
               </SheetHeader>
               <div className="-mt-4">
-                <NavMenu orientation="vertical" />
+                <NavMenu variant="sidebar" />
               </div>
             </SheetContent>
           </Sheet>
