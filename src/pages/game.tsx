@@ -2,9 +2,13 @@ import { Footer } from "@/components/footer"
 import { GameBannerCarousel } from "@/components/game-banner-carousel"
 import { Navbar } from "@/components/navbar"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Download, ExternalLink, Star } from "lucide-react"
 import { useParams } from "react-router"
 
 function Game() {
+
+  const auth = true //TEMP
 
   const { id } = useParams()
 
@@ -30,7 +34,7 @@ function Game() {
     <div className="m-0 p-0 flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-1 mx-4 flex flex-col items-center">
-        <div className="flex flex-col lg:flex-row items-center gap-8 w-full max-w-7xl mt-4 border-b-2 pb-4">
+        <div className="flex flex-col lg:flex-row items-center gap-8 w-full max-w-7xl mt-4">
           <div className="flex-3 w-full min-w-0">
             <GameBannerCarousel banners={game.banners} />
           </div>
@@ -49,6 +53,19 @@ function Game() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+        <div className="w-full max-w-7xl mt-4 border-y-2 p-4 flex justify-between">
+          <h1 className="text-3xl font-bold">Play {game.title} {id}</h1>
+          <div className="flex flex-col items-end md:flex-row gap-4">
+            <Button variant="secondary" size="icon"><ExternalLink /></Button>
+            {auth ?
+              <Button><Download />Download</Button> :
+              <div className="cursor-not-allowed">
+                <Button disabled><Download />Login to Download</Button>
+              </div>
+            }
+            {auth && <Button variant="outline"><Star />Save to My Favorite</Button>}
           </div>
         </div>
       </main>
