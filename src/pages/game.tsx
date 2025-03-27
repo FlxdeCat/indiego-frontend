@@ -43,38 +43,7 @@ function Game() {
       review: "Good game!",
       stars: 4,
       date: 1742963482
-    },
-    {
-      username: "Username 2",
-      review: "Very nice game!",
-      stars: 5,
-      date: 1742963481
-    },{
-      username: "Username 2",
-      review: "Very nice game!",
-      stars: 5,
-      date: 1742963481
-    },{
-      username: "Username 2",
-      review: "Very nice game!",
-      stars: 5,
-      date: 1742963481
-    },{
-      username: "Username 2",
-      review: "Very nice game!",
-      stars: 5,
-      date: 1742963481
-    },{
-      username: "Username 2",
-      review: "Very nice game!",
-      stars: 5,
-      date: 1742963481
-    },{
-      username: "Username 2",
-      review: "Very nice game!",
-      stars: 5,
-      date: 1742963481
-    },
+    }
   ]
 
   return (
