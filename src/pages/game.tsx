@@ -1,8 +1,10 @@
 import { Footer } from "@/components/footer"
 import { GameBannerCarousel } from "@/components/game-banner-carousel"
 import { Navbar } from "@/components/navbar"
+import { ReviewGame } from "@/components/review-game"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { convertDate } from "@/utils/utils"
 import { Download, ExternalLink, Star } from "lucide-react"
 import { useParams } from "react-router"
 
@@ -23,12 +25,26 @@ function Game() {
     release: 1742963482
   }
 
-  const releaseDate = new Date(game.release * 1000)
-  const releaseDateString = releaseDate.toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  })
+  const reviews = [
+    {
+      username: "Username 1",
+      review: "Very good game!",
+      stars: 4,
+      date: 1742963480
+    },
+    {
+      username: "Username 2",
+      review: "Very nice game!",
+      stars: 5,
+      date: 1742963481
+    },
+    {
+      username: "Username 3",
+      review: "Good game!",
+      stars: 4,
+      date: 1742963482
+    }
+  ]
 
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
@@ -43,7 +59,7 @@ function Game() {
             <div className="flex flex-col space-y-1 items-center lg:items-start">
               <h1 className="font-bold text-xl">{game.title} {id} ({game.stars} ★)</h1>
               <h4 className="font-bold">{game.dev}</h4>
-              <h4 className="text-muted-foreground">{releaseDateString}</h4>
+              <h4 className="text-muted-foreground">{convertDate(game.release)}</h4>
               <h4 className="text-center lg:text-justify">{game.desc}</h4>
               <div className="flex flex-wrap gap-2 mt-2">
                 {game.genres.map((genre, index) => (
@@ -55,19 +71,20 @@ function Game() {
             </div>
           </div>
         </div>
-        <div className="w-full max-w-7xl mt-4 border-y-2 p-4 flex justify-between">
+        <div className="w-full max-w-7xl mt-8 border-y-2 py-8 px-4 flex justify-between">
           <h1 className="text-3xl font-bold">Play {game.title} {id}</h1>
           <div className="flex flex-col items-end md:flex-row gap-4">
-            <Button variant="secondary" size="icon"><ExternalLink /></Button>
+            <Button variant="outline" size="icon"><ExternalLink /></Button>
             {auth ?
               <Button><Download />Download</Button> :
               <div className="cursor-not-allowed">
                 <Button disabled><Download />Login to Download</Button>
               </div>
             }
-            {auth && <Button variant="outline"><Star />Save to My Favorite</Button>}
+            {auth && <Button variant="outline"><Star />Save to My Favorites</Button>}
           </div>
         </div>
+        <ReviewGame reviews={reviews} />
       </main>
       <Footer />
     </div>
