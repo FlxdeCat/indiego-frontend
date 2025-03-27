@@ -18,7 +18,7 @@ function Game() {
     title: "Holocure",
     desc: "Play as your favorite Vtubers from Hololive! Fight, explore, and clear your way through armies of fans and save them from their mind-control in this unofficial free fan-game.",
     image: "/holocure.png",
-    banners: ["/holocure-banner.png", "/holocure-1.png", "/holocure-2.png", "/holocure-3.png", "/holocure-4.png", "/holocure-5.png"],
+    banners: ["/holocure-banner.png", "/holocure-1.png", "/holocure-2.png", "/holocure-3.png", "/holocure-4.png", "/holocure-5.png", "/holocure-1.png", "/holocure-2.png", "/holocure-3.png", "/holocure-4.png", "/holocure-5.png", "/holocure-1.png", "/holocure-2.png", "/holocure-3.png", "/holocure-4.png", "/holocure-5.png", "/holocure-1.png", "/holocure-2.png", "/holocure-3.png", "/holocure-4.png", "/holocure-5.png", "/holocure-1.png", "/holocure-2.png", "/holocure-3.png", "/holocure-4.png", "/holocure-5.png"],
     dev: "Hololive",
     genres: ["Action", "Comedy"],
     stars: 4.3,
@@ -43,7 +43,38 @@ function Game() {
       review: "Good game!",
       stars: 4,
       date: 1742963482
-    }
+    },
+    {
+      username: "Username 2",
+      review: "Very nice game!",
+      stars: 5,
+      date: 1742963481
+    },{
+      username: "Username 2",
+      review: "Very nice game!",
+      stars: 5,
+      date: 1742963481
+    },{
+      username: "Username 2",
+      review: "Very nice game!",
+      stars: 5,
+      date: 1742963481
+    },{
+      username: "Username 2",
+      review: "Very nice game!",
+      stars: 5,
+      date: 1742963481
+    },{
+      username: "Username 2",
+      review: "Very nice game!",
+      stars: 5,
+      date: 1742963481
+    },{
+      username: "Username 2",
+      review: "Very nice game!",
+      stars: 5,
+      date: 1742963481
+    },
   ]
 
   return (

@@ -50,7 +50,7 @@ export function ReviewGame({ reviews }: ReviewGameProps) {
 
   return (
     <div className="w-full max-w-7xl mt-6 mb-4 px-4 flex flex-col gap-6">
-      <div className="flex gap-4 items-center justify-between">
+      <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
         <div className="flex gap-4 items-center">
           <h1 className="font-bold text-2xl">Reviews</h1>
           {auth && <Button><Plus />Add</Button>}
@@ -109,7 +109,7 @@ export function ReviewGame({ reviews }: ReviewGameProps) {
           key={index}
           className="flex flex-col gap-2 p-4 border-1 border-foreground rounded-sm bg-muted"
         >
-          <div className="flex gap-20">
+          <div className="flex flex-col md:flex-row gap-2 md:gap-20">
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-4">
                 <User size={44} />

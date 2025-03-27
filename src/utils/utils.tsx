@@ -5,3 +5,22 @@ export function convertDate(unix: number): string{
     year: "numeric",
   })
 }
+
+export function smoothScroll(element: HTMLElement, target: number, duration: number) {
+  const start = element.scrollLeft
+  const startTime = performance.now()
+
+  function scrollStep(currentTime: number) {
+    const elapsed = currentTime - startTime
+    const progress = Math.min(elapsed / duration, 1)
+    const ease = progress * (2 - progress)
+
+    element.scrollLeft = start + (target - start) * ease
+
+    if (progress < 1) {
+      requestAnimationFrame(scrollStep)
+    }
+  }
+
+  requestAnimationFrame(scrollStep)
+}
