@@ -21,8 +21,8 @@ export function NavMenu({ variant }: { variant?: string }) {
           href={navigation.href}
           key={index}
           className={variant === "sidebar" 
-            ? "p-2 text-md font-semibold rounded-md hover:underline decoration-2 focus:bg-sidebar-accent"
-            : "p-2 m-0 text-sm font-semibold rounded-md hover:underline decoration-2 focus:bg-sidebar-accent"}
+            ? "p-2 text-md font-semibold rounded-md hover:underline decoration-1 focus:bg-sidebar-accent"
+            : "p-2 m-0 text-sm font-semibold rounded-md hover:underline decoration-1 focus:bg-sidebar-accent"}
         >
           {navigation.title}
         </a>
