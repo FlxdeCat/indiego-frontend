@@ -45,7 +45,7 @@ export function GameTable({ games }: GameTableProps) {
       <img width={100} src="no-games.png" alt="No games" />
       You have no favorite games yet.
     </div>
-    ) : (
+  ) : (
     <Table>
       <TableCaption>
         <Pagination>
@@ -82,15 +82,15 @@ export function GameTable({ games }: GameTableProps) {
               key={index}
               className="flex items-center justify-between cursor-pointer transition-all duration-200 p-2 hover:px-1"
             >
-              <TableCell className="flex items-center space-x-4">
+              <TableCell className="flex flex-col sm:flex-row items-center space-x-8 space-y-2">
                 <img
                   src={game.image}
                   alt={game.title}
                   className="max-w-[200px] aspect-[2/1] object-cover rounded-sm"
                 />
-                <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-2 w-full">
                   <div className="font-bold text-2xl">{game.title}</div>
-                  <div className="flex space-x-2 flex-wrap max-w-[300px]">
+                  <div className="flex gap-2 flex-wrap max-w-[300px]">
                     {displayedGenres.map((genre, index) => (
                       <Badge key={index} variant="secondary">
                         {genre}
@@ -105,7 +105,7 @@ export function GameTable({ games }: GameTableProps) {
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="icon"><EllipsisVertical /></Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="ml-48 -mt-4">
+                  <DropdownMenuContent className="sm:ml-48 mr-4 -mt-4">
                     <DropdownMenuItem onClick={(e) => {
                       e.stopPropagation()
                       nav("/profile")

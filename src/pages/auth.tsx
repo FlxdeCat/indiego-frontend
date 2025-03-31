@@ -8,8 +8,8 @@ function Auth() {
       <div className="absolute top-4 right-4">
         <ModeToggle />
       </div>
-      <div className="grid grid-cols-2 w-full rounded-md">
-        <div className="flex flex-col justify-center items-end p-24 pl-48">
+      <div className="grid grid-rows-2 grid-cols-1 md:grid-rows-1 md:grid-cols-2 w-full rounded-md">
+        <div className="flex flex-col justify-center items-end p-24 pl-20">
           <div className="text-2xl">Welcome to</div>
           <a href="/" className="text-5xl mb-4 font-bold h-12">
             <LogoTypeAnimation />
