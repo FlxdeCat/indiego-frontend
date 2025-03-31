@@ -13,6 +13,7 @@ import { useParams } from "react-router"
 function Game() {
 
   const auth = true //TEMP
+  const external = true //TEMP
   const [favorite, setFavorite] = useState(false) //TEMP
 
   const { id } = useParams()
@@ -77,7 +78,12 @@ function Game() {
         <div className="w-full max-w-7xl mt-8 border-y-2 py-8 px-4 flex justify-between">
           <h1 className="text-3xl font-bold">Play {game.title} {id}</h1>
           <div className="flex flex-col items-end md:flex-row gap-4">
-            <Button variant="outline" size="icon"><ExternalLink /></Button>
+            {external ?
+              <Button variant="outline" size="icon"><ExternalLink /></Button> :
+              <div className="cursor-not-allowed">
+                <Button variant="outline" disabled><ExternalLink /></Button>
+              </div>
+            }
             {auth ?
               <Button><Download />Download</Button> :
               <div className="cursor-not-allowed">
