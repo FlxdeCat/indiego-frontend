@@ -1,5 +1,5 @@
 import { convertDate } from "@/utils/utils"
-import { ArrowDownNarrowWide, ArrowUpWideNarrow, Check, ChevronDown, Plus, User } from "lucide-react"
+import { ArrowDownNarrowWide, ArrowUpWideNarrow, Check, ChevronDown, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -28,8 +28,6 @@ interface ReviewGameProps {
 
 export function ReviewGame({ reviews }: ReviewGameProps) {
 
-  const auth = true //TEMP
-
   const sorters = ["Recent", "Rated"]
 
   const [open, setOpen] = useState(false)
@@ -49,11 +47,10 @@ export function ReviewGame({ reviews }: ReviewGameProps) {
   }, [reviews, sort, ascending])
 
   return (
-    <div className="w-full max-w-7xl mt-6 mb-4 px-4 flex flex-col gap-6">
+    <div className="w-full max-w-7xl mt-4 mb-4 px-4 flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
         <div className="flex gap-4 items-center">
           <h1 className="font-bold text-2xl">Reviews</h1>
-          {auth && <Button><Plus />Add</Button>}
         </div>
         <div className="flex gap-4 items-center">
           <Popover open={open} onOpenChange={setOpen}>

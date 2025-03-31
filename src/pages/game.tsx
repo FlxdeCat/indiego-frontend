@@ -1,3 +1,4 @@
+import { AddReview } from "@/components/add-review"
 import { Footer } from "@/components/footer"
 import { GameBannerCarousel } from "@/components/game-banner-carousel"
 import { Navbar } from "@/components/navbar"
@@ -6,11 +7,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { convertDate } from "@/utils/utils"
 import { Download, ExternalLink, Star } from "lucide-react"
+import { useState } from "react"
 import { useParams } from "react-router"
 
 function Game() {
 
   const auth = true //TEMP
+  const [favorite, setFavorite] = useState(false) //TEMP
 
   const { id } = useParams()
 
@@ -81,9 +84,15 @@ function Game() {
                 <Button disabled><Download />Login to Download</Button>
               </div>
             }
-            {auth && <Button variant="outline"><Star />Save to My Favorites</Button>}
+            {auth && (favorite ?
+              <Button variant="secondary" onClick={() => setFavorite(false)}><Star className="fill-black dark:fill-white" />Remove from My Favorites</Button> :
+              <Button variant="outline" onClick={() => setFavorite(true)}><Star />Save to My Favorites</Button>
+            )}
           </div>
         </div>
+        {auth && <div className="w-full max-w-7xl gap-2 p-4 border-b-2">
+          <AddReview id={id!} />
+        </div>}
         <ReviewGame reviews={reviews} />
       </main>
       <Footer />

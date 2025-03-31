@@ -17,32 +17,29 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
   const [api, setApi] = React.useState<CarouselApi | null>(null)
   const [current, setCurrent] = React.useState(0)
 
+  const handleSelect = React.useCallback(() => {
+    if (!api) return
+    const newIndex = api.selectedScrollSnap()
+    setCurrent(newIndex)
+
+    const thumb = document.getElementById(`game-banner-${newIndex}`)
+    const container = thumb?.parentElement?.parentElement
+
+    if (thumb && container) {
+      const containerRect = container.getBoundingClientRect()
+      const thumbRect = thumb.getBoundingClientRect()
+
+      const offset = thumbRect.left - containerRect.left - (containerRect.width / 2) + (thumbRect.width / 2)
+      smoothScroll(container, container.scrollLeft + offset, 300)
+    }
+  }, [api])
+
   React.useEffect(() => {
     if (!api) return
 
-    setCurrent(api.selectedScrollSnap())
-
-    const handleSelect = () => {
-      const newIndex = api.selectedScrollSnap()
-      setCurrent(newIndex)
-      
-      const thumb = document.getElementById(`game-banner-${newIndex}`)
-      const container = thumb?.parentElement?.parentElement
-
-      if (thumb && container) {
-        const containerRect = container.getBoundingClientRect()
-        const thumbRect = thumb.getBoundingClientRect()
-
-        const offset = thumbRect.left - containerRect.left - (containerRect.width / 2) + (thumbRect.width / 2)
-        smoothScroll(container, container.scrollLeft + offset, 300)
-      }
-    }
-
     api.on("select", handleSelect)
-    return () => {
-      api.off("select", handleSelect)
-    }
-  }, [api])
+    return () => { api.off("select", handleSelect) }
+  }, [api, handleSelect])
 
   return (
     <div className="flex flex-col h-full w-full items-center gap-4">
@@ -58,9 +55,9 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
               <CarouselItem key={index}>
                 <Card className="p-0 border-0">
                   <CardContent className="rounded-sm p-0">
-                    <img 
-                      src={image} 
-                      className="w-full object-cover aspect-[7/4]" 
+                    <img
+                      src={image}
+                      className="w-full object-cover aspect-[7/4]"
                       alt={`Game banner ${index + 1}`}
                     />
                   </CardContent>
@@ -72,7 +69,7 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
       </div>
 
       <div className="w-full max-w-7xl px-2">
-        <div 
+        <div
           className="overflow-x-auto pb-3"
           style={{ overscrollBehaviorX: 'contain' }}
         >
@@ -81,15 +78,15 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
               <button
                 id={`game-banner-${index}`}
                 key={index}
+                tabIndex={0}
                 onClick={() => api?.scrollTo(index)}
-                className={`relative h-12 min-w-20 overflow-hidden rounded-sm transition-opacity outline-none ${
-                  index === current ? "opacity-100" : "opacity-50 hover:opacity-75"
-                }`}
+                className={`relative h-12 min-w-20 overflow-hidden rounded-sm transition-opacity outline-none ${index === current ? "opacity-100" : "opacity-50 hover:opacity-75 focus:opacity-75"
+                  }`}
                 aria-label={`View banner ${index + 1}`}
               >
-                <img 
-                  src={image} 
-                  className="object-cover w-full h-full" 
+                <img
+                  src={image}
+                  className="object-cover w-full h-full"
                   alt={`Thumbnail ${index + 1}`}
                 />
                 {index === current && (
