@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge"
 function Browse() {
   const nav = useNavigate()
 
-  const games = Array.from({ length: 30 }, (_) => ({
+  const games = Array.from({ length: 30 }, () => ({
     title: "Holocure",
     image: "holocure.png",
     dev: "Hololive",
@@ -50,9 +50,9 @@ function Browse() {
                   <Card onClick={() => nav(`/game/${index + 1}`)} key={index} className="p-0 bg-transparent border-0 shadow-transparent transition-transform duration-300 hover:-translate-y-2 cursor-pointer">
                     <CardContent className="flex flex-col justify-center p-2">
                       <img src={game.image} alt={game.title} className="w-full aspect-[4/5] object-cover rounded-sm shadow-[0px_0px_8px_0px_var(--foreground)]" />
-                      <div className="text-xl font-semibold mt-2 text-start line-clamp-1">{game.title} {index + 1}</div>
+                      <div className="text-xl font-semibold text-start mt-2 line-clamp-1">{game.title} {index + 1}</div>
                       <div className="text-md text-start line-clamp-1">{game.dev}</div>
-                      <div className="flex space-x-2">
+                      <div className="flex mt-2 space-x-2">
                         {displayedGenres.map((genre, index) => (
                           <Badge key={index} variant="secondary">
                             {genre}
@@ -67,27 +67,27 @@ function Browse() {
             </div>
           </div>
           <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="/" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="/" isActive>1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="/">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="/">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="/" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="/" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="/" isActive>1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="/">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="/">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="/" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
           <Footer />
         </SidebarInset>
       </SidebarProvider>
