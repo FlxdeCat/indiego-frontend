@@ -9,7 +9,7 @@ const navigations = [
   },
   {
     title: "Subscription",
-    href: "/",
+    href: "/subscription",
   },
 ]
 
