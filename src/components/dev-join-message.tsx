@@ -20,18 +20,18 @@ export function DevJoinMessage() {
       >
         <X size={24} />
       </button>
-      
-      <AlertTitle className="text-white text-2xl">
+
+      <AlertTitle className="text-white line-clamp-none pr-6 text-lg sm:text-xl md:text-2xl">
         Become a Game Developer and Earn Revenue!
       </AlertTitle>
-      <AlertDescription className="text-white text-justify text-lg">
+      <AlertDescription className="text-white text-justify text-sm sm:text-base md:text-lg">
         Are you passionate about game development? Here's your chance to turn
         your creations into a source of income! Upload your games to our
         platform, and every time users play or click on your game, you'll earn
         revenue. It's time to showcase your talent, gain exposure, and start
         earning!
       </AlertDescription>
-      
+
       <div className="flex justify-end w-full">
         <Button variant="ghost" className="font-bold text-white border-2 border-white hover:text-black dark:hover:bg-white">
           Become a Developer

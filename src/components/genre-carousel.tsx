@@ -19,7 +19,7 @@ export function GenreCarousel() {
           <CarouselItem key={index} className="sm:basis-1/2 md:basis-1/3 lg:basis-1/3">
             <Card onClick={() => nav("/")} className="p-0 bg-transparent border-0 shadow-transparent transition-transform duration-300 hover:-translate-y-2 cursor-pointer">
               <CardContent className="flex flex-col items-center justify-center p-4">
-                <img src={game.image} alt={game.title} className="w-full aspect-[4/3] object-cover rounded-sm shadow-[0px_0px_8px_0px_var(--foreground)]" />
+                <img src={game.image} alt={game.title} className="w-full aspect-[4/3] object-cover rounded-md" />
                 <span className="text-xl font-semibold mt-2 text-center">{game.title} {index + 1}</span>
               </CardContent>
             </Card>

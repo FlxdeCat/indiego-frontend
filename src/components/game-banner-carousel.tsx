@@ -48,16 +48,16 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
           setApi={setApi}
           opts={{ align: "start", loop: true }}
           plugins={[plugin.current]}
-          className="rounded-sm shadow-[0px_0px_8px_0px_var(--foreground)]"
+          className="rounded-md"
         >
           <CarouselContent>
             {banners.map((image, index) => (
               <CarouselItem key={index}>
                 <Card className="p-0 border-0">
-                  <CardContent className="rounded-sm p-0">
+                  <CardContent className="rounded-md p-0">
                     <img
                       src={image}
-                      className="w-full object-cover aspect-[7/4]"
+                      className="w-full rounded-md object-cover aspect-[7/4]"
                       alt={`Game banner ${index + 1}`}
                     />
                   </CardContent>
@@ -80,7 +80,7 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
                 key={index}
                 tabIndex={0}
                 onClick={() => api?.scrollTo(index)}
-                className={`relative h-12 min-w-20 overflow-hidden rounded-sm transition-opacity outline-none ${index === current ? "opacity-100" : "opacity-50 hover:opacity-75 focus:opacity-75"
+                className={`relative h-12 min-w-20 overflow-hidden rounded-md transition-opacity outline-none ${index === current ? "opacity-100" : "opacity-50 hover:opacity-75 focus:opacity-75"
                   }`}
                 aria-label={`View banner ${index + 1}`}
               >
@@ -90,7 +90,7 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
                   alt={`Thumbnail ${index + 1}`}
                 />
                 {index === current && (
-                  <div className="absolute inset-0 border-2 border-foreground rounded-sm" />
+                  <div className="absolute inset-0 border-2 border-foreground rounded-md" />
                 )}
               </button>
             ))}

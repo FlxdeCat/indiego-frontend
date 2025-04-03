@@ -26,9 +26,8 @@ export function Navbar() {
 
   return (
     <nav
-      className={`px-4 py-3 flex justify-between items-center sticky w-full top-0 z-10 bg-background transition-all duration-150 ${
-        scrolled && "shadow-md shadow-muted-foreground"
-      }`}
+      className={`px-4 py-3 flex justify-between items-center sticky w-full top-0 z-10 bg-background transition-all duration-150 ${scrolled && "shadow-md shadow-muted-foreground"
+        }`}
     >
       <div className="content-center">
         <a href="/" className="text-xl">
@@ -43,21 +42,21 @@ export function Navbar() {
         {auth && <Button variant="outline"><Gamepad2 /><span className="hidden sm:flex">{dev ? "Developer Hub" : "Become a Developer"}</span></Button>}
         {auth ? <ProfilePopover /> : <Button onClick={() => nav("/auth")} variant="outline">Login | Register</Button>}
         <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="md:hidden">
-                <MenuIcon className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="md:hidden">
-              <SheetHeader className="mt-4 px-4 py-2">
-                <SheetTitle className="text-xl font-bold">Menu</SheetTitle>
-                <SheetDescription></SheetDescription>
-              </SheetHeader>
-              <div className="-mt-4">
-                <NavMenu variant="sidebar" />
-              </div>
-            </SheetContent>
-          </Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="md:hidden">
+              <MenuIcon className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="md:hidden">
+            <SheetHeader className="mt-4 px-6 py-2">
+              <SheetTitle className="text-xl font-bold">Menu</SheetTitle>
+              <SheetDescription></SheetDescription>
+            </SheetHeader>
+            <div className="-mt-4">
+              <NavMenu variant="sidebar" />
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   )

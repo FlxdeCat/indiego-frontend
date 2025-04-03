@@ -27,9 +27,9 @@ export function AddReview({ id }: { id: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row items-center gap-4 sm:gap-10">
-      <div className="flex flex-1 flex-col items-center">
-        <h1 className="text-start font-semibold text-lg">Rate Holocure {id}</h1>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:flex-row items-center gap-4 md:gap-10">
+      <div className="flex flex-col items-center px-2 mb-2 md:mb-0">
+        <h1 className="text-start font-semibold text-xl">Rate Holocure {id}</h1>
         <div className="flex gap-1 text-4xl cursor-pointer">
           {[1, 2, 3, 4, 5].map((star) => (
             <span
@@ -47,14 +47,14 @@ export function AddReview({ id }: { id: string }) {
         </div>
         {errors.rating && <p className="text-destructive text-sm">{errors.rating.message}</p>}
       </div>
-      <div className="sm:w-[1px] border-1 self-stretch" />
-      <div className="flex flex-4 flex-col w-full gap-2">
-        <Label className="text-lg" htmlFor="review">Review Holocure {id}</Label>
-        <div className="flex flex-col gap-1">
+      <div className="md:w-[1px] border-1 self-stretch" />
+      <div className="flex flex-col w-full items-center md:items-start px-4">
+        <Label className="text-xl mb-4 font-semibold" htmlFor="review">Review Holocure {id}</Label>
+        <div className="flex flex-col gap-1 mb-2 w-full">
           <Textarea placeholder="Write your review here..." id="review" {...register("review")} />
           {errors.review && <p className="text-destructive text-sm">{errors.review.message}</p>}
         </div>
-        <div className="flex justify-between items-start gap-2">
+        <div className="flex justify-between items-start w-full gap-2">
           <p className="text-sm text-muted-foreground">
             Please describe what you liked or disliked about this game and whether you recommend it to others.
           </p>

@@ -47,9 +47,9 @@ export function ReviewGame({ reviews }: ReviewGameProps) {
   }, [reviews, sort, ascending])
 
   return (
-    <div className="w-full max-w-7xl mt-4 mb-4 px-4 flex flex-col gap-6">
-      <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
-        <div className="flex gap-4 items-center">
+    <div className="w-full max-w-7xl mt-4 mb-4 px-4 flex flex-col gap-4">
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div className="gap-4">
           <h1 className="font-bold text-2xl">Reviews</h1>
         </div>
         <div className="flex gap-4 items-center">
@@ -101,26 +101,28 @@ export function ReviewGame({ reviews }: ReviewGameProps) {
           </Button>
         </div>
       </div>
-      {sortedReviews.map((review, index) => (
-        <div
-          key={index}
-          className="flex flex-col gap-2 p-4 border-1 border-foreground rounded-sm bg-muted"
-        >
-          <div className="flex flex-col md:flex-row gap-2 md:gap-20">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-4">
-                <User size={44} />
-                <div className="flex flex-col">
-                  <h4 className="font-bold text-xl">{review.username}</h4>
-                  <h4 className="text-lg">{review.stars} ★</h4>
+      <div className="flex flex-col gap-6">
+        {sortedReviews.map((review, index) => (
+          <div
+            key={index}
+            className="flex flex-col gap-2 px-8 py-4 border-2 rounded-md"
+          >
+            <div className="flex flex-col md:flex-row gap-2 md:gap-20">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-4">
+                  <User size={44} />
+                  <div className="flex flex-col">
+                    <h4 className="font-bold text-xl">{review.username}</h4>
+                    <h4 className="text-lg">{review.stars} ★</h4>
+                  </div>
                 </div>
+                <div>{convertDate(review.date)}</div>
               </div>
-              <div>{convertDate(review.date)}</div>
+              <div className="p-0.5">{review.review}</div>
             </div>
-            <div className="p-0.5">{review.review}</div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   )
 }

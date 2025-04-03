@@ -56,18 +56,18 @@ export function BannerCarousel() {
           setApi={setApi}
           opts={{ align: "start", loop: true }}
           plugins={[plugin.current]}
-          className="w-full max-w-5xl rounded-sm shadow-[0px_0px_8px_0px_var(--foreground)] bg-background"
+          className="w-full max-w-5xl rounded-md bg-background"
         >
           <CarouselContent>
             {banners.map((banner, index) => (
               <CarouselItem key={index}>
                 <Card onClick={() => nav(`/game/${index + 1}`)} className="p-0 border-0 cursor-pointer">
-                  <CardContent className="relative flex rounded-sm aspect-[2/1] items-end justify-end bg-cover bg-center group overflow-hidden">
+                  <CardContent className="relative flex rounded-md aspect-[2/1] items-end justify-end bg-cover bg-center group overflow-hidden">
                     <div
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-105"
                       style={{ backgroundImage: `url(${banner.image})` }}
                     />
-                    <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 to-transparent pt-16 pb-8 px-10 text-right opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
+                    <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-dark-background/90 to-transparent pt-16 pb-8 px-10 text-right opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                       <span className="text-white text-3xl font-semibold">
                         {banner.title} {index + 1}
                       </span>
@@ -84,9 +84,8 @@ export function BannerCarousel() {
           {Array.from({ length: count }).map((_, index) => (
             <span
               key={index}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === current ? "bg-foreground w-6" : "bg-muted-foreground w-2"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${index === current ? "bg-foreground w-6" : "bg-muted-foreground w-2"
+                }`}
             />
           ))}
         </div>

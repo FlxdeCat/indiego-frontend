@@ -38,7 +38,7 @@ export function BrowseSidebar() {
   }
 
   return (
-    <Sidebar className="top-[60px] !h-[calc(100svh-60px)] z-30 shadow-sm shadow-muted-foreground">
+    <Sidebar className="top-[60px] !h-[calc(100svh-60px)] z-30 border-1">
       <SidebarHeader>
         <div className="font-bold text-2xl pt-2 px-1">Filter Games</div>
         <SidebarGroup className="px-0">

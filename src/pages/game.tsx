@@ -59,7 +59,7 @@ function Game() {
             <GameBannerCarousel banners={game.banners} />
           </div>
           <div className="flex-1 flex flex-col space-y-4 items-center">
-            <img src={game.image} alt={game.title} className="aspect-[4/5] object-cover rounded-sm shadow-[0px_0px_8px_0px_var(--foreground)] w-full max-w-76" />
+            <img src={game.image} alt={game.title} className="aspect-[4/5] object-cover rounded-md w-full max-w-76" />
             <div className="flex flex-col space-y-1 items-center lg:items-start">
               <h1 className="font-bold text-xl">{game.title} {id} ({game.stars} ★)</h1>
               <h4 className="font-bold">{game.dev}</h4>
@@ -75,21 +75,23 @@ function Game() {
             </div>
           </div>
         </div>
-        <div className="w-full max-w-7xl mt-8 border-y-2 py-8 px-4 flex justify-between">
+        <div className="w-full max-w-7xl mt-8 border-y-2 py-8 px-4 flex flex-col md:flex-row gap-4 items-center justify-between">
           <h1 className="text-3xl font-bold">Play {game.title} {id}</h1>
-          <div className="flex flex-col items-end md:flex-row gap-4">
-            {external ?
-              <Button variant="outline" size="icon"><ExternalLink /></Button> :
-              <div className="cursor-not-allowed">
-                <Button variant="outline" disabled><ExternalLink /></Button>
-              </div>
-            }
-            {auth ?
-              <Button><Download />Download</Button> :
-              <div className="cursor-not-allowed">
-                <Button disabled><Download />Login to Download</Button>
-              </div>
-            }
+          <div className="flex flex-col items-center sm:flex-row sm:items-end gap-4">
+            <div className="flex gap-4">
+              {external ?
+                <Button variant="outline" size="icon"><ExternalLink /></Button> :
+                <div className="cursor-not-allowed">
+                  <Button variant="outline" disabled><ExternalLink /></Button>
+                </div>
+              }
+              {auth ?
+                <Button><Download />Download</Button> :
+                <div className="cursor-not-allowed">
+                  <Button disabled><Download />Login to Download</Button>
+                </div>
+              }
+            </div>
             {auth && (favorite ?
               <Button variant="secondary" onClick={() => setFavorite(false)}><Star className="fill-black dark:fill-white" />Remove from My Favorites</Button> :
               <Button variant="outline" onClick={() => setFavorite(true)}><Star />Save to My Favorites</Button>

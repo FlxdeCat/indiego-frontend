@@ -86,7 +86,7 @@ export function GameTable({ games }: GameTableProps) {
                 <img
                   src={game.image}
                   alt={game.title}
-                  className="max-w-[200px] aspect-[2/1] object-cover rounded-sm"
+                  className="max-w-[200px] aspect-[2/1] object-cover rounded-md"
                 />
                 <div className="flex flex-col space-y-2 w-full">
                   <div className="font-bold text-2xl">{game.title}</div>
