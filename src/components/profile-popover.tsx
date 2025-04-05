@@ -9,7 +9,7 @@ import { useNavigate } from "react-router"
 
 export function ProfilePopover() {
 
-    const nav = useNavigate()
+  const nav = useNavigate()
 
   return (
     <Popover>
@@ -18,11 +18,11 @@ export function ProfilePopover() {
           <User />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-50 mr-4">
+      <PopoverContent className="w-50 mt-2 mr-4">
         <div className="flex flex-col gap-4 items-center justify-center">
           <User size={90} />
           <h4 className="font-medium leading-none text-center">Username</h4>
-          <Button onClick={() => nav("/profile")} className="w-full">My Profile</Button>
+          <Button onClick={() => nav("/profile")} className="w-full text-white">My Profile</Button>
           <Button onClick={() => nav("/auth")} className="w-full" variant="destructive">Logout</Button>
         </div>
       </PopoverContent>
