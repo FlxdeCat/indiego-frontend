@@ -43,14 +43,16 @@ function Subscription() {
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex flex-col h-full items-center justify-between flex-1 mx-16">
-        <h1 className="text-4xl text-center font-bold mt-12">
-          Subscribe to Support Indie Developers
-        </h1>
-        <div className="text-lg text-center my-8">
-          Indiego is built for creators by creators. Your subscription helps keep the platform alive, supports independent developers, and unlocks exclusive recommendations for you.
+      <main className="flex flex-col h-full items-center justify-between flex-1 mx-12">
+        <div className="flex flex-col items-center justify-center gap-8 mt-8 xl:mt-16 mb-8">
+          <h1 className="text-4xl text-center font-bold">
+            Subscribe to Support Indie Developers
+          </h1>
+          <div className="text-lg text-center">
+            Indiego is built for creators by creators. Your subscription helps keep the platform alive, supports independent developers, and unlocks exclusive recommendations for you.
+          </div>
         </div>
-        <div className="flex-grow flex items-center justify-center mb-4">
+        <div className="flex flex-grow items-center justify-center mb-4">
           <div className="flex flex-wrap justify-center gap-8">
             {tiers.map((tier, index) => (<SubscriptionCard key={index} auth={auth} bought={auth && curr_tier === tier.title} tier={tier} />))}
           </div>

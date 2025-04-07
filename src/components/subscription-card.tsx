@@ -23,7 +23,7 @@ interface SubscriptionCardProps {
 
 export function SubscriptionCard({ auth, bought, tier }: SubscriptionCardProps) {
   return (
-    <Card className={`w-sm flex flex-col border-2 ${bought && "border-primary"}`}>
+    <Card className={`max-w-sm flex flex-col border-2 ${bought && "border-primary"}`}>
       <CardHeader>
         <CardTitle className="text-xl">{tier.title} <span className="text-base text-primary">{bought && "(Current Subscription)"}</span></CardTitle>
         <CardDescription>{tier.desc}</CardDescription>
@@ -33,7 +33,7 @@ export function SubscriptionCard({ auth, bought, tier }: SubscriptionCardProps) 
           {tier.details.map((detail, index) => (<li key={index}>{detail}</li>))}
         </ul>
       </CardContent>
-      <CardFooter className="flex flex-col gap-2 items-center">
+      <CardFooter className="flex flex-col gap-2 justify-around items-center">
         {auth ? bought ?
           <Button variant="destructive">Cancel Subscription</Button> :
           <Button className="text-white">Subscribe for ${tier.price}</Button> :
