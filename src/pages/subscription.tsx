@@ -45,10 +45,10 @@ function Subscription() {
       <Navbar />
       <main className="flex flex-col h-full items-center justify-between flex-1 mx-11">
         <div className="flex flex-col items-center justify-center gap-8 mt-8 xl:mt-20 mb-8">
-          <h1 className="text-4xl text-center font-bold">
+          <h1 className="text-4xl xl:text-5xl text-center font-bold">
             Subscribe to Support Indie Developers
           </h1>
-          <div className="text-lg text-center">
+          <div className="text-lg xl:text-xl text-center">
             Indiego is built for creators by creators. Your subscription helps keep the platform alive, supports independent developers, and unlocks exclusive recommendations for you.
           </div>
         </div>
