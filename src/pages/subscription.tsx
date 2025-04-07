@@ -43,8 +43,8 @@ function Subscription() {
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
       <Navbar />
-      <main className="flex flex-col h-full items-center justify-between flex-1 mx-12">
-        <div className="flex flex-col items-center justify-center gap-8 mt-8 xl:mt-16 mb-8">
+      <main className="flex flex-col h-full items-center justify-between flex-1 mx-11">
+        <div className="flex flex-col items-center justify-center gap-8 mt-8 xl:mt-20 mb-8">
           <h1 className="text-4xl text-center font-bold">
             Subscribe to Support Indie Developers
           </h1>
