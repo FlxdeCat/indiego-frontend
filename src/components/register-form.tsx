@@ -28,8 +28,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from "@/lib/utils"
 import { CalendarDOB } from "./calender-dob"
 import { Checkbox } from "./ui/checkbox"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
-import { ScrollArea } from "./ui/scroll-area"
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger } from "./ui/dialog"
+import { TermsConditionsDialogueContent } from "./terms-conditions-dialog-content"
 
 const RegisterFormSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
@@ -43,10 +43,10 @@ const RegisterFormSchema = z.object({
     const today = new Date();
     const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
     return date <= minDate;
-  }, { 
+  }, {
     message: "You must be at least 13 years old",
   }),
-  })
+})
   .refine(({ password, confirmPassword }) => password === confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
@@ -56,10 +56,10 @@ const RegisterFormSchema = z.object({
     path: ["terms"],
   })
 
-export function RegisterForm(){
+export function RegisterForm() {
 
   const registerForm = useForm<z.infer<typeof RegisterFormSchema>>({
-  resolver: zodResolver(RegisterFormSchema),
+    resolver: zodResolver(RegisterFormSchema),
     defaultValues: {
       username: "",
       email: "",
@@ -191,38 +191,21 @@ export function RegisterForm(){
                       I agree to the
                     </FormLabel>
                     <Dialog>
-                        <DialogTrigger asChild>
-                          <span className="underline text-primary cursor-pointer text-sm font-bold"> Terms & Conditions</span>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[600px]">
-                          <DialogHeader>
-                            <DialogTitle>Terms & Conditions</DialogTitle>
-                            <DialogDescription>
-                              Indiego's Terms & Conditions
-                            </DialogDescription>
-                          </DialogHeader>
-                          <ScrollArea className="h-[400px] rounded-md border p-4">
-                            <h2 className="text-lg font-bold">Welcome to Indiego</h2>
-                            <p>Indiego is a platform where users can browse and play games published by indie developers.</p>
-                            <h3 className="font-semibold mt-4">1. Age Requirement</h3>
-                            <p>You must be at least 13 years old to create an account.</p>
-                            <h3 className="font-semibold mt-4">2. Subscriptions</h3>
-                            <p>Users can purchase a subscription to receive a personalized recommendation bundle of games every week.</p>
-                            <h3 className="font-semibold mt-4">3. User Responsibilities</h3>
-                            <p>Users must comply with community guidelines and respect the developers.</p>
-                            <h3 className="font-semibold mt-4">4. Payment & Refunds</h3>
-                            <p>Subscriptions are refundable, subject to certain conditions and eligibility criteria.</p>
-                          </ScrollArea>
-                          <DialogFooter>
-                            <DialogClose asChild>
-                              <Button onClick={() => {
-                                registerForm.setValue("terms", true)
-                                registerForm.trigger("terms")
-                              }}>Agree</Button>
-                            </DialogClose>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
+                      <DialogTrigger asChild>
+                        <span className="underline text-primary cursor-pointer text-sm font-bold"> Terms & Conditions</span>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[600px]">
+                        <TermsConditionsDialogueContent />
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button onClick={() => {
+                              registerForm.setValue("terms", true)
+                              registerForm.trigger("terms")
+                            }}>Agree</Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                   <FormMessage />
                 </FormItem>
