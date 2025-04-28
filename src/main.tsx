@@ -13,6 +13,7 @@ import Game from './pages/game.tsx'
 import News from './pages/news.tsx'
 import Subscription from './pages/subscription.tsx'
 import { SonnerToaster } from './components/sonner-toaster.tsx'
+import DeveloperHub from './pages/developer-hub.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/game/:id" element={<Game />} />
           <Route path="/news" element={<News />} />
           <Route path="/subscription" element={<Subscription />} />
+          <Route path="/developer" element={<DeveloperHub />} />
         </Routes>
         <SonnerToaster />
       </BrowserRouter>

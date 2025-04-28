@@ -6,6 +6,7 @@ import { Button } from "./ui/button"
 import { Gamepad2, MenuIcon } from "lucide-react"
 import { useNavigate } from "react-router"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet"
+import { NewDeveloper } from "./new-developer"
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -13,7 +14,7 @@ export function Navbar() {
   const nav = useNavigate()
 
   const auth = true // TEMP
-  const dev = true // TEMP
+  const dev = false // TEMP
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,7 +40,10 @@ export function Navbar() {
       </div>
       <div className="flex gap-4">
         <ModeToggle />
-        {auth && <Button variant="outline"><Gamepad2 /><span className="hidden sm:flex">{dev ? "Developer Hub" : "Become a Developer"}</span></Button>}
+        {auth && (dev ?
+          <Button variant="outline" onClick={() => window.open("/developer", "_blank")}><Gamepad2 /><span className="hidden sm:flex">Developer Hub</span></Button> :
+          <NewDeveloper />
+        )}
         {auth ? <ProfilePopover /> : <Button onClick={() => nav("/auth")} variant="outline">Login | Register</Button>}
         <Sheet>
           <SheetTrigger asChild>
