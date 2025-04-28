@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "./ui/button"
 import { SubscriptionDrawer } from "./subscription-drawer"
+import { SubscriptionDialog } from "./subscription-dialog"
 
 export interface SubscriptionTier {
   title: string
@@ -36,7 +37,7 @@ export function SubscriptionCard({ auth, bought, tier }: SubscriptionCardProps) 
       </CardContent>
       <CardFooter className="flex flex-col gap-2 justify-around items-center">
         {auth ? bought ?
-          <Button variant="destructive">Cancel Subscription</Button> :
+          <SubscriptionDialog tier={tier} /> :
           <SubscriptionDrawer tier={tier} /> :
           <div className="cursor-not-allowed">
             <Button disabled className="text-white">Login to Subscribe for ${tier.price}</Button>

@@ -25,6 +25,8 @@ import { TermsConditionsDialogueContent } from "./terms-conditions-dialog-conten
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { toast } from "sonner"
 
 const SubscriptionSchema = z.object({
   card: z.string().refine(
@@ -34,7 +36,26 @@ const SubscriptionSchema = z.object({
     },
     { message: 'Invalid card number format' }
   ),
-  expiry: z.string().regex(/^\d{2}\/\d{2}$/, 'Invalid expiry format'),
+  expiry: z.string()
+    .regex(/^\d{2}\/\d{2}$/, 'Invalid expiry format')
+    .refine((value) => {
+      const [monthStr, yearStr] = value.split('/')
+      const month = parseInt(monthStr, 10)
+      const year = parseInt(yearStr, 10)
+
+      if (isNaN(month) || isNaN(year)) return false
+      if (month < 1 || month > 12) return false
+
+      const now = new Date()
+      const currentMonth = now.getMonth() + 1
+      const currentYear = now.getFullYear() % 100
+
+      if (year < currentYear || (year === currentYear && month < currentMonth)) {
+        return false
+      }
+
+      return true
+    }, { message: 'Invalid expiry date' }),
   cvc: z.string().regex(/^\d{3,4}$/, 'CVC must be 3 or 4 digits'),
   terms: z.boolean().default(false),
 })
@@ -44,6 +65,12 @@ const SubscriptionSchema = z.object({
   })
 
 export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
+
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false)
+  }
 
   const subscriptionForm = useForm<z.infer<typeof SubscriptionSchema>>({
     resolver: zodResolver(SubscriptionSchema),
@@ -57,6 +84,10 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
 
   function onSubscriptionSubmit(data: z.infer<typeof SubscriptionSchema>) {
     console.log(JSON.stringify(data, null, 2))
+    handleDrawerClose()
+    toast.success("Your payment is currectly being processed", {
+      description: "Please refresh this page in a few seconds. ",
+    })
   }
 
   const formatCardNumber = (value: string) => {
@@ -72,18 +103,34 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
       : cleaned
   }
 
-  const handleCardInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatCardNumber(e.target.value)
-    subscriptionForm.setValue('card', formatted)
+  const formatCVC = (value: string) => {
+    return value.replace(/\D/g, '').slice(0, 4)
   }
 
-  const handleExpiryInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatExpiry(e.target.value)
-    subscriptionForm.setValue('expiry', formatted)
+  const handleFormattedInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: string) => void,
+    formatter: (value: string) => string
+  ) => {
+    const input = e.target
+    const rawValue = input.value
+    const selectionStart = input.selectionStart || 0
+
+    const beforeCursor = rawValue.slice(0, selectionStart)
+    const formattedBeforeCursor = formatter(beforeCursor)
+    const formattedFull = formatter(rawValue)
+
+    const newCursorPos = formattedBeforeCursor.length
+
+    onChange(formattedFull)
+
+    requestAnimationFrame(() => {
+      input.setSelectionRange(newCursorPos, newCursorPos)
+    })
   }
 
   return (
-    <Drawer>
+    <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
       <DrawerTrigger className="text-white text-sm font-semibold bg-primary py-2 px-4 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] shadow-xs hover:bg-primary/90">
         Subscribe for ${tier.price}
       </DrawerTrigger>
@@ -123,7 +170,7 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
                     <FormItem>
                       <FormLabel>Card Number</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="XXXX XXXX XXXX XXXX" onChange={handleCardInput} value={subscriptionForm.watch('card') || ''} />
+                        <Input {...field} placeholder="XXXX XXXX XXXX XXXX" onChange={(e) => handleFormattedInput(e, field.onChange, formatCardNumber)} value={subscriptionForm.watch('card') || ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -137,7 +184,7 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
                       <FormItem className="flex-1">
                         <FormLabel>Expiry</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="MM/YY" onChange={handleExpiryInput} value={subscriptionForm.watch('expiry') || ''} />
+                          <Input {...field} placeholder="MM/YY" onChange={(e) => handleFormattedInput(e, field.onChange, formatExpiry)} value={subscriptionForm.watch('expiry') || ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -150,7 +197,7 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
                       <FormItem className="flex-1">
                         <FormLabel>CVC</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="XXX" />
+                          <Input {...field} placeholder="XXX" onChange={(e) => handleFormattedInput(e, field.onChange, formatCVC)} value={subscriptionForm.watch('cvc') || ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
