@@ -1,4 +1,0 @@
-- Change Payment to PayPal
-  - Need Full Name, Email, Tax ID (Optional), and Country
-  - Developer Form
-- Developer T&C
