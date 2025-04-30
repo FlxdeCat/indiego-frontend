@@ -20,7 +20,7 @@ export function TermsConditionsDialogueContent() {
         <h3 className="font-semibold mt-4">3. User Responsibilities</h3>
         <p>Users must comply with community guidelines and respect the developers.</p>
         <h3 className="font-semibold mt-4">4. Payment & Refunds</h3>
-        <p>Subscriptions are refundable, subject to certain conditions and eligibility criteria.</p>
+        <p>Payments are exclusively processed through PayPal. Subscriptions are refundable, subject to certain conditions and eligibility criteria.</p>
       </ScrollArea>
     </>
   )

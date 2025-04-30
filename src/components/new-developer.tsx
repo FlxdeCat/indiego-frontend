@@ -12,6 +12,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,16 +20,24 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Gamepad2 } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Checkbox } from "./ui/checkbox"
 import { TermsConditionsDeveloperDialogueContent } from "./terms-conditions-developer-dialog-content"
 import { Textarea } from "./ui/textarea"
+import { ReactNode, useEffect, useState } from "react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+
+interface MyComponentProps {
+  button: ReactNode
+}
 
 const DeveloperFormSchema = z.object({
   name: z.string().min(1, "Name cannot be empty"),
   description: z.string().min(1, "Description cannot be empty"),
+  full_name: z.string().min(1, "Full Name cannot be empty"),
+  tax_id: z.string(),
+  country: z.string(),
   terms: z.boolean().default(false),
 })
   .refine(({ terms }) => terms === true, {
@@ -36,13 +45,22 @@ const DeveloperFormSchema = z.object({
     path: ["terms"],
   })
 
-export function NewDeveloper() {
+export function NewDeveloper({ button }: MyComponentProps) {
+
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const handleDialogClose = () => {
+    setDialogOpen(false)
+  }
 
   const developerForm = useForm<z.infer<typeof DeveloperFormSchema>>({
     resolver: zodResolver(DeveloperFormSchema),
     defaultValues: {
       name: "",
       description: "",
+      full_name: "",
+      tax_id: "",
+      country: "",
       terms: false,
     }
   })
@@ -50,14 +68,34 @@ export function NewDeveloper() {
   function onDeveloperSubmit(data: z.infer<typeof DeveloperFormSchema>) {
     console.log(JSON.stringify(data, null, 2))
     window.open("/developer", "_blank")
+    handleDialogClose()
   }
 
+  interface Country {
+    value: string
+    label: string
+  }
+
+  const [countries, setCountries] = useState<Country[]>([])
+
+  useEffect(() => {
+    fetch('https://restcountries.com/v3.1/all')
+      .then(response => response.json())
+      .then(data => {
+        const countryList = data.map((country: any) => ({
+          value: country.cca2,
+          label: country.name.common,
+        }))
+        setCountries(countryList.sort((a: Country, b: Country) => a.label.localeCompare(b.label)))
+      })
+  }, [])
+
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline"><Gamepad2 /><span className="hidden sm:flex">Become a Game Developer</span></Button>
+        {button}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Become a Game Developer</DialogTitle>
           <DialogDescription>
@@ -92,6 +130,64 @@ export function NewDeveloper() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={developerForm.control}
+              name="full_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Enter the full name on the PayPal account that matches the email you registered with.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex flex-col sm:flex-row gap-4">
+              <FormField
+                control={developerForm.control}
+                name="tax_id"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Tax ID (Optional)</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={developerForm.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Country</FormLabel>
+                    <FormControl>
+                      <div className="w-full">
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select your country" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-120">
+                            {countries.map(country => (
+                              <SelectItem key={country.value} value={country.value} className="cursor-pointer hover:bg-muted">{country.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={developerForm.control}
               name="terms"

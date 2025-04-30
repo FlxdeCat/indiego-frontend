@@ -9,6 +9,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,38 +26,14 @@ import { TermsConditionsDialogueContent } from "./terms-conditions-dialog-conten
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 
 const SubscriptionSchema = z.object({
-  card: z.string().refine(
-    (nums) => {
-      const digits = nums.replace(/\s/g, '')
-      return /^\d{15,16}$/.test(digits)
-    },
-    { message: 'Invalid card number format' }
-  ),
-  expiry: z.string()
-    .regex(/^\d{2}\/\d{2}$/, 'Invalid expiry format')
-    .refine((value) => {
-      const [monthStr, yearStr] = value.split('/')
-      const month = parseInt(monthStr, 10)
-      const year = parseInt(yearStr, 10)
-
-      if (isNaN(month) || isNaN(year)) return false
-      if (month < 1 || month > 12) return false
-
-      const now = new Date()
-      const currentMonth = now.getMonth() + 1
-      const currentYear = now.getFullYear() % 100
-
-      if (year < currentYear || (year === currentYear && month < currentMonth)) {
-        return false
-      }
-
-      return true
-    }, { message: 'Invalid expiry date' }),
-  cvc: z.string().regex(/^\d{3,4}$/, 'CVC must be 3 or 4 digits'),
+  full_name: z.string().min(1, "Full Name cannot be empty"),
+  tax_id: z.string(),
+  country: z.string(),
   terms: z.boolean().default(false),
 })
   .refine(({ terms }) => terms === true, {
@@ -75,9 +52,9 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
   const subscriptionForm = useForm<z.infer<typeof SubscriptionSchema>>({
     resolver: zodResolver(SubscriptionSchema),
     defaultValues: {
-      card: "",
-      expiry: "",
-      cvc: "",
+      full_name: "",
+      tax_id: "",
+      country: "",
       terms: false
     }
   })
@@ -90,44 +67,24 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
     })
   }
 
-  const formatCardNumber = (value: string) => {
-    const digits = value.replace(/\D/g, '').slice(0, 16)
-    const formatted = digits.match(/.{1,4}/g)?.join(' ') || ''
-    return formatted
+  interface Country {
+    value: string
+    label: string
   }
 
-  const formatExpiry = (value: string) => {
-    const cleaned = value.replace(/\D/g, '').slice(0, 4)
-    return cleaned.length > 2
-      ? `${cleaned.slice(0, 2)}/${cleaned.slice(2)}`
-      : cleaned
-  }
+  const [countries, setCountries] = useState<Country[]>([])
 
-  const formatCVC = (value: string) => {
-    return value.replace(/\D/g, '').slice(0, 4)
-  }
-
-  const handleFormattedInput = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void,
-    formatter: (value: string) => string
-  ) => {
-    const input = e.target
-    const rawValue = input.value
-    const selectionStart = input.selectionStart || 0
-
-    const beforeCursor = rawValue.slice(0, selectionStart)
-    const formattedBeforeCursor = formatter(beforeCursor)
-    const formattedFull = formatter(rawValue)
-
-    const newCursorPos = formattedBeforeCursor.length
-
-    onChange(formattedFull)
-
-    requestAnimationFrame(() => {
-      input.setSelectionRange(newCursorPos, newCursorPos)
-    })
-  }
+  useEffect(() => {
+    fetch('https://restcountries.com/v3.1/all')
+      .then(response => response.json())
+      .then(data => {
+        const countryList = data.map((country: any) => ({
+          value: country.cca2,
+          label: country.name.common,
+        }))
+        setCountries(countryList.sort((a: Country, b: Country) => a.label.localeCompare(b.label)))
+      })
+  }, [])
 
   return (
     <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
@@ -165,13 +122,16 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
               <form onSubmit={subscriptionForm.handleSubmit(onSubscriptionSubmit)} className="w-full xl:w-lg space-y-4">
                 <FormField
                   control={subscriptionForm.control}
-                  name="card"
+                  name="full_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Card Number</FormLabel>
+                      <FormLabel>Full Name</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="XXXX XXXX XXXX XXXX" onChange={(e) => handleFormattedInput(e, field.onChange, formatCardNumber)} value={subscriptionForm.watch('card') || ''} />
+                        <Input {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Enter the full name on the PayPal account that matches the email you registered with.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -179,12 +139,12 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <FormField
                     control={subscriptionForm.control}
-                    name="expiry"
+                    name="tax_id"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Expiry</FormLabel>
+                        <FormLabel>Tax ID (Optional)</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="MM/YY" onChange={(e) => handleFormattedInput(e, field.onChange, formatExpiry)} value={subscriptionForm.watch('expiry') || ''} />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -192,12 +152,26 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
                   />
                   <FormField
                     control={subscriptionForm.control}
-                    name="cvc"
+                    name="country"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>CVC</FormLabel>
+                        <FormLabel>Country</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="XXX" onChange={(e) => handleFormattedInput(e, field.onChange, formatCVC)} value={subscriptionForm.watch('cvc') || ''} />
+                          <div className="w-full">
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select your country" />
+                              </SelectTrigger>
+                              <SelectContent className="max-h-120">
+                                {countries.map(country => (
+                                  <SelectItem key={country.value} value={country.value} className="cursor-pointer hover:bg-muted">{country.label}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -246,6 +220,6 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
           </div>
         </ScrollArea>
       </DrawerContent>
-    </Drawer>
+    </Drawer >
   )
 }

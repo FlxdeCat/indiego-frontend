@@ -1,6 +1,4 @@
 - Change Payment to PayPal
   - Need Full Name, Email, Tax ID (Optional), and Country
-  - Register Form, Subscription Form, and Developer Form
-- Player can access other profiles
-  - Game Detail Page
+  - Developer Form
 - Developer T&C

@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
+import { NewDeveloper } from "./new-developer"
 
 export function DevJoinMessage() {
   const [visible, setVisible] = useState(true)
@@ -33,9 +34,11 @@ export function DevJoinMessage() {
       </AlertDescription>
 
       <div className="flex justify-end w-full">
-        <Button variant="ghost" className="font-bold text-white border-2 border-white hover:text-black dark:hover:bg-white">
-          Become a Developer
-        </Button>
+        <NewDeveloper button={
+          <Button variant="ghost" className="font-bold text-white border-2 border-white hover:text-black dark:hover:bg-white">
+            Become a Developer
+          </Button>
+        } />
       </div>
     </Alert>
   )

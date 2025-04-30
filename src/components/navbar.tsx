@@ -42,7 +42,7 @@ export function Navbar() {
         <ModeToggle />
         {auth && (dev ?
           <Button variant="outline" onClick={() => window.open("/developer", "_blank")}><Gamepad2 /><span className="hidden sm:flex">Developer Hub</span></Button> :
-          <NewDeveloper />
+          <NewDeveloper button={<Button variant="outline"><Gamepad2 /><span className="hidden sm:flex">Become a Game Developer</span></Button>} />
         )}
         {auth ? <ProfilePopover /> : <Button onClick={() => nav("/auth")} variant="outline">Login | Register</Button>}
         <Sheet>
