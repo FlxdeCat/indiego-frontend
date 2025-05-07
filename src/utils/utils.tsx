@@ -1,4 +1,4 @@
-export function convertDate(unix: number): string{
+export function convertDate(unix: number): string {
   return (new Date(unix * 1000)).toLocaleDateString("en-US", {
     day: "2-digit",
     month: "long",
@@ -23,4 +23,8 @@ export function smoothScroll(element: HTMLElement, target: number, duration: num
   }
 
   requestAnimationFrame(scrollStep)
+}
+
+export function formatThousand(amount: number): string {
+  return new Intl.NumberFormat("en-US").format(amount)
 }
