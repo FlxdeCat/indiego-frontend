@@ -62,93 +62,108 @@ export const schema = z.object({
   id: z.number(),
   cover: z.string(),
   title: z.string(),
-  genre: z.string(),
+  genre: z.array(z.string()),
   rating: z.number(),
   downloads: z.number(),
-  comments: z.number(),
+  reviews: z.number(),
 })
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     accessorKey: "cover",
-    header: "Cover",
+    header: () => (
+      <div className="text-center">Cover</div>
+    ),
     cell: ({ row }) => (
-      <div className="flex justify-center">
-        <img src={"/" + row.original.cover} alt="Game Cover" className="w-[150px]" />
+      <div className="flex justify-center items-center">
+        <img
+          src={"/" + row.original.cover}
+          alt={row.original.title}
+          className="h-48 max-w-full object-contain min-w-32"
+        />
       </div>
     ),
     enableHiding: false,
   },
   {
     accessorKey: "title",
-    header: "Title",
+    header: () => (
+      <div className="w-full text-center flex-1">Title</div>
+    ),
     cell: ({ row }) => (
-      <div className="text-center">
-        {row.original.title}
-      </div>
+      <div className="text-center flex-1 text-lg font-bold">{row.original.title}</div>
     ),
     enableHiding: false,
   },
   {
     accessorKey: "genre",
-    header: "Genre",
+    header: () => (
+      <div className="w-full text-center">Genre</div>
+    ),
     cell: ({ row }) => (
-      <div className="">
-        <Badge variant="outline" className="px-1.5 text-muted-foreground">
-          {row.original.genre}
-        </Badge>
+      <div className="w-full flex justify-center">
+        <div className="flex flex-wrap gap-2 justify-center items-center max-w-60">
+          {row.original.genre.map((genre, idx) => (
+            <Badge
+              key={idx}
+              variant="outline"
+              className="px-1.5 text-muted-foreground"
+            >
+              {genre}
+            </Badge>
+          ))}
+        </div>
       </div>
     ),
   },
   {
     accessorKey: "rating",
-    header: "Rating",
+    header: () => (
+      <div className="w-full text-center flex-1">Rating</div>
+    ),
     cell: ({ row }) => (
-      <div className="text-center">
-        {row.original.rating}
-      </div>
+      <div className="text-center flex-1">{row.original.rating}</div>
     ),
   },
   {
     accessorKey: "downloads",
-    header: "Downloads",
+    header: () => (
+      <div className="w-full text-center flex-1">Downloads</div>
+    ),
     cell: ({ row }) => (
-      <div className="text-center">
-        {row.original.downloads}
-      </div>
+      <div className="text-center flex-1">{row.original.downloads}</div>
     ),
   },
   {
-    accessorKey: "comments",
-    header: "Comments",
+    accessorKey: "reviews",
+    header: () => (
+      <div className="w-full text-center flex-1">Reviews</div>
+    ),
     cell: ({ row }) => (
-      <div className="text-center">
-        {row.original.comments}
-      </div>
+      <div className="text-center flex-1">{row.original.reviews}</div>
     ),
   },
   {
     id: "actions",
     cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
-            size="icon"
-          >
-            <MoreVerticalIcon />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Delete</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex justify-center">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+              size="icon"
+            >
+              <MoreVerticalIcon />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     ),
   },
 ]
@@ -160,7 +175,7 @@ function MainTableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
       className="relative z-0"
     >
       {row.getVisibleCells().map((cell) => (
-        <TableCell key={cell.id}>
+        <TableCell key={cell.id} className="text-center">
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </TableCell>
       ))}
@@ -173,7 +188,7 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[]
 }) {
-  const [data, setData] = React.useState(() => initialData)
+  const [data, _] = React.useState(() => initialData)
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -288,19 +303,18 @@ export function DataTable({
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        {header.isPlaceholder ? null : (
+                          <div className="w-full text-center">
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+                          </div>
+                        )}
                       </TableHead>
                     )
                   })}
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody className="**:data-[slot=table-cell]:first:w-8">
+            <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <MainTableRow key={row.id} row={row} />
@@ -396,20 +410,10 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent
-        value="past-performance"
-        className="flex flex-col px-4 lg:px-6"
-      >
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
-      </TabsContent>
-      <TabsContent value="key-personnel" className="flex flex-col px-4 lg:px-6">
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
-      </TabsContent>
-      <TabsContent
-        value="focus-documents"
-        className="flex flex-col px-4 lg:px-6"
-      >
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
+      <TabsContent value="news" className="px-4 lg:px-6">
+        <div className="border rounded-lg p-6 text-center">
+          This is the News tab. You can render news data here.
+        </div>
       </TabsContent>
     </Tabs>
   )
