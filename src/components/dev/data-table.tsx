@@ -20,6 +20,7 @@ import {
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
+  ChevronUpIcon,
   ColumnsIcon,
   MoreVerticalIcon,
   PlusIcon,
@@ -32,7 +33,6 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
@@ -57,6 +57,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { useNavigate } from "react-router"
+import { Input } from "../ui/input"
 
 export const schema = z.object({
   id: z.number(),
@@ -84,6 +86,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
       </div>
     ),
     enableHiding: false,
+    enableSorting: false,
   },
   {
     accessorKey: "title",
@@ -150,17 +153,21 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant="ghost"
-              className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+              variant="outline"
+              className="flex text-muted-foreground data-[state=open]:bg-muted"
               size="icon"
             >
               <MoreVerticalIcon />
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-32">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+          <DropdownMenuContent align="end" className="mr-4 -mt-4">
+            <DropdownMenuItem onClick={(e) => {
+              e.stopPropagation()
+            }}>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => {
+              e.stopPropagation()
+            }}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -169,10 +176,13 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
 ]
 
 function MainTableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
+  const nav = useNavigate()
+
   return (
     <TableRow
+      onClick={() => nav(`/game/${row.original.id}`)}
       data-state={row.getIsSelected() && "selected"}
-      className="relative z-0"
+      className="relative z-0 cursor-pointer"
     >
       {row.getVisibleCells().map((cell) => (
         <TableCell key={cell.id} className="text-center">
@@ -189,6 +199,7 @@ export function DataTable({
   data: z.infer<typeof schema>[]
 }) {
   const [data, _] = React.useState(() => initialData)
+  const [activeTab, setActiveTab] = React.useState<"games" | "news">("games")
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -228,14 +239,15 @@ export function DataTable({
 
   return (
     <Tabs
-      defaultValue="games"
+      value={activeTab}
+      onValueChange={(value) => setActiveTab(value as "games" | "news")}
       className="flex w-full flex-col justify-start gap-6"
     >
-      <div className="flex items-center justify-between px-4 lg:px-6">
+      <div className="flex items-center justify-between px-4 lg:px-6 gap-2">
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
-        <Select defaultValue="games">
+        <Select value={activeTab} onValueChange={(value) => setActiveTab(value as "games" | "news")}>
           <SelectTrigger
             className="@4xl/main:hidden flex w-fit"
             id="view-selector"
@@ -252,43 +264,61 @@ export function DataTable({
           <TabsTrigger value="news">News</TabsTrigger>
         </TabsList>
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <ColumnsIcon />
-                <span className="hidden lg:inline">Customize Columns</span>
-                <span className="lg:hidden">Columns</span>
-                <ChevronDownIcon />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              {table
-                .getAllColumns()
-                .filter(
-                  (column) =>
-                    typeof column.accessorFn !== "undefined" &&
-                    column.getCanHide()
-                )
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  )
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button variant="outline" size="sm">
-            <PlusIcon />
-            <span className="hidden lg:inline">Add Section</span>
-          </Button>
+          {activeTab === "games" && (
+            <>
+              <Input type="search" placeholder="Search"
+                className="w-full h-8 border input-class"
+                value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+                onChange={(e) => table.getColumn("title")?.setFilterValue(e.target.value)}
+              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <ColumnsIcon />
+                    <span className="hidden lg:inline">Customize Columns</span>
+                    <span className="lg:hidden">Columns</span>
+                    <ChevronDownIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  {table
+                    .getAllColumns()
+                    .filter(
+                      (column) =>
+                        typeof column.accessorFn !== "undefined" &&
+                        column.getCanHide()
+                    )
+                    .map((column) => {
+                      return (
+                        <DropdownMenuCheckboxItem
+                          key={column.id}
+                          className="capitalize"
+                          checked={column.getIsVisible()}
+                          onCheckedChange={(value) =>
+                            column.toggleVisibility(!!value)
+                          }
+                        >
+                          {column.id}
+                        </DropdownMenuCheckboxItem>
+                      )
+                    })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
+          {activeTab === "games" ? (
+            <Button size="sm">
+              <PlusIcon />
+              <span className="hidden lg:inline">Add Game</span>
+              <span className="lg:hidden">Add</span>
+            </Button>
+          ) : (
+            <Button size="sm">
+              <PlusIcon />
+              <span className="hidden lg:inline">Add News</span>
+              <span className="lg:hidden">Add</span>
+            </Button>
+          )}
         </div>
       </div>
       <TabsContent
@@ -302,12 +332,19 @@ export function DataTable({
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <div className="w-full text-center">
-                            {flexRender(header.column.columnDef.header, header.getContext())}
-                          </div>
-                        )}
+                      <TableHead
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        onClick={header.column.getToggleSortingHandler()}
+                        className="cursor-pointer"
+                      >
+                        <div className="flex items-center justify-center gap-1">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {{
+                            asc: <ChevronUpIcon className="w-4 h-4" />,
+                            desc: <ChevronDownIcon className="w-4 h-4" />,
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
                       </TableHead>
                     )
                   })}
@@ -332,11 +369,7 @@ export function DataTable({
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-between px-4">
-          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </div>
+        <div className="flex items-center justify-center px-4">
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
               <Label htmlFor="rows-per-page" className="text-sm font-medium">
@@ -354,7 +387,7 @@ export function DataTable({
                   />
                 </SelectTrigger>
                 <SelectContent side="top">
-                  {[10, 20, 30, 40, 50].map((pageSize) => (
+                  {[3, 10, 20, 30, 40, 50].map((pageSize) => (
                     <SelectItem key={pageSize} value={`${pageSize}`}>
                       {pageSize}
                     </SelectItem>
