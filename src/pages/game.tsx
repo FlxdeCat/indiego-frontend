@@ -27,7 +27,7 @@ function Game() {
     dev: "Hololive",
     genres: ["Action", "Comedy"],
     stars: 4.3,
-    release: 1742963482
+    release: "1742963482"
   }
 
   const reviews = [
@@ -35,19 +35,19 @@ function Game() {
       username: "Username 1",
       review: "Very good game!",
       stars: 4,
-      date: 1742963480
+      date: "1742963480"
     },
     {
       username: "Username 2",
       review: "Very nice game!",
       stars: 5,
-      date: 1742963481
+      date: "1742963481"
     },
     {
       username: "Username 3",
       review: "Good game!",
       stars: 4,
-      date: 1742963482
+      date: "1742963482"
     }
   ]
 

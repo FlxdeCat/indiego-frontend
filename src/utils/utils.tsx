@@ -1,5 +1,5 @@
-export function convertDate(unix: number): string {
-  return (new Date(unix * 1000)).toLocaleDateString("en-US", {
+export function convertDate(unix: string): string {
+  return (new Date(Number(unix) * 1000)).toLocaleDateString("en-US", {
     day: "2-digit",
     month: "long",
     year: "numeric",

@@ -59,6 +59,7 @@ import {
 } from "@/components/ui/tabs"
 import { useNavigate } from "react-router"
 import { Input } from "../ui/input"
+import { DevNews } from "./dev-news"
 
 export const schema = z.object({
   id: z.number(),
@@ -444,8 +445,8 @@ export function DataTable({
         </div>
       </TabsContent>
       <TabsContent value="news" className="px-4 lg:px-6">
-        <div className="border rounded-lg p-6 text-center">
-          This is the News tab. You can render news data here.
+        <div className="border rounded-lg p-4 text-center">
+          <DevNews />
         </div>
       </TabsContent>
     </Tabs>

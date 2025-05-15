@@ -19,7 +19,7 @@ interface Review {
   username: string
   review: string
   stars: number
-  date: number
+  date: string
 }
 
 interface ReviewGameProps {
@@ -36,11 +36,13 @@ export function ReviewGame({ reviews }: ReviewGameProps) {
 
   const sortedReviews = useMemo(() => {
     return [...reviews].sort((a, b) => {
+      const a_date = Number(a.date)
+      const b_date = Number(b.date)
       if (sort === "Recent") {
-        if (a.date === b.date) return b.stars - a.stars
-        return ascending ? a.date - b.date : b.date - a.date
+        if (a_date === b_date) return b.stars - a.stars
+        return ascending ? a_date - b_date : b_date - a_date
       } else {
-        if (a.stars === b.stars) return b.date - a.date
+        if (a.stars === b.stars) return b_date - a_date
         return ascending ? a.stars - b.stars : b.stars - a.stars
       }
     })

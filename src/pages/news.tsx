@@ -19,7 +19,7 @@ function News() {
       title: "Some Updates",
       dev: "Hololive",
       image: "holocure-banner.png",
-      date: 1742963482,
+      date: "1742963482",
       content:
         `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7`
     },
@@ -27,7 +27,7 @@ function News() {
       title: "Some Updates",
       dev: "Hololive",
       image: "holocure-banner.png",
-      date: 1742963482,
+      date: "1742963482",
       content:
         `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7.`
     },
@@ -35,7 +35,7 @@ function News() {
       title: "Some Updates",
       dev: "Hololive",
       image: "holocure-banner.png",
-      date: 1742963482,
+      date: "1742963482",
       content:
         `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7.`
     },
@@ -43,7 +43,7 @@ function News() {
       title: "Some Updates",
       dev: "Hololive",
       image: "holocure-banner.png",
-      date: 1742963482,
+      date: "1742963482",
       content:
         `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7.`
     },
@@ -59,7 +59,7 @@ function News() {
             {newss.map((news, index) => (
               <Dialog key={index}>
                 <DialogTrigger asChild>
-                  <div className="flex flex-col sm:flex-row justify-center items-center w-full hover:bg-accent cursor-pointer border-2 rounded-md">
+                  <div className="flex flex-col sm:flex-row justify-center items-center w-full hover:bg-muted/50 cursor-pointer border-2 rounded-md">
                     <div className="flex-2 lg:flex-1">
                       <img src={news.image} alt="Holocure" className="object-cover h-auto rounded-l-sm" />
                     </div>
