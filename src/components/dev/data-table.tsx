@@ -60,6 +60,7 @@ import {
 import { useNavigate } from "react-router"
 import { Input } from "../ui/input"
 import { DevNews } from "./dev-news"
+import { DeleteGameDialog } from "./delete-game-dialog"
 
 export const schema = z.object({
   id: z.number(),
@@ -71,119 +72,117 @@ export const schema = z.object({
   reviews: z.number(),
 })
 
-const columns: ColumnDef<z.infer<typeof schema>>[] = [
-  {
-    accessorKey: "cover",
-    header: () => (
-      <div className="text-center">Cover</div>
-    ),
-    cell: ({ row }) => (
-      <div className="flex justify-center items-center">
-        <img
-          src={"/" + row.original.cover}
-          alt={row.original.title}
-          className="h-48 max-w-full object-contain min-w-32"
-        />
-      </div>
-    ),
-    enableHiding: false,
-    enableSorting: false,
-  },
-  {
-    accessorKey: "title",
-    header: () => (
-      <div className="w-full text-center flex-1">Title</div>
-    ),
-    cell: ({ row }) => (
-      <div className="text-center flex-1 text-lg font-bold">{row.original.title}</div>
-    ),
-    enableHiding: false,
-  },
-  {
-    accessorKey: "genre",
-    header: () => (
-      <div className="w-full text-center">Genre</div>
-    ),
-    cell: ({ row }) => (
-      <div className="w-full flex justify-center">
-        <div className="flex flex-wrap gap-2 justify-center items-center max-w-60">
-          {row.original.genre.map((genre, idx) => (
-            <Badge
-              key={idx}
-              variant="outline"
-              className="px-1.5 text-muted-foreground"
-            >
-              {genre}
-            </Badge>
-          ))}
+function getGameTableColumns(nav: ReturnType<typeof useNavigate>): ColumnDef<z.infer<typeof schema>>[] {
+  return [
+    {
+      accessorKey: "cover",
+      header: () => (
+        <div className="text-center">Cover</div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex justify-center items-center">
+          <img
+            src={"/" + row.original.cover}
+            alt={row.original.title}
+            className="h-48 max-w-full object-contain min-w-32"
+          />
         </div>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "rating",
-    header: () => (
-      <div className="w-full text-center flex-1">Rating</div>
-    ),
-    cell: ({ row }) => (
-      <div className="text-center flex-1">{row.original.rating}</div>
-    ),
-  },
-  {
-    accessorKey: "downloads",
-    header: () => (
-      <div className="w-full text-center flex-1">Downloads</div>
-    ),
-    cell: ({ row }) => (
-      <div className="text-center flex-1">{row.original.downloads}</div>
-    ),
-  },
-  {
-    accessorKey: "reviews",
-    header: () => (
-      <div className="w-full text-center flex-1">Reviews</div>
-    ),
-    cell: ({ row }) => (
-      <div className="text-center flex-1">{row.original.reviews}</div>
-    ),
-  },
-  {
-    id: "actions",
-    cell: () => (
-      <div className="flex justify-center">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="flex text-muted-foreground data-[state=open]:bg-muted"
-              size="icon"
-            >
-              <MoreVerticalIcon />
-              <span className="sr-only">Open menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="mr-4 -mt-4">
-            <DropdownMenuItem onClick={(e) => {
-              e.stopPropagation()
-            }}>Edit</DropdownMenuItem>
-            <DropdownMenuItem onClick={(e) => {
-              e.stopPropagation()
-            }}>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    ),
-  },
-]
+      ),
+      enableHiding: false,
+      enableSorting: false,
+    },
+    {
+      accessorKey: "title",
+      header: () => (
+        <div className="w-full text-center flex-1">Title</div>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center flex-1 text-lg font-bold">{row.original.title}</div>
+      ),
+      enableHiding: false,
+    },
+    {
+      accessorKey: "genre",
+      header: () => (
+        <div className="w-full text-center">Genre</div>
+      ),
+      cell: ({ row }) => (
+        <div className="w-full flex justify-center">
+          <div className="flex flex-wrap gap-2 justify-center items-center max-w-60">
+            {row.original.genre.map((genre, idx) => (
+              <Badge
+                key={idx}
+                variant="outline"
+                className="px-1.5 text-muted-foreground"
+              >
+                {genre}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "rating",
+      header: () => (
+        <div className="w-full text-center flex-1">Rating</div>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center flex-1">{row.original.rating}</div>
+      ),
+    },
+    {
+      accessorKey: "downloads",
+      header: () => (
+        <div className="w-full text-center flex-1">Downloads</div>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center flex-1">{row.original.downloads}</div>
+      ),
+    },
+    {
+      accessorKey: "reviews",
+      header: () => (
+        <div className="w-full text-center flex-1">Reviews</div>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center flex-1">{row.original.reviews}</div>
+      ),
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="flex text-muted-foreground data-[state=open]:bg-muted"
+                size="icon"
+              >
+                <MoreVerticalIcon />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="mr-4 -mt-4">
+              <DropdownMenuItem
+                onClick={() => nav(`/game/${row.original.id}`)}
+              >Go to Game Page</DropdownMenuItem>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DeleteGameDialog title={row.original.title} />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      ),
+    },
+  ]
+}
 
 function MainTableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
-  const nav = useNavigate()
-
   return (
     <TableRow
-      onClick={() => nav(`/game/${row.original.id}`)}
       data-state={row.getIsSelected() && "selected"}
-      className="relative z-0 cursor-pointer"
+      className="relative z-0"
     >
       {row.getVisibleCells().map((cell) => (
         <TableCell key={cell.id} className="text-center">
@@ -212,6 +211,9 @@ export function DataTable({
     pageIndex: 0,
     pageSize: 10,
   })
+
+  const nav = useNavigate()
+  const columns = getGameTableColumns(nav)
 
   const table = useReactTable({
     data,
