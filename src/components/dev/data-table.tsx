@@ -61,6 +61,8 @@ import { useNavigate } from "react-router"
 import { Input } from "../ui/input"
 import { DevNews } from "./dev-news"
 import { DeleteGameDialog } from "./delete-game-dialog"
+import { NewsForm } from "./news-form"
+import { DialogTrigger } from "../ui/dialog"
 
 export const schema = z.object({
   id: z.number(),
@@ -316,11 +318,15 @@ export function DataTable({
               <span className="lg:hidden">Add</span>
             </Button>
           ) : (
-            <Button size="sm">
-              <PlusIcon />
-              <span className="hidden lg:inline">Add News</span>
-              <span className="lg:hidden">Add</span>
-            </Button>
+            <NewsForm trigger={
+              <DialogTrigger>
+                <Button size="sm">
+                  <PlusIcon />
+                  <span className="hidden lg:inline">Add News</span>
+                  <span className="lg:hidden">Add</span>
+                </Button>
+              </DialogTrigger>
+            } />
           )}
         </div>
       </div>
