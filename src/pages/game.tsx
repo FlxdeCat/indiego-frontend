@@ -14,6 +14,7 @@ function Game() {
 
   const auth = true //TEMP
   const external = true //TEMP
+  const sub = true //TEMP
   const [favorite, setFavorite] = useState(false) //TEMP
 
   const { id } = useParams()
@@ -86,7 +87,11 @@ function Game() {
                 </div>
               }
               {auth ?
-                <Button><Download />Download</Button> :
+                sub ?
+                  <Button><Download />Download</Button> :
+                  <div className="cursor-not-allowed">
+                    <Button disabled><Download />Subscribe to Download</Button>
+                  </div> :
                 <div className="cursor-not-allowed">
                   <Button disabled><Download />Login to Download</Button>
                 </div>

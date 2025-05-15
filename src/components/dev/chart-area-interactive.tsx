@@ -170,13 +170,13 @@ export function ChartAreaInteractive() {
             variant="outline"
             className="@[767px]/card:flex hidden"
           >
-            <ToggleGroupItem value="90d" className="h-8 px-2.5">
+            <ToggleGroupItem value="90d" className="h-8 px-4">
               Last 3 months
             </ToggleGroupItem>
-            <ToggleGroupItem value="30d" className="h-8 px-2.5">
+            <ToggleGroupItem value="30d" className="h-8 px-4">
               Last 30 days
             </ToggleGroupItem>
-            <ToggleGroupItem value="7d" className="h-8 px-2.5">
+            <ToggleGroupItem value="7d" className="h-8 px-4">
               Last 7 days
             </ToggleGroupItem>
           </ToggleGroup>
