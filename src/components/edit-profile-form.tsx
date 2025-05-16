@@ -33,31 +33,31 @@ const EditProfileFormSchema = z.object({
   dob: z.date({
     required_error: "A date of birth is required",
   }).refine((date) => {
-    const today = new Date();
-    const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
-    return date <= minDate;
-  }, { 
+    const today = new Date()
+    const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate())
+    return date <= minDate
+  }, {
     message: "You must be at least 13 years old",
   }),
-  })
+})
 
-export function EditProfileForm(){
+export function EditProfileForm() {
 
   const editProfileForm = useForm<z.infer<typeof EditProfileFormSchema>>({
     resolver: zodResolver(EditProfileFormSchema),
-      defaultValues: {
-        username: "Username",
-        dob: new Date(1325350800 * 1000),
-      }
-    })
-  
-    function onEditProfileSubmit(data: z.infer<typeof EditProfileFormSchema>) {
-      const formattedData = {
-        ...data,
-        dob: Math.floor(new Date(data.dob).getTime() / 1000)
-      }
-      console.log(JSON.stringify(formattedData, null, 2))
+    defaultValues: {
+      username: "Username",
+      dob: new Date(1325350800 * 1000),
     }
+  })
+
+  function onEditProfileSubmit(data: z.infer<typeof EditProfileFormSchema>) {
+    const formattedData = {
+      ...data,
+      dob: Math.floor(new Date(data.dob).getTime() / 1000)
+    }
+    console.log(JSON.stringify(formattedData, null, 2))
+  }
 
   return (
     <Dialog>

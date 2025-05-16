@@ -30,7 +30,6 @@ function Profile() {
     if (file) {
       const url = URL.createObjectURL(file)
       setImageUrl(url)
-      console.log(file)
     }
   }
 

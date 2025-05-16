@@ -40,9 +40,9 @@ const RegisterFormSchema = z.object({
   dob: z.date({
     required_error: "A date of birth is required",
   }).refine((date) => {
-    const today = new Date();
-    const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
-    return date <= minDate;
+    const today = new Date()
+    const minDate = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate())
+    return date <= minDate
   }, {
     message: "You must be at least 13 years old",
   }),

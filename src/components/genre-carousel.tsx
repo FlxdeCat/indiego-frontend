@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router"
 
 export function GenreCarousel() {
   const nav = useNavigate()

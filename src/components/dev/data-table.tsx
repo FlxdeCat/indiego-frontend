@@ -62,7 +62,7 @@ import { Input } from "../ui/input"
 import { DevNews } from "./dev-news"
 import { DeleteGameDialog } from "./delete-game-dialog"
 import { NewsForm } from "./news-form"
-import { DialogTrigger } from "../ui/dialog"
+import { Dialog } from "../ui/dialog"
 
 export const schema = z.object({
   id: z.number(),
@@ -242,6 +242,8 @@ export function DataTable({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
+  const [isAddNewsOpen, setAddNewsOpen] = React.useState(false)
+
   return (
     <Tabs
       value={activeTab}
@@ -318,15 +320,16 @@ export function DataTable({
               <span className="lg:hidden">Add</span>
             </Button>
           ) : (
-            <NewsForm trigger={
-              <DialogTrigger>
-                <Button size="sm">
-                  <PlusIcon />
-                  <span className="hidden lg:inline">Add News</span>
-                  <span className="lg:hidden">Add</span>
-                </Button>
-              </DialogTrigger>
-            } />
+            <>
+              <Button size="sm" onClick={() => setAddNewsOpen(true)}>
+                <PlusIcon />
+                <span className="hidden lg:inline">Add News</span>
+                <span className="lg:hidden">Add</span>
+              </Button>
+              <Dialog open={isAddNewsOpen} onOpenChange={setAddNewsOpen}>
+                <NewsForm onSubmit={() => setAddNewsOpen(false)} />
+              </Dialog>
+            </>
           )}
         </div>
       </div>

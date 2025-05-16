@@ -18,6 +18,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "../ui/button"
 import { MoreVerticalIcon } from "lucide-react"
 import { DeleteNewsDialog } from "./delete-news-dialog"
+import { NewsForm } from "./news-form"
+import { useEffect, useState } from "react"
 
 export function DevNews() {
 
@@ -56,16 +58,22 @@ export function DevNews() {
     },
   ]
 
+  const [editingIndex, setEditingIndex] = useState<number | null>(null)
+
+  useEffect(() => {
+    console.log(editingIndex)
+  }, [editingIndex])
+
   return (
     <div className="flex flex-col items-center w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         {newss.map((news, index) => (
-          <div className="relative m-0 p-0">
-            <Dialog key={index}>
+          <div key={index} className="relative m-0 p-0">
+            <Dialog>
               <DialogTrigger asChild>
                 <div className="flex flex-col sm:flex-row justify-center items-center w-full hover:bg-muted/50 cursor-pointer border-2 rounded-md">
                   <div className="flex-2 lg:flex-1">
-                    <img src={news.image} alt="Holocure" className="object-cover h-auto rounded-l-sm" />
+                    <img src={news.image} alt={news.dev} className="object-cover h-auto rounded-l-sm" />
                   </div>
                   <div className="flex-2 text-start flex flex-col gap-2 py-2 pl-8 pr-12 w-full">
                     <div className="flex flex-col gap-1">
@@ -90,7 +98,7 @@ export function DevNews() {
                 <ScrollArea className="flex-1 max-h-[90vh] overflow-auto pr-4">
                   <div className="flex flex-col space-y-4">
                     <div className="font-bold text-2xl">{news.title}</div>
-                    <img src={news.image} alt="Holocure" className="aspect-[2/1] object-cover rounded-md" />
+                    <img src={news.image} alt={news.dev} className="aspect-[2/1] object-cover rounded-md" />
                     <div>
                       {news.content.split("\n").map((line, i) => (
                         <p key={i} className="whitespace-pre-wrap">
@@ -102,6 +110,7 @@ export function DevNews() {
                 </ScrollArea>
               </DialogContent>
             </Dialog>
+
             <div className="flex justify-center absolute bottom-2 sm:top-2 right-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -115,7 +124,15 @@ export function DevNews() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="mr-4 -mt-4">
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault()
+                      setEditingIndex(index)
+                    }}
+                    className="w-full"
+                  >
+                    Edit
+                  </DropdownMenuItem>
                   <DeleteNewsDialog title={news.title} />
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -123,13 +140,30 @@ export function DevNews() {
           </div>
         ))}
       </div>
+
+      <Dialog
+        open={editingIndex !== null}
+        onOpenChange={(open) => {
+          if (!open) setEditingIndex(null)
+        }}
+      >
+        {editingIndex !== null && (
+          <NewsForm
+            news={newss[editingIndex]}
+            onSubmit={() => setEditingIndex(null)}
+          />
+        )}
+      </Dialog>
+
       <Pagination className="mt-6">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious href="/" />
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink href="/" isActive>1</PaginationLink>
+            <PaginationLink href="/" isActive>
+              1
+            </PaginationLink>
           </PaginationItem>
           <PaginationItem>
             <PaginationLink href="/">2</PaginationLink>
