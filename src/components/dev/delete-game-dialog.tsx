@@ -7,23 +7,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { toast } from "sonner"
-import { DropdownMenuItem } from "../ui/dropdown-menu"
 
-export function DeleteGameDialog({ title }: { title: string }) {
+export function DeleteGameDialog({ open, onOpenChange, title }: { open: boolean, onOpenChange: (open: boolean) => void, title: string }) {
   return (
-    <AlertDialog>
-      <DropdownMenuItem
-        onSelect={(e) => e.preventDefault()}
-        asChild
-        className="w-full"
-      >
-        <AlertDialogTrigger>
-          Delete
-        </AlertDialogTrigger>
-      </DropdownMenuItem>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure to delete {title}?</AlertDialogTitle>
