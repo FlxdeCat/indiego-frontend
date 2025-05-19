@@ -63,16 +63,7 @@ import { DevNews } from "./dev-news"
 import { DeleteGameDialog } from "./delete-game-dialog"
 import { NewsForm } from "./news-form"
 import { Dialog } from "../ui/dialog"
-
-export const schema = z.object({
-  id: z.number(),
-  cover: z.string(),
-  title: z.string(),
-  genre: z.array(z.string()),
-  rating: z.number(),
-  downloads: z.number(),
-  reviews: z.number(),
-})
+import { schema } from '../../schema/data-table.schema'
 
 function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<z.infer<typeof schema>>[] {
   return [
