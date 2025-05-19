@@ -163,7 +163,11 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
               >
                 Go to Game Page
               </DropdownMenuItem>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => nav(`/developer/game/${row.original.id}`)}
+              >
+                Edit
+              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <button
                   className="w-full text-left"
@@ -320,7 +324,7 @@ export function DataTable({
               </>
             )}
             {activeTab === "games" ? (
-              <Button size="sm">
+              <Button size="sm" onClick={() => nav(`/developer/game`)}>
                 <PlusIcon />
                 <span className="hidden lg:inline">Add Game</span>
                 <span className="lg:hidden">Add</span>
