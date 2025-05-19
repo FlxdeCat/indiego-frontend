@@ -62,8 +62,8 @@ export function NewsForm({ news, onSubmit }: { news?: News, onSubmit?: () => voi
   return (
     <DialogContent className="sm:max-w-xl md:max-w-2xl max-h-[95vh] flex flex-col gap-2 justify-start overflow-auto">
       <DialogHeader>
-        <DialogTitle>Add News</DialogTitle>
-        <DialogDescription>Please fill out the form to add news.</DialogDescription>
+        <DialogTitle>{news ? "Edit News" : "Add News"}</DialogTitle>
+        <DialogDescription>{news ? "Please update the form to edit news." : "Please fill out the form to add news."}</DialogDescription>
       </DialogHeader>
       <Form {...newsForm}>
         <form onSubmit={newsForm.handleSubmit(onNewsFormSubmit)} className="space-y-4 flex flex-col mt-2">

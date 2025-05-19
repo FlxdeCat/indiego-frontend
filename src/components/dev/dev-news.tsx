@@ -19,7 +19,7 @@ import { Button } from "../ui/button"
 import { MoreVerticalIcon } from "lucide-react"
 import { DeleteNewsDialog } from "./delete-news-dialog"
 import { NewsForm } from "./news-form"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 export function DevNews() {
 
@@ -59,10 +59,8 @@ export function DevNews() {
   ]
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
-
-  useEffect(() => {
-    console.log(editingIndex)
-  }, [editingIndex])
+  const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null)
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -112,7 +110,12 @@ export function DevNews() {
             </Dialog>
 
             <div className="flex justify-center absolute bottom-2 sm:top-2 right-2">
-              <DropdownMenu>
+              <DropdownMenu
+                open={openDropdownIndex === index}
+                onOpenChange={(open) => {
+                  setOpenDropdownIndex(open ? index : null)
+                }}
+              >
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
@@ -124,36 +127,38 @@ export function DevNews() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="mr-4 -mt-4">
-                  <DropdownMenuItem
-                    onSelect={(e) => {
-                      e.preventDefault()
-                      setEditingIndex(index)
-                    }}
-                    className="w-full"
-                  >
-                    Edit
+                  <DropdownMenuItem asChild>
+                    <button
+                      className="w-full text-left"
+                      onClick={() => {
+                        setOpenDropdownIndex(null)
+                        setTimeout(() => {
+                          setEditingIndex(index)
+                        }, 10)
+                      }}
+                    >
+                      Edit
+                    </button>
                   </DropdownMenuItem>
-                  <DeleteNewsDialog title={news.title} />
+                  <DropdownMenuItem asChild>
+                    <button
+                      className="w-full text-left"
+                      onClick={() => {
+                        setOpenDropdownIndex(null)
+                        setTimeout(() => {
+                          setDeleteIndex(index)
+                        }, 10)
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
           </div>
         ))}
       </div>
-
-      <Dialog
-        open={editingIndex !== null}
-        onOpenChange={(open) => {
-          if (!open) setEditingIndex(null)
-        }}
-      >
-        {editingIndex !== null && (
-          <NewsForm
-            news={newss[editingIndex]}
-            onSubmit={() => setEditingIndex(null)}
-          />
-        )}
-      </Dialog>
 
       <Pagination className="mt-6">
         <PaginationContent>
@@ -179,6 +184,28 @@ export function DevNews() {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
+
+      <Dialog
+        open={editingIndex !== null}
+        onOpenChange={(open) => {
+          if (!open) setEditingIndex(null)
+        }}
+      >
+        {editingIndex !== null && (
+          <NewsForm
+            news={newss[editingIndex]}
+            onSubmit={() => setEditingIndex(null)}
+          />
+        )}
+      </Dialog>
+
+      <DeleteNewsDialog
+        open={deleteIndex !== null}
+        title={deleteIndex !== null ? newss[deleteIndex].title : ""}
+        onOpenChange={(open) => {
+          if (!open) setDeleteIndex(null)
+        }}
+      />
     </div>
   )
 }
