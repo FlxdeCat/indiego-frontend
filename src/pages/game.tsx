@@ -22,7 +22,7 @@ function Game() {
   const game = {
     title: "Holocure",
     desc: "Play as your favorite Vtubers from Hololive! Fight, explore, and clear your way through armies of fans and save them from their mind-control in this unofficial free fan-game.",
-    image: "/holocure.png",
+    cover: "/holocure.png",
     banners: ["/holocure-banner.png", "/holocure-1.png", "/holocure-2.png", "/holocure-3.png", "/holocure-4.png", "/holocure-5.png"],
     dev: "Hololive",
     genres: ["Action", "Comedy"],
@@ -60,7 +60,7 @@ function Game() {
             <GameBannerCarousel banners={game.banners} />
           </div>
           <div className="flex-1 flex flex-col space-y-4 items-center">
-            <img src={game.image} alt={game.title} className="aspect-[4/5] object-cover rounded-md w-full max-w-76" />
+            <img src={game.cover} alt={game.title} className="aspect-[4/5] object-cover rounded-md w-full max-w-76" />
             <div className="flex flex-col space-y-1 items-center lg:items-start">
               <h1 className="font-bold text-xl">{game.title} {id} ({game.stars} ★)</h1>
               <h4 className="font-bold">{game.dev}</h4>

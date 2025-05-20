@@ -12,16 +12,13 @@ import {
 } from "@/components/ui/sidebar"
 import { Search } from "lucide-react"
 import { Checkbox } from "./ui/checkbox"
+import { genres } from "../schema/temp"
 
 export function BrowseSidebar() {
-  const genres = [
-    "Action", "Adventure", "RPG", "Shooter", "Fighting", "Platformer", "Survival", "Horror", "Stealth", "Puzzle", "Simulation", "Strategy", "Turn-Based Strategy", "Real-Time Strategy", "Card Game", "MOBA", "Battle Royale", "MMORPG", "Sandbox", "Roguelike", "Visual Novel", "Rhythm", "Sports", "Racing", "Party", "Casual", "Idle", "Educational"
-  ]
-
   const [genreSearch, setGenreSearch] = useState("")
   const [checkedGenres, setCheckedGenres] = useState(new Set())
 
-  const filteredGenres = genres.filter((genre) =>
+  const filteredGenres = genres.filter((genre: string) =>
     genre.toLowerCase().includes(genreSearch.toLowerCase())
   )
 

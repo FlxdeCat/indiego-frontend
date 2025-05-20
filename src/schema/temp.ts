@@ -1,0 +1,1 @@
+export const genres = ["Action", "Adventure", "RPG", "Shooter", "Fighting", "Platformer", "Survival", "Horror", "Stealth", "Puzzle", "Simulation", "Strategy", "Turn-Based Strategy", "Real-Time Strategy", "Card Game", "MOBA", "Battle Royale", "MMORPG", "Sandbox", "Roguelike", "Visual Novel", "Rhythm", "Sports", "Racing", "Party", "Casual", "Idle", "Educational"]
