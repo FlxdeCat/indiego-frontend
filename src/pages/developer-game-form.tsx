@@ -12,6 +12,7 @@ import * as z from "zod"
 import { useEffect, useState } from "react"
 import { genres } from "../schema/temp"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Search } from "lucide-react"
 
 const GameFormSchema = z.object({
   title: z.string().min(1, "Title must not be empty"),
@@ -56,6 +57,8 @@ function DeveloperGameForm() {
       setBannersUrl(watchBanners.map(file => URL.createObjectURL(file)))
     }
   }, [watchBanners])
+
+  const [genreSearch, setGenreSearch] = useState("")
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -162,28 +165,42 @@ function DeveloperGameForm() {
                         <DialogTitle>Select Genres</DialogTitle>
                         <DialogDescription>Filter and choose genres to describe your game.</DialogDescription>
                       </DialogHeader>
+                      <div className="relative">
+                        <Input
+                          id="search"
+                          placeholder="Search for genre"
+                          className="pl-8"
+                          value={genreSearch}
+                          onChange={(e) => setGenreSearch(e.target.value)}
+                        />
+                        <Search className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none opacity-100" />
+                      </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {genres.map((genre) => {
-                          const isSelected = gameForm.getValues("genres").includes(genre)
-                          return (
-                            <div
-                              key={genre}
-                              className={`
-                                p-2 rounded cursor-pointer text-center font-bold
-                                ${isSelected ? 'bg-primary text-primary-foreground hover:bg-primary/80' : 'bg-muted/50 hover:bg-muted'}
-                              `}
-                              onClick={() => {
-                                const current = gameForm.getValues("genres")
-                                const updated = isSelected
-                                  ? current.filter(g => g !== genre)
-                                  : [...current, genre]
-                                gameForm.setValue("genres", updated)
-                              }}
-                            >
-                              {genre}
-                            </div>
+                        {genres
+                          .filter((genre) =>
+                            genre.toLowerCase().includes(genreSearch.toLowerCase())
                           )
-                        })}
+                          .map((genre) => {
+                            const isSelected = gameForm.getValues("genres").includes(genre)
+                            return (
+                              <div
+                                key={genre}
+                                className={`
+                                  p-2 rounded cursor-pointer text-center font-bold
+                                  ${isSelected ? 'bg-primary text-primary-foreground hover:bg-primary/80' : 'bg-muted/50 hover:bg-muted'}
+                                `}
+                                onClick={() => {
+                                  const current = gameForm.getValues("genres")
+                                  const updated = isSelected
+                                    ? current.filter(g => g !== genre)
+                                    : [...current, genre]
+                                  gameForm.setValue("genres", updated)
+                                }}
+                              >
+                                {genre}
+                              </div>
+                            )
+                          })}
                       </div>
                     </DialogContent>
                   </Dialog>
