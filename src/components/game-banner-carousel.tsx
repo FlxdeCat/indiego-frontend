@@ -59,6 +59,7 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
                       src={image}
                       className="w-full rounded-md object-cover aspect-[7/4]"
                       alt={`Game banner ${index + 1}`}
+                      loading="lazy"
                     />
                   </CardContent>
                 </Card>
@@ -88,6 +89,7 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
                   src={image}
                   className="object-cover w-full h-full"
                   alt={`Thumbnail ${index + 1}`}
+                  loading="lazy"
                 />
                 {index === current && (
                   <div className="absolute inset-0 border-2 border-foreground rounded-md" />

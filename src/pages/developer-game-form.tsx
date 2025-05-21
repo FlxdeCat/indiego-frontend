@@ -12,22 +12,25 @@ import * as z from "zod"
 import { useEffect, useState } from "react"
 import { genres } from "../schema/temp"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Search } from "lucide-react"
+import { Plus, Search } from "lucide-react"
+import { GenreList } from "@/components/dev/dev-genre-list"
+import { DevGameBannerCarousel } from "@/components/dev/dev-game-banner-carousel"
 
 const GameFormSchema = z.object({
   title: z.string().min(1, "Title must not be empty"),
   desc: z.string().min(1, "Description must not be empty"),
-  cover: z.instanceof(File),
-  banners: z.array(z.instanceof(File)).min(1, "At least one banner image must be provided"),
+  cover: z.instanceof(File, { message: "Cover image must be provided" }),
+  banners: z
+    .array(z.instanceof(File, { message: "Each banner must be an image" }))
+    .min(1, "At least one banner image must be provided"),
   genres: z.array(z.string()).min(1, "Genre must not be empty"),
-  external: z.string().url("Invalid URL"),
-  file: z.instanceof(File),
+  external: z.string().url("Invalid URL").or(z.literal("")),
+  file: z.instanceof(File, { message: "Downloadable file must be provided" }),
 })
 
 function DeveloperGameForm() {
   const { id } = useParams()
   const [coverUrl, setCoverUrl] = useState<string>()
-  const [bannersUrl, setBannersUrl] = useState<string[]>([])
   const [genreDialogOpen, setGenreDialogOpen] = useState(false)
 
   const gameForm = useForm<z.infer<typeof GameFormSchema>>({
@@ -44,7 +47,6 @@ function DeveloperGameForm() {
   })
 
   const watchCover = gameForm.watch("cover")
-  const watchBanners = gameForm.watch("banners")
 
   useEffect(() => {
     if (watchCover instanceof File) {
@@ -52,21 +54,15 @@ function DeveloperGameForm() {
     }
   }, [watchCover])
 
-  useEffect(() => {
-    if (Array.isArray(watchBanners) && watchBanners.every(f => f instanceof File)) {
-      setBannersUrl(watchBanners.map(file => URL.createObjectURL(file)))
-    }
-  }, [watchBanners])
-
   const [genreSearch, setGenreSearch] = useState("")
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) gameForm.setValue("file", file)
+    if (file) gameForm.setValue("file", file, { shouldValidate: true })
   }
 
   const onGameFormSubmit = (data: z.infer<typeof GameFormSchema>) => {
-    console.log(JSON.stringify(data, null, 2))
+    console.log(data)
   }
 
   return (
@@ -77,58 +73,72 @@ function DeveloperGameForm() {
           <h1 className="text-center lg:text-left text-2xl font-bold">Add Game</h1>
         </div>
         <Form {...gameForm}>
-          <form onSubmit={gameForm.handleSubmit(onGameFormSubmit)} className="flex flex-col gap-4 items-center w-full max-w-7xl">
+          <form onSubmit={gameForm.handleSubmit(onGameFormSubmit)} className="flex flex-col gap-4 items-center w-full max-w-7xl mb-4">
             <div className="flex flex-col lg:flex-row items-center gap-8 w-full mt-4">
               <div className="flex-3 w-full min-w-0">
-                <div className="grid grid-cols-2 gap-2">
-                  {bannersUrl.map((src, idx) => (
-                    <img
-                      key={idx}
-                      src={src}
-                      alt={`Banner ${idx + 1}`}
-                      className="aspect-[7/4] object-cover rounded-md"
-                    />
-                  ))}
-                  <label className="bg-gray-200 aspect-[7/4] flex items-center justify-center rounded-md cursor-pointer">
-                    +
-                    <input
-                      type="file"
-                      multiple
-                      className="hidden"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const files = Array.from(e.target.files || [])
-                        gameForm.setValue("banners", files as any)
-                      }}
-                    />
-                  </label>
-                </div>
+                <FormField
+                  control={gameForm.control}
+                  name="banners"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <div className="w-full overflow-x-auto">
+                          <DevGameBannerCarousel
+                            banners={field.value.map((file: File) =>
+                              URL.createObjectURL(file)
+                            )}
+                            onAddBanners={(newFiles) => {
+                              field.onChange([...field.value, ...newFiles])
+                            }}
+                            onRemoveBanner={(index) => {
+                              const updated = [...field.value]
+                              updated.splice(index, 1)
+                              field.onChange(updated)
+                            }}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <div className="flex-1 flex flex-col space-y-4 items-center">
-                <label className="w-full">
-                  {coverUrl ? (
-                    <img
-                      src={coverUrl}
-                      className="aspect-[4/5] object-cover rounded-md w-full max-w-76"
-                      alt="Cover"
-                    />
-                  ) : (
-                    <div className="bg-gray-200 aspect-[4/5] flex items-center justify-center rounded-md w-full max-w-76">
-                      +
-                    </div>
+                <FormField
+                  control={gameForm.control}
+                  name="cover"
+                  render={() => (
+                    <FormItem className="w-full flex flex-col justify-center">
+                      <FormControl>
+                        <label className="w-full relative cursor-pointer max-w-76">
+                          {coverUrl ? (
+                            <>
+                              <img src={coverUrl} className="aspect-[4/5] object-cover rounded-md w-full max-w-76" alt="Cover" />
+                              <div className="absolute inset-0 bg-black/0 rounded-md flex items-center justify-center opacity-0 hover:opacity-100 hover:bg-black/70">
+                                <Plus />
+                              </div>
+                            </>
+                          ) : (
+                            <div className="bg-muted/70 aspect-[4/5] flex items-center justify-center rounded-md w-full max-w-76 cursor-pointer hover:bg-muted">
+                              <Plus />
+                            </div>
+                          )}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              gameForm.setValue("cover", file as any, { shouldValidate: true })
+                            }}
+                          />
+                        </label>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    {...gameForm.register("cover")}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) gameForm.setValue("cover", file)
-                    }}
-                  />
-                </label>
+                />
 
                 <div className="flex flex-col gap-4 items-center lg:items-start w-full">
                   <FormField
@@ -155,74 +165,74 @@ function DeveloperGameForm() {
                       </FormItem>
                     )}
                   />
-
-                  <Dialog open={genreDialogOpen} onOpenChange={setGenreDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" className="w-full">Genres</Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-sm max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>Select Genres</DialogTitle>
-                        <DialogDescription>Filter and choose genres to describe your game.</DialogDescription>
-                      </DialogHeader>
-                      <div className="relative">
-                        <Input
-                          id="search"
-                          placeholder="Search for genre"
-                          className="pl-8"
-                          value={genreSearch}
-                          onChange={(e) => setGenreSearch(e.target.value)}
-                        />
-                        <Search className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none opacity-100" />
+                  <div className="flex flex-col gap-2 w-full">
+                    <Dialog open={genreDialogOpen} onOpenChange={setGenreDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className={`w-full ${gameForm.formState.errors.genres && "!border-red-500"}`}>Genres</Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-sm max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>Select Genres</DialogTitle>
+                          <DialogDescription>Filter and choose genres to describe your game.</DialogDescription>
+                        </DialogHeader>
+                        <div className="relative">
+                          <Input
+                            id="search"
+                            placeholder="Search for genre"
+                            className="pl-8"
+                            value={genreSearch}
+                            autoComplete="off"
+                            onChange={(e) => setGenreSearch(e.target.value)}
+                          />
+                          <Search className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none opacity-100" />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <GenreList
+                            genres={genres}
+                            selected={gameForm.watch("genres")}
+                            search={genreSearch}
+                            onToggle={(genre) => {
+                              const current = gameForm.getValues("genres")
+                              const updated = current.includes(genre)
+                                ? current.filter((g) => g !== genre)
+                                : [...current, genre]
+                              gameForm.setValue("genres", updated, { shouldValidate: true })
+                            }}
+                          />
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                    <div>
+                      <FormField
+                        control={gameForm.control}
+                        name="genres"
+                        render={() => (
+                          <FormItem className="w-full">
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {gameForm.watch("genres").map((genre, index) => (
+                          <Badge key={index} variant="secondary">{genre}</Badge>
+                        ))}
                       </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {genres
-                          .filter((genre) =>
-                            genre.toLowerCase().includes(genreSearch.toLowerCase())
-                          )
-                          .map((genre) => {
-                            const isSelected = gameForm.getValues("genres").includes(genre)
-                            return (
-                              <div
-                                key={genre}
-                                className={`
-                                  p-2 rounded cursor-pointer text-center font-bold
-                                  ${isSelected ? 'bg-primary text-primary-foreground hover:bg-primary/80' : 'bg-muted/50 hover:bg-muted'}
-                                `}
-                                onClick={() => {
-                                  const current = gameForm.getValues("genres")
-                                  const updated = isSelected
-                                    ? current.filter(g => g !== genre)
-                                    : [...current, genre]
-                                  gameForm.setValue("genres", updated)
-                                }}
-                              >
-                                {genre}
-                              </div>
-                            )
-                          })}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                  <div className="flex flex-wrap gap-2">
-                    {gameForm.watch("genres").map((genre, index) => (
-                      <Badge key={index} variant="secondary">{genre}</Badge>
-                    ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-4 w-full">
-              <div className="flex flex-col items-center justify-center sm:flex-row gap-4">
+              <div className="flex flex-col items-start justify-center sm:flex-row gap-4">
                 <FormField
                   control={gameForm.control}
                   name="external"
                   render={({ field }) => (
                     <FormItem className="flex-1 w-full">
-                      <FormLabel>External Link</FormLabel>
+                      <FormLabel>External Link (Optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="External Link" {...field} />
+                        <Input placeholder="Link to your game page (e.g. Steam or Itch.io)" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -248,7 +258,7 @@ function DeveloperGameForm() {
         </Form>
       </main>
       <Footer />
-    </div>
+    </div >
   )
 }
 
