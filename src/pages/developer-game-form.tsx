@@ -33,14 +33,24 @@ function DeveloperGameForm() {
   const [coverUrl, setCoverUrl] = useState<string>()
   const [genreDialogOpen, setGenreDialogOpen] = useState(false)
 
+  // TEMP
+  let game = undefined
+  if (id) {
+    game = {
+      title: "Holocure",
+      desc: "Play as your favorite Vtubers from Hololive! Fight, explore, and clear your way through armies of fans and save them from their mind-control in this unofficial free fan-game.",
+      genres: ["Action", "Comedy"],
+    }
+  }
+
   const gameForm = useForm<z.infer<typeof GameFormSchema>>({
     resolver: zodResolver(GameFormSchema),
     defaultValues: {
-      title: "",
-      desc: "",
+      title: game?.title ?? "",
+      desc: game?.desc ?? "",
       cover: undefined as any,
       banners: [],
-      genres: [],
+      genres: game?.genres ?? [],
       external: "",
       file: undefined as any,
     },

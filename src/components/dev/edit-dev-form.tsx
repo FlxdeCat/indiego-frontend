@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -22,28 +20,19 @@ import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Checkbox } from "./ui/checkbox"
-import { TermsConditionsDeveloperDialogueContent } from "./terms-conditions-developer-dialog-content"
-import { ReactNode, useEffect, useState } from "react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-
-interface MyComponentProps {
-  button: ReactNode
-}
+import { useEffect, useState } from "react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Pencil } from "lucide-react"
+import { Developer } from "./dev-profile"
 
 const DeveloperFormSchema = z.object({
   name: z.string().min(1, "Name cannot be empty"),
   full_name: z.string().min(1, "Full Name cannot be empty"),
   tax_id: z.string(),
   country: z.string(),
-  terms: z.boolean().default(false),
 })
-  .refine(({ terms }) => terms === true, {
-    message: "You must accept the terms and conditions",
-    path: ["terms"],
-  })
 
-export function NewDeveloper({ button }: MyComponentProps) {
+export function EditDeveloperForm({ dev }: { dev: Developer }) {
 
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -54,17 +43,15 @@ export function NewDeveloper({ button }: MyComponentProps) {
   const developerForm = useForm<z.infer<typeof DeveloperFormSchema>>({
     resolver: zodResolver(DeveloperFormSchema),
     defaultValues: {
-      name: "",
-      full_name: "",
-      tax_id: "",
-      country: "",
-      terms: false,
+      name: dev.name,
+      full_name: dev.full_name,
+      tax_id: dev.tax_id,
+      country: dev.country
     }
   })
 
   function onDeveloperSubmit(data: z.infer<typeof DeveloperFormSchema>) {
     console.log(JSON.stringify(data, null, 2))
-    window.open("/developer", "_blank")
     handleDialogClose()
   }
 
@@ -90,13 +77,13 @@ export function NewDeveloper({ button }: MyComponentProps) {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        {button}
+        <Button><Pencil />Edit Developer</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Become a Game Developer</DialogTitle>
+          <DialogTitle>Edit Developer Data</DialogTitle>
           <DialogDescription>
-            Fill out the details below to become a game developer.
+            Modify the details of your game developer profile below.
           </DialogDescription>
         </DialogHeader>
         <Form {...developerForm}>
@@ -172,42 +159,6 @@ export function NewDeveloper({ button }: MyComponentProps) {
                 )}
               />
             </div>
-            <FormField
-              control={developerForm.control}
-              name="terms"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <div className="flex items-center space-x-1.5">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormLabel className="ml-2">
-                      I agree to the
-                    </FormLabel>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <span className="underline text-primary cursor-pointer text-sm font-bold"> Developer Terms & Conditions</span>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[600px]">
-                        <TermsConditionsDeveloperDialogueContent />
-                        <DialogFooter>
-                          <DialogClose asChild>
-                            <Button onClick={() => {
-                              developerForm.setValue("terms", true)
-                              developerForm.trigger("terms")
-                            }}>Agree</Button>
-                          </DialogClose>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <Button type="submit" className="mt-1">Submit</Button>
           </form>
         </Form>

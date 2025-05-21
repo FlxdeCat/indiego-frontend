@@ -14,7 +14,7 @@ export function Navbar() {
   const nav = useNavigate()
 
   const auth = true // TEMP
-  const dev = true // TEMP
+  const dev = false // TEMP
 
   useEffect(() => {
     const handleScroll = () => {

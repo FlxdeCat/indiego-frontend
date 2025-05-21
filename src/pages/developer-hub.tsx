@@ -1,6 +1,7 @@
 import { ChartAreaInteractive } from "@/components/dev/chart-area-interactive"
 import { DataTable } from "@/components/dev/data-table"
 import { DevNavbar } from "@/components/dev/dev-navbar"
+import { DevProfile } from "@/components/dev/dev-profile"
 import { SectionCards } from "@/components/dev/section-cards"
 import { Footer } from "@/components/footer"
 
@@ -44,7 +45,7 @@ function DeveloperHub() {
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 
             <div className="px-4 lg:px-6">
-              TODO: Dev Profile here
+              <DevProfile />
             </div>
 
             <SectionCards />
