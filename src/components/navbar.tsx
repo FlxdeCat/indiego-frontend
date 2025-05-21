@@ -3,7 +3,7 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { ProfilePopover } from "./profile-popover"
 import { NavMenu } from "./nav-menu"
 import { Button } from "./ui/button"
-import { Gamepad2, MenuIcon } from "lucide-react"
+import { Gamepad2, MenuIcon, UserCog } from "lucide-react"
 import { useNavigate } from "react-router"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet"
 import { NewDeveloper } from "./new-developer"
@@ -14,7 +14,8 @@ export function Navbar() {
   const nav = useNavigate()
 
   const auth = true // TEMP
-  const dev = false // TEMP
+  const dev = true // TEMP
+  const admin = true // TEMP
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,7 +28,7 @@ export function Navbar() {
 
   return (
     <nav
-      className={`px-4 py-3 flex justify-between items-center sticky w-full top-0 z-10 bg-background transition-all duration-150 ${scrolled && "shadow-md shadow-muted-foreground"
+      className={`px-4 py-3 gap-2 flex justify-between items-center sticky w-full top-0 z-10 bg-background transition-all duration-150 ${scrolled && "shadow-md shadow-muted-foreground"
         }`}
     >
       <div className="content-center">
@@ -44,6 +45,7 @@ export function Navbar() {
           <Button variant="outline" onClick={() => window.open("/developer", "_blank")}><Gamepad2 /><span className="hidden sm:flex">Developer Hub</span></Button> :
           <NewDeveloper button={<Button variant="outline"><Gamepad2 /><span className="hidden sm:flex">Become a Game Developer</span></Button>} />
         )}
+        {auth && admin && <Button variant="outline" onClick={() => window.open("/admin", "_blank")}><UserCog /></Button>}
         {auth ? <ProfilePopover /> : <Button onClick={() => nav("/auth")} variant="outline">Login | Register</Button>}
         <Sheet>
           <SheetTrigger asChild>

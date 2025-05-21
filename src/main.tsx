@@ -15,6 +15,7 @@ import Subscription from './pages/subscription.tsx'
 import { SonnerToaster } from './components/sonner-toaster.tsx'
 import DeveloperHub from './pages/developer-hub.tsx'
 import DeveloperGameForm from './pages/developer-game-form.tsx'
+import AdminHub from './pages/admin-hub.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -30,6 +31,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/subscription" element={<Subscription />} />
           <Route path="/developer" element={<DeveloperHub />} />
           <Route path="/developer/game/:id?" element={<DeveloperGameForm />} />
+          <Route path="/admin" element={<AdminHub />} />
         </Routes>
         <SonnerToaster />
       </BrowserRouter>
