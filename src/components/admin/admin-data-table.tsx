@@ -23,7 +23,6 @@ import {
   ChevronUpIcon,
   ColumnsIcon,
   MoreVerticalIcon,
-  PlusIcon,
 } from "lucide-react"
 import { z } from "zod"
 import { Badge } from "@/components/ui/badge"
@@ -59,11 +58,10 @@ import {
 } from "@/components/ui/tabs"
 import { useNavigate } from "react-router"
 import { Input } from "../ui/input"
-import { DevNews } from "@/components/dev/dev-news"
 import { DeleteGameDialog } from "@/components/dev/delete-game-dialog"
-import { NewsForm } from "@/components/dev/news-form"
-import { Dialog } from "../ui/dialog"
 import { schema } from '../../schema/data-table.schema'
+import { AdminNews } from "./admin-news"
+import { AdminSubsTable } from "./admin-subs-table"
 
 function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<z.infer<typeof schema>>[] {
   return [
@@ -163,11 +161,6 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
               >
                 Go to Game Page
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => nav(`/developer/game/${row.original.id}`)}
-              >
-                Edit
-              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <button
                   className="w-full text-left"
@@ -209,7 +202,7 @@ export function AdminDataTable({
   data: z.infer<typeof schema>[]
 }) {
   const [data, _] = React.useState(() => initialData)
-  const [activeTab, setActiveTab] = React.useState<"games" | "news">("games")
+  const [activeTab, setActiveTab] = React.useState<"games" | "news" | "subscriptions">("games")
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -251,20 +244,18 @@ export function AdminDataTable({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  const [isAddNewsOpen, setAddNewsOpen] = React.useState(false)
-
   return (
     <>
       <Tabs
         value={activeTab}
-        onValueChange={(value) => setActiveTab(value as "games" | "news")}
+        onValueChange={(value) => setActiveTab(value as "games" | "news" | "subscriptions")}
         className="flex w-full flex-col justify-start gap-6"
       >
         <div className="flex items-center justify-between px-4 lg:px-6 gap-2">
           <Label htmlFor="view-selector" className="sr-only">
             View
           </Label>
-          <Select value={activeTab} onValueChange={(value) => setActiveTab(value as "games" | "news")}>
+          <Select value={activeTab} onValueChange={(value) => setActiveTab(value as "games" | "news" | "subscriptions")}>
             <SelectTrigger
               className="@4xl/main:hidden flex w-fit"
               id="view-selector"
@@ -274,11 +265,13 @@ export function AdminDataTable({
             <SelectContent>
               <SelectItem value="games">Games</SelectItem>
               <SelectItem value="news">News</SelectItem>
+              <SelectItem value="subscriptions">Subscriptions</SelectItem>
             </SelectContent>
           </Select>
           <TabsList className="@4xl/main:flex hidden">
             <TabsTrigger value="games">Games</TabsTrigger>
             <TabsTrigger value="news">News</TabsTrigger>
+            <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
           </TabsList>
           <div className="flex items-center gap-2">
             {activeTab === "games" && (
@@ -321,24 +314,6 @@ export function AdminDataTable({
                       })}
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </>
-            )}
-            {activeTab === "games" ? (
-              <Button size="sm" onClick={() => nav(`/developer/game`)}>
-                <PlusIcon />
-                <span className="hidden lg:inline">Add Game</span>
-                <span className="lg:hidden">Add</span>
-              </Button>
-            ) : (
-              <>
-                <Button size="sm" onClick={() => setAddNewsOpen(true)}>
-                  <PlusIcon />
-                  <span className="hidden lg:inline">Add News</span>
-                  <span className="lg:hidden">Add</span>
-                </Button>
-                <Dialog open={isAddNewsOpen} onOpenChange={setAddNewsOpen}>
-                  <NewsForm onSubmit={() => setAddNewsOpen(false)} />
-                </Dialog>
               </>
             )}
           </div>
@@ -467,8 +442,14 @@ export function AdminDataTable({
         </TabsContent>
         <TabsContent value="news" className="px-4 lg:px-6">
           <div className="border rounded-lg p-4 text-center">
-            <DevNews />
+            <AdminNews />
           </div>
+        </TabsContent>
+        <TabsContent
+          value="subscriptions"
+          className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+        >
+          <AdminSubsTable data={data} />
         </TabsContent>
       </Tabs>
 

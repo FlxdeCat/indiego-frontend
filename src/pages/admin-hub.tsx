@@ -6,9 +6,40 @@ function AdminHub() {
 
   // admin (set permissions)
   // subscription (refunds -> approve/reject)
+  // reviews (delete)
+
   // news (delete)
   // games (delete)
-  // reviews (delete)
+
+  const games = [
+    {
+      "id": 1,
+      "cover": "holocure.png",
+      "title": "Holocure",
+      "genre": ["Action", "Comedy"],
+      "rating": 4.5,
+      "downloads": 15,
+      "reviews": 0,
+    },
+    {
+      "id": 2,
+      "cover": "holocure.png",
+      "title": "Holocure",
+      "genre": ["Action"],
+      "rating": 4.7,
+      "downloads": 20,
+      "reviews": 9,
+    },
+    {
+      "id": 3,
+      "cover": "holocure.png",
+      "title": "Holocure",
+      "genre": ["Action"],
+      "rating": 3.9,
+      "downloads": 13,
+      "reviews": 3,
+    },
+  ]
 
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
@@ -17,7 +48,7 @@ function AdminHub() {
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
 
-            {/* <AdminDataTable data={data} /> */}
+            <AdminDataTable data={games} />
 
           </div>
         </div>
