@@ -61,6 +61,7 @@ import { Input } from "../ui/input"
 import { DeleteGameDialog } from "@/components/dev/delete-game-dialog"
 import { schema } from '../../schema/data-table.schema'
 import { AdminNews } from "./admin-news"
+import { AdminReviews } from "./admin-reviews"
 
 function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<z.infer<typeof schema>>[] {
   return [
@@ -88,6 +89,16 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
       ),
       cell: ({ row }) => (
         <div className="text-center flex-1 text-lg font-bold">{row.original.title}</div>
+      ),
+      enableHiding: false,
+    },
+    {
+      accessorKey: "developer",
+      header: () => (
+        <div className="w-full text-center flex-1">Developer</div>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center flex-1 text-lg">{row.original.developer}</div>
       ),
       enableHiding: false,
     },
@@ -176,6 +187,7 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
           </DropdownMenu>
         </div>
       ),
+      enableSorting: false,
     },
   ]
 }
@@ -201,7 +213,7 @@ export function AdminDataTable({
   data: z.infer<typeof schema>[]
 }) {
   const [data, _] = React.useState(() => initialData)
-  const [activeTab, setActiveTab] = React.useState<"games" | "news">("games")
+  const [activeTab, setActiveTab] = React.useState<"games" | "news" | "reviews">("games")
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -247,7 +259,7 @@ export function AdminDataTable({
     <>
       <Tabs
         value={activeTab}
-        onValueChange={(value) => setActiveTab(value as "games" | "news")}
+        onValueChange={(value) => setActiveTab(value as "games" | "news" | "reviews")}
         className="flex w-full flex-col justify-start gap-6"
       >
         <div className="flex items-center justify-between px-4 lg:px-6 gap-2">
@@ -264,11 +276,13 @@ export function AdminDataTable({
             <SelectContent>
               <SelectItem value="games">Games</SelectItem>
               <SelectItem value="news">News</SelectItem>
+              <SelectItem value="reviews">Reviews</SelectItem>
             </SelectContent>
           </Select>
           <TabsList className="@4xl/main:flex hidden">
             <TabsTrigger value="games">Games</TabsTrigger>
             <TabsTrigger value="news">News</TabsTrigger>
+            <TabsTrigger value="reviews">Reviews</TabsTrigger>
           </TabsList>
           <div className="flex items-center gap-2">
             {activeTab === "games" && (
@@ -440,6 +454,11 @@ export function AdminDataTable({
         <TabsContent value="news" className="px-4 lg:px-6">
           <div className="border rounded-lg p-4 text-center">
             <AdminNews />
+          </div>
+        </TabsContent>
+        <TabsContent value="reviews" className="px-4 lg:px-6">
+          <div className="border rounded-lg p-4 text-center">
+            <AdminReviews />
           </div>
         </TabsContent>
       </Tabs>

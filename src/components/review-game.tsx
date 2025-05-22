@@ -109,18 +109,18 @@ export function ReviewGame({ reviews }: ReviewGameProps) {
             key={index}
             className="flex flex-col gap-2 px-8 py-4 border-2 rounded-md"
           >
-            <div className="flex flex-col md:flex-row gap-2 md:gap-20">
-              <div className="flex flex-col gap-2">
+            <div className="flex flex-col items-start md:flex-row gap-2 md:gap-20">
+              <div className="flex flex-col gap-2 items-start">
                 <div className="flex items-center gap-4">
                   <User size={44} />
-                  <div className="flex flex-col">
-                    <h4 className="font-bold text-xl">{review.username}</h4>
-                    <h4 className="text-lg">{review.stars} ★</h4>
+                  <div className="flex flex-col items-start">
+                    <h4 className="font-bold text-xl text-start">{review.username}</h4>
+                    <h4 className="text-lg text-start">{review.stars} ★</h4>
                   </div>
                 </div>
                 <div>{convertDate(review.date)}</div>
               </div>
-              <div className="p-0.5">{review.review}</div>
+              <div>{review.review}</div>
             </div>
           </div>
         ))}

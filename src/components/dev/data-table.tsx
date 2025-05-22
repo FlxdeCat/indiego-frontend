@@ -184,6 +184,7 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
           </DropdownMenu>
         </div>
       ),
+      enableSorting: false,
     },
   ]
 }

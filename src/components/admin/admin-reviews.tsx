@@ -1,0 +1,105 @@
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+import { convertDate } from "@/utils/utils"
+import { useState } from "react"
+import { Button } from "../ui/button"
+import { Trash2, User } from "lucide-react"
+import { DeleteReviewsDialog } from "./delete-reviews-dialog"
+
+export function AdminReviews() {
+
+  const reviews = [
+    {
+      username: "Username 1",
+      title: "Holocure",
+      review: "Very good game!",
+      stars: 4,
+      date: "1742963480"
+    },
+    {
+      username: "Username 2",
+      title: "Holocure",
+      review: "Very nice game!",
+      stars: 5,
+      date: "1742963481"
+    },
+    {
+      username: "Username 3",
+      title: "Holocure",
+      review: "Good game!",
+      stars: 4,
+      date: "1742963482"
+    }
+  ]
+
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
+
+  return (
+    <div className="flex flex-col items-center w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        {reviews.map((review, index) => (
+          <div key={index} className="relative m-0 p-0">
+            <div
+              key={index}
+              className="flex flex-col gap-2 pl-8 pr-12 py-4 border-2 rounded-md"
+            >
+              <div className="flex flex-col xl:flex-row gap-2 xl:gap-20 items-start">
+                <div className="flex flex-col gap-2 items-start">
+                  <div className="flex items-center gap-4">
+                    <User size={77} />
+                    <div className="flex flex-col items-start">
+                      <h4 className="font-bold text-xl text-start">{review.username}</h4>
+                      <h4 className="font-bold text-lg text-start">{review.title}</h4>
+                      <h4 className="text-lg text-start">{review.stars} ★</h4>
+                    </div>
+                  </div>
+                  <div>{convertDate(review.date)}</div>
+                </div>
+                <div className="text-start">{review.review}</div>
+              </div>
+            </div>
+
+            <div className="flex justify-center absolute top-2 right-2">
+              <Button variant="destructive" onClick={() => {
+                setDeleteIndex(index)
+              }}><Trash2 /></Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Pagination className="mt-6">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="/" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="/" isActive>
+              1
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="/">2</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="/">3</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="/" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+
+      <DeleteReviewsDialog
+        open={deleteIndex !== null}
+        username={deleteIndex !== null ? reviews[deleteIndex].username : ""}
+        title={deleteIndex !== null ? reviews[deleteIndex].title : ""}
+        onOpenChange={(open) => {
+          if (!open) setDeleteIndex(null)
+        }}
+      />
+    </div>
+  )
+}

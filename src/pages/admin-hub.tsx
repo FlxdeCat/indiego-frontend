@@ -4,17 +4,12 @@ import { Footer } from "@/components/footer"
 
 function AdminHub() {
 
-  // admin (set permissions)
-  // reviews (delete)
-
-  // news (delete)
-  // games (delete)
-
   const games = [
     {
       "id": 1,
       "cover": "holocure.png",
       "title": "Holocure",
+      "developer": "Hololive",
       "genre": ["Action", "Comedy"],
       "rating": 4.5,
       "downloads": 15,
@@ -24,6 +19,7 @@ function AdminHub() {
       "id": 2,
       "cover": "holocure.png",
       "title": "Holocure",
+      "developer": "Hololive",
       "genre": ["Action"],
       "rating": 4.7,
       "downloads": 20,
@@ -33,6 +29,7 @@ function AdminHub() {
       "id": 3,
       "cover": "holocure.png",
       "title": "Holocure",
+      "developer": "Hololive",
       "genre": ["Action"],
       "rating": 3.9,
       "downloads": 13,
