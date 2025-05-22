@@ -5,7 +5,6 @@ import { Footer } from "@/components/footer"
 function AdminHub() {
 
   // admin (set permissions)
-  // subscription (refunds -> approve/reject)
   // reviews (delete)
 
   // news (delete)

@@ -33,7 +33,7 @@ export function TermsConditionsDialogueContent() {
 
         <h3 className="font-semibold mt-4">4. Payment & Refunds</h3>
         <p>
-          Payments are exclusively processed through PayPal. Subscriptions are refundable, subject to specific conditions and eligibility criteria.
+          Payments are exclusively processed through PayPal. All subscription purchases are final and non-refundable, with no exceptions.
         </p>
 
         <h3 className="font-semibold mt-4">5. Reviews and Feedback</h3>

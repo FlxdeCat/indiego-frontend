@@ -61,7 +61,6 @@ import { Input } from "../ui/input"
 import { DeleteGameDialog } from "@/components/dev/delete-game-dialog"
 import { schema } from '../../schema/data-table.schema'
 import { AdminNews } from "./admin-news"
-import { AdminSubsTable } from "./admin-subs-table"
 
 function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<z.infer<typeof schema>>[] {
   return [
@@ -202,7 +201,7 @@ export function AdminDataTable({
   data: z.infer<typeof schema>[]
 }) {
   const [data, _] = React.useState(() => initialData)
-  const [activeTab, setActiveTab] = React.useState<"games" | "news" | "subscriptions">("games")
+  const [activeTab, setActiveTab] = React.useState<"games" | "news">("games")
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -248,14 +247,14 @@ export function AdminDataTable({
     <>
       <Tabs
         value={activeTab}
-        onValueChange={(value) => setActiveTab(value as "games" | "news" | "subscriptions")}
+        onValueChange={(value) => setActiveTab(value as "games" | "news")}
         className="flex w-full flex-col justify-start gap-6"
       >
         <div className="flex items-center justify-between px-4 lg:px-6 gap-2">
           <Label htmlFor="view-selector" className="sr-only">
             View
           </Label>
-          <Select value={activeTab} onValueChange={(value) => setActiveTab(value as "games" | "news" | "subscriptions")}>
+          <Select value={activeTab} onValueChange={(value) => setActiveTab(value as "games" | "news")}>
             <SelectTrigger
               className="@4xl/main:hidden flex w-fit"
               id="view-selector"
@@ -265,13 +264,11 @@ export function AdminDataTable({
             <SelectContent>
               <SelectItem value="games">Games</SelectItem>
               <SelectItem value="news">News</SelectItem>
-              <SelectItem value="subscriptions">Subscriptions</SelectItem>
             </SelectContent>
           </Select>
           <TabsList className="@4xl/main:flex hidden">
             <TabsTrigger value="games">Games</TabsTrigger>
             <TabsTrigger value="news">News</TabsTrigger>
-            <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
           </TabsList>
           <div className="flex items-center gap-2">
             {activeTab === "games" && (
@@ -444,12 +441,6 @@ export function AdminDataTable({
           <div className="border rounded-lg p-4 text-center">
             <AdminNews />
           </div>
-        </TabsContent>
-        <TabsContent
-          value="subscriptions"
-          className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
-        >
-          <AdminSubsTable data={data} />
         </TabsContent>
       </Tabs>
 
