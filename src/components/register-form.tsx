@@ -31,12 +31,30 @@ import { Checkbox } from "./ui/checkbox"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger } from "./ui/dialog"
 import { TermsConditionsDialogueContent } from "./terms-conditions-dialog-content"
 
-const RegisterFormSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+export const RegisterFormSchema = z.object({
+  username: z
+    .string()
+    .min(3, "Name must be between 3 and 100 characters long.")
+    .max(100, "Name must be between 3 and 100 characters long.")
+    .regex(/^[a-zA-Z0-9 ]+$/, "Name can only contain letters, numbers, and spaces."),
+  email: z
+    .string()
+    .nonempty("Email is required.")
+    .email("Invalid email format."),
+  password: z
+    .string()
+    .nonempty("Password is required.")
+    .min(8, "Password must be at least 8 characters long.")
+    .max(100, "Password must be at most 100 characters long.")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter.")
+    .regex(/[0-9]/, "Password must contain at least one number.")
+    .regex(/[\W_]/, "Password must contain at least one special character."),
   confirmPassword: z.string(),
-  terms: z.boolean().default(false),
+  terms: z.boolean().refine((val) => val === true, {
+    message: "You must accept the terms and conditions",
+    path: ["terms"],
+  }),
   dob: z.date({
     required_error: "A date of birth is required",
   }).refine((date) => {
@@ -50,10 +68,6 @@ const RegisterFormSchema = z.object({
   .refine(({ password, confirmPassword }) => password === confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  })
-  .refine(({ terms }) => terms === true, {
-    message: "You must accept the terms and conditions",
-    path: ["terms"],
   })
 
 export function RegisterForm() {

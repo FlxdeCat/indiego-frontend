@@ -29,7 +29,11 @@ import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 
 const EditProfileFormSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
+  username: z
+    .string()
+    .min(3, "Name must be between 3 and 100 characters long.")
+    .max(100, "Name must be between 3 and 100 characters long.")
+    .regex(/^[a-zA-Z0-9 ]+$/, "Name can only contain letters, numbers, and spaces."),
   dob: z.date({
     required_error: "A date of birth is required",
   }).refine((date) => {
