@@ -30,6 +30,10 @@ import { CalendarDOB } from "./calender-dob"
 import { Checkbox } from "./ui/checkbox"
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTrigger } from "./ui/dialog"
 import { TermsConditionsDialogueContent } from "./terms-conditions-dialog-content"
+import { registerApi } from "@/api/auth-api"
+import { toast } from "sonner"
+import { LoadingIcon } from "./loading-icon"
+import { useState } from "react"
 
 export const RegisterFormSchema = z.object({
   username: z
@@ -72,6 +76,8 @@ export const RegisterFormSchema = z.object({
 
 export function RegisterForm() {
 
+  const [loading, setLoading] = useState(false)
+
   const registerForm = useForm<z.infer<typeof RegisterFormSchema>>({
     resolver: zodResolver(RegisterFormSchema),
     defaultValues: {
@@ -84,12 +90,24 @@ export function RegisterForm() {
     }
   })
 
-  function onRegisterSubmit(data: z.infer<typeof RegisterFormSchema>) {
+  async function onRegisterSubmit(data: z.infer<typeof RegisterFormSchema>) {
+    setLoading(true)
+
     const formattedData = {
-      ...data,
-      dob: Math.floor(new Date(data.dob).getTime() / 1000)
+      name: data.username,
+      email: data.email,
+      password: data.password,
+      birthDate: Math.floor(new Date(data.dob).getTime() / 1000).toString()
     }
-    console.log(JSON.stringify(formattedData, null, 2))
+
+    try {
+      await registerApi(formattedData)
+      window.location.href = "/auth"
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Registration failed. Please try again later.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -225,7 +243,10 @@ export function RegisterForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="mt-1">Register</Button>
+            <Button type="submit" className="mt-1" disabled={loading}>
+              {loading && <LoadingIcon />}
+              {loading ? "Registering..." : "Register"}
+            </Button>
           </form>
         </Form>
       </CardContent>

@@ -16,25 +16,58 @@ import { SonnerToaster } from './components/sonner-toaster.tsx'
 import DeveloperHub from './pages/developer-hub.tsx'
 import DeveloperGameForm from './pages/developer-game-form.tsx'
 import AdminHub from './pages/admin-hub.tsx'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { RedirectIfAuthenticated, RequireAuth } from './components/middleware.tsx'
+import { AuthProvider } from './context/auth-context.tsx'
+
+const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/browse" element={<Browse />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/game/:id" element={<Game />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/subscription" element={<Subscription />} />
-          <Route path="/developer" element={<DeveloperHub />} />
-          <Route path="/developer/game/:id?" element={<DeveloperGameForm />} />
-          <Route path="/admin" element={<AdminHub />} />
-        </Routes>
-        <SonnerToaster />
-      </BrowserRouter>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <BrowserRouter>
+            <Routes>
+              <Route path="/auth" element={
+                <RedirectIfAuthenticated>
+                  <Auth />
+                </RedirectIfAuthenticated>
+              } />
+
+              <Route path="/" element={<Home />} />
+              <Route path="/browse" element={<Browse />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/subscription" element={<Subscription />} />
+              <Route path="/game/:id" element={<Game />} />
+
+              <Route path="/profile" element={
+                <RequireAuth>
+                  <Profile />
+                </RequireAuth>
+              } />
+
+              <Route path="/developer" element={
+                <RequireAuth allowedRoles={["developer"]}>
+                  <DeveloperHub />
+                </RequireAuth>
+              } />
+              <Route path="/developer/game/:id?" element={
+                <RequireAuth allowedRoles={["developer"]}>
+                  <DeveloperGameForm />
+                </RequireAuth>
+              } />
+
+              <Route path="/admin" element={
+                <RequireAuth allowedRoles={["admin"]}>
+                  <AdminHub />
+                </RequireAuth>
+              } />
+            </Routes>
+            <SonnerToaster />
+          </BrowserRouter>
+        </ThemeProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   </StrictMode>,
 )

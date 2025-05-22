@@ -7,15 +7,17 @@ import { Gamepad2, MenuIcon, UserCog } from "lucide-react"
 import { useNavigate } from "react-router"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet"
 import { NewDeveloper } from "./new-developer"
+import { useAuth } from "@/context/auth-context"
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const { user, isAuthenticated } = useAuth()
 
   const nav = useNavigate()
 
-  const auth = true // TEMP
-  const dev = true // TEMP
-  const admin = true // TEMP
+  const auth = isAuthenticated
+  const dev = user?.role?.includes("developer") || false
+  const admin = user?.role?.includes("admin") || false
 
   useEffect(() => {
     const handleScroll = () => {

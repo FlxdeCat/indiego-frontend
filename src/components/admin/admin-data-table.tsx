@@ -59,7 +59,7 @@ import {
 import { useNavigate } from "react-router"
 import { Input } from "../ui/input"
 import { DeleteGameDialog } from "@/components/dev/delete-game-dialog"
-import { schema } from '../../schema/data-table.schema'
+import { schema } from '../../schemas/data-table.schema'
 import { AdminNews } from "./admin-news"
 import { AdminReviews } from "./admin-reviews"
 

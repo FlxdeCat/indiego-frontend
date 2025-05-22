@@ -63,7 +63,7 @@ import { DevNews } from "./dev-news"
 import { DeleteGameDialog } from "./delete-game-dialog"
 import { NewsForm } from "./news-form"
 import { Dialog } from "../ui/dialog"
-import { schema } from '../../schema/data-table.schema'
+import { schema } from '../../schemas/data-table.schema'
 
 function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<z.infer<typeof schema>>[] {
   return [

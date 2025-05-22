@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Search } from "lucide-react"
 import { Checkbox } from "./ui/checkbox"
-import { genres } from "../schema/temp"
+import { genres } from "../schemas/temp"
 
 export function BrowseSidebar() {
   const [genreSearch, setGenreSearch] = useState("")
