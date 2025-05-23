@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -27,6 +28,11 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/context/auth-context"
+import { useState } from "react"
+import { LoadingIcon } from "./loading-icon"
+import { updateUser } from "@/api/user-api"
+import { toast } from "sonner"
 
 const EditProfileFormSchema = z.object({
   username: z
@@ -47,30 +53,47 @@ const EditProfileFormSchema = z.object({
 
 export function EditProfileForm() {
 
+  const { user } = useAuth()
+  const [loading, setLoading] = useState(false)
+
   const editProfileForm = useForm<z.infer<typeof EditProfileFormSchema>>({
     resolver: zodResolver(EditProfileFormSchema),
     defaultValues: {
-      username: "Username",
-      dob: new Date(1325350800 * 1000),
+      username: user?.name,
+      dob: new Date(Number(user!.birthDate) * 1000),
     }
   })
 
-  function onEditProfileSubmit(data: z.infer<typeof EditProfileFormSchema>) {
+  async function onEditProfileSubmit(data: z.infer<typeof EditProfileFormSchema>) {
+    setLoading(true)
+
     const formattedData = {
-      ...data,
-      dob: Math.floor(new Date(data.dob).getTime() / 1000)
+      name: data.username,
+      birthDate: Math.floor(new Date(data.dob).getTime() / 1000).toString()
     }
-    console.log(JSON.stringify(formattedData, null, 2))
+
+    try {
+      await updateUser(formattedData)
+      window.location.reload()
+    } catch (err: any) {
+      toast.error(err.message || "Update failed. Please try again later.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button><Pencil />Edit Profile</Button>
+        <Button onClick={() => editProfileForm.reset({
+          username: user?.name,
+          dob: new Date(Number(user!.birthDate) * 1000),
+        })}><Pencil />Edit Profile</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <Form {...editProfileForm}>
           <form onSubmit={editProfileForm.handleSubmit(onEditProfileSubmit)} className="space-y-4 flex flex-col">
@@ -121,7 +144,10 @@ export function EditProfileForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="mt-1">Save</Button>
+            <Button type="submit" className="mt-1" disabled={loading}>
+              {loading && <LoadingIcon />}
+              {loading ? "Saving..." : "Save"}
+            </Button>
           </form>
         </Form>
       </DialogContent>

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router"
 export function ProfilePopover() {
 
   const nav = useNavigate()
-  const { logout } = useAuth()
+  const { user, logout } = useAuth()
 
   return (
     <Popover>
@@ -23,7 +23,7 @@ export function ProfilePopover() {
       <PopoverContent className="w-50 mt-2 mr-4">
         <div className="flex flex-col gap-4 items-center justify-center">
           <User size={90} />
-          <h4 className="font-medium leading-none text-center">Username</h4>
+          <h4 className="font-medium leading-none text-center">{user?.name}</h4>
           <Button onClick={() => nav("/profile")} className="w-full text-white">My Profile</Button>
           <Button onClick={logout} className="w-full" variant="destructive">Logout</Button>
         </div>

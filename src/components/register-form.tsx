@@ -104,7 +104,7 @@ export function RegisterForm() {
       await registerApi(formattedData)
       window.location.href = "/auth"
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Registration failed. Please try again later.")
+      toast.error(err.message || "Registration failed. Please try again later.")
     } finally {
       setLoading(false)
     }

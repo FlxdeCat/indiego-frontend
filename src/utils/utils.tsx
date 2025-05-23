@@ -1,4 +1,5 @@
 export function convertDate(unix: string): string {
+  if (unix == "") return "Error: Invalid Date"
   return (new Date(Number(unix) * 1000)).toLocaleDateString("en-US", {
     day: "2-digit",
     month: "long",

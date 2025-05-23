@@ -1,3 +1,4 @@
+import { updateUser } from "@/api/user-api"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -17,8 +18,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Lock } from "lucide-react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { z } from "zod"
+import { LoadingIcon } from "./loading-icon"
 
 const ChangePasswordFormSchema = z.object({
   password: z
@@ -39,6 +43,8 @@ const ChangePasswordFormSchema = z.object({
 
 export function ChangePasswordForm() {
 
+  const [loading, setLoading] = useState(false)
+
   const changePasswordForm = useForm<z.infer<typeof ChangePasswordFormSchema>>({
     resolver: zodResolver(ChangePasswordFormSchema),
     defaultValues: {
@@ -47,8 +53,21 @@ export function ChangePasswordForm() {
     }
   })
 
-  function onChangePasswordFormSubmit(data: z.infer<typeof ChangePasswordFormSchema>) {
-    console.log(JSON.stringify(data, null, 2))
+  async function onChangePasswordFormSubmit(data: z.infer<typeof ChangePasswordFormSchema>) {
+    setLoading(true)
+
+    const formattedData = {
+      password: data.password
+    }
+
+    try {
+      await updateUser(formattedData)
+      window.location.reload()
+    } catch (err: any) {
+      toast.error(err.message || "Update failed. Please try again later.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -88,7 +107,10 @@ export function ChangePasswordForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="mt-1">Save</Button>
+            <Button type="submit" className="mt-1" disabled={loading}>
+              {loading && <LoadingIcon />}
+              {loading ? "Saving..." : "Save"}
+            </Button>
           </form>
         </Form>
       </DialogContent>

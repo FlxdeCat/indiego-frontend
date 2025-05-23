@@ -3,10 +3,15 @@ import { EditProfileForm } from "@/components/edit-profile-form"
 import { Footer } from "@/components/footer"
 import { GameTable } from "@/components/game-table"
 import { Navbar } from "@/components/navbar"
-import { Camera, User } from "lucide-react"
+import { useAuth } from "@/context/auth-context"
+import { convertDate } from "@/utils/utils"
+import { User } from "lucide-react"
 import { useRef, useState } from "react"
+// import { Camera } from "lucide-react"
 
 function Profile() {
+
+  const { user } = useAuth()
 
   const games: { title: string; image: string, genres: string[] }[] = [
     { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
@@ -21,9 +26,9 @@ function Profile() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
-  const handleOverlayClick = () => {
-    fileInputRef.current?.click()
-  }
+  // const handleOverlayClick = () => {
+  //   fileInputRef.current?.click()
+  // }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -45,15 +50,15 @@ function Profile() {
               ) : (
                 <User className="w-full h-full rounded-md border-2" />
               )}
-              <div onClick={handleOverlayClick} className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer rounded-md transition">
+              {/* <div onClick={handleOverlayClick} className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer rounded-md transition">
                 <Camera className="text-white w-12 h-12" />
-              </div>
+              </div> */}
               <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
             </div>
             <div className="flex flex-col items-center sm:items-start gap-2">
-              <div className="text-3xl font-bold">Username</div>
-              <div className="text-2xl">Email</div>
-              <div className="text-xl">DOB</div>
+              <div className="text-3xl font-bold">{user?.name}</div>
+              <div className="text-2xl">{user?.email}</div>
+              <div className="text-xl">{convertDate(user?.birthDate || "")}</div>
             </div>
           </div>
           <div className="flex flex-row md:flex-col gap-4 items-end justify-center md:justify-start">
@@ -63,6 +68,7 @@ function Profile() {
         </div>
         <div className="w-full max-w-7xl">
           <h1 className="font-bold text-3xl p-4 mt-2">My Favorites</h1>
+          {/* TODO */}
           <GameTable games={games} />
         </div>
       </main>

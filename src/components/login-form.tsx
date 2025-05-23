@@ -50,7 +50,8 @@ export function LoginForm() {
       const response = await loginApi(data)
       login(response.token)
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Login failed. Please try again later.")
+      if (err.response?.status == 400) toast.error("Invalid credentials.")
+      else toast.error(err.message || "Login failed. Please try again later.")
     } finally {
       setLoading(false)
     }
