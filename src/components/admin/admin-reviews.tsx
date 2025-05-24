@@ -1,9 +1,10 @@
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
-import { convertDate } from "@/utils/utils"
+import { convertDate, paginationNumbers } from "@/utils/utils"
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { Trash2, User } from "lucide-react"
 import { DeleteReviewsDialog } from "./delete-reviews-dialog"
+import { usePagination } from "@/hooks/use-pagination"
 
 export function AdminReviews() {
 
@@ -31,12 +32,16 @@ export function AdminReviews() {
     }
   ]
 
+  const itemsPerPage = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const { paginatedItems: paginatedReviews, totalPages } = usePagination(reviews, currentPage, itemsPerPage)
+
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
 
   return (
     <div className="flex flex-col items-center w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        {reviews.map((review, index) => (
+        {paginatedReviews.map((review, index) => (
           <div key={index} className="relative m-0 p-0">
             <div
               key={index}
@@ -70,24 +75,39 @@ export function AdminReviews() {
       <Pagination className="mt-6">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="/" />
+            <PaginationPrevious
+              aria-disabled={currentPage <= 1}
+              className={
+                currentPage <= 1 ? "pointer-events-none opacity-50 select-none" : "cursor-pointer"
+              }
+              onClick={() => setCurrentPage(currentPage - 1)}
+            />
           </PaginationItem>
+
+          {paginationNumbers(totalPages, currentPage).map((page, i) => (
+            <PaginationItem key={i}>
+              {page === "..." ? (
+                <PaginationEllipsis />
+              ) : (
+                <PaginationLink
+                  className="cursor-pointer"
+                  isActive={page === currentPage}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </PaginationLink>
+              )}
+            </PaginationItem>
+          ))}
+
           <PaginationItem>
-            <PaginationLink href="/" isActive>
-              1
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="/">2</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="/">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="/" />
+            <PaginationNext
+              aria-disabled={currentPage >= totalPages}
+              className={
+                currentPage >= totalPages ? "pointer-events-none opacity-50 select-none" : "cursor-pointer"
+              }
+              onClick={() => setCurrentPage(currentPage + 1)}
+            />
           </PaginationItem>
         </PaginationContent>
       </Pagination>

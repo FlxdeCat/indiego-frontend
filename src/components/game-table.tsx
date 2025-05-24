@@ -24,6 +24,9 @@ import { useNavigate } from "react-router"
 import { EllipsisVertical } from "lucide-react"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
+import { useState } from "react"
+import { usePagination } from "@/hooks/use-pagination"
+import { paginationNumbers } from "@/utils/utils"
 
 interface Game {
   title: string
@@ -38,6 +41,10 @@ interface GameTableProps {
 export function GameTable({ games }: GameTableProps) {
   const nav = useNavigate()
 
+  const itemsPerPage = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const { paginatedItems: paginatedGames, totalPages } = usePagination(games, currentPage, itemsPerPage)
+
   const maxGenres = 5
 
   return games.length === 0 ? (
@@ -51,28 +58,45 @@ export function GameTable({ games }: GameTableProps) {
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious href="/" />
+              <PaginationPrevious
+                aria-disabled={currentPage <= 1}
+                className={
+                  currentPage <= 1 ? "pointer-events-none opacity-50 select-none" : "cursor-pointer"
+                }
+                onClick={() => setCurrentPage(currentPage - 1)}
+              />
             </PaginationItem>
+
+            {paginationNumbers(totalPages, currentPage).map((page, i) => (
+              <PaginationItem key={i}>
+                {page === "..." ? (
+                  <PaginationEllipsis />
+                ) : (
+                  <PaginationLink
+                    className="cursor-pointer"
+                    isActive={page === currentPage}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </PaginationLink>
+                )}
+              </PaginationItem>
+            ))}
+
             <PaginationItem>
-              <PaginationLink href="/" isActive>1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="/">2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="/">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="/" />
+              <PaginationNext
+                aria-disabled={currentPage >= totalPages}
+                className={
+                  currentPage >= totalPages ? "pointer-events-none opacity-50 select-none" : "cursor-pointer"
+                }
+                onClick={() => setCurrentPage(currentPage + 1)}
+              />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
       </TableCaption>
       <TableBody className="border-y-1">
-        {games.map((game, index) => {
+        {paginatedGames.map((game, index) => {
           const displayedGenres = game.genres.slice(0, maxGenres)
           const extraCount = game.genres.length - maxGenres
 

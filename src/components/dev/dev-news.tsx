@@ -13,13 +13,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { convertDate } from "@/utils/utils"
+import { convertDate, paginationNumbers } from "@/utils/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "../ui/button"
 import { MoreVerticalIcon } from "lucide-react"
 import { DeleteNewsDialog } from "./delete-news-dialog"
 import { NewsForm } from "./news-form"
 import { useState } from "react"
+import { usePagination } from "@/hooks/use-pagination"
 
 export function DevNews() {
 
@@ -58,6 +59,10 @@ export function DevNews() {
     },
   ]
 
+  const itemsPerPage = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const { paginatedItems: paginatedNews, totalPages } = usePagination(newss, currentPage, itemsPerPage)
+
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null)
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
@@ -65,7 +70,7 @@ export function DevNews() {
   return (
     <div className="flex flex-col items-center w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        {newss.map((news, index) => (
+        {paginatedNews.map((news, index) => (
           <div key={index} className="relative m-0 p-0">
             <Dialog>
               <DialogTrigger asChild>
@@ -163,24 +168,39 @@ export function DevNews() {
       <Pagination className="mt-6">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="/" />
+            <PaginationPrevious
+              aria-disabled={currentPage <= 1}
+              className={
+                currentPage <= 1 ? "pointer-events-none opacity-50 select-none" : "cursor-pointer"
+              }
+              onClick={() => setCurrentPage(currentPage - 1)}
+            />
           </PaginationItem>
+
+          {paginationNumbers(totalPages, currentPage).map((page, i) => (
+            <PaginationItem key={i}>
+              {page === "..." ? (
+                <PaginationEllipsis />
+              ) : (
+                <PaginationLink
+                  className="cursor-pointer"
+                  isActive={page === currentPage}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </PaginationLink>
+              )}
+            </PaginationItem>
+          ))}
+
           <PaginationItem>
-            <PaginationLink href="/" isActive>
-              1
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="/">2</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="/">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="/" />
+            <PaginationNext
+              aria-disabled={currentPage >= totalPages}
+              className={
+                currentPage >= totalPages ? "pointer-events-none opacity-50 select-none" : "cursor-pointer"
+              }
+              onClick={() => setCurrentPage(currentPage + 1)}
+            />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
