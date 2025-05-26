@@ -35,7 +35,9 @@ function Subscription() {
   }
 
   useEffect(() => {
-    getTiersAndCurrent()
+    if (isAuthenticated !== undefined) {
+      getTiersAndCurrent()
+    }
   }, [isAuthenticated])
 
   return (
