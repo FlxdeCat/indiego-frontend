@@ -1,11 +1,12 @@
+import { User } from "@/types/user"
 import axios from "./axios-instance"
 
-export const registerApi = async (data: { name: string, email: string, password: string, birthDate: string }) => {
-  const response = await axios.post("/Users", data)
+export const registerApi = async (user: Partial<User>) => {
+  const response = await axios.post("/Users", user)
   return response.data
 }
 
-export const loginApi = async (data: { email: string, password: string }) => {
-  const response = await axios.post("/Users/login", data)
+export const loginApi = async (user: Partial<User>) => {
+  const response = await axios.post("/Users/login", user)
   return response.data
 }

@@ -1,44 +1,42 @@
+import { getCurrentSubscription, getSubscriptionTypes } from "@/api/subscription-api"
 import { Footer } from "@/components/footer"
+import { LoadingIcon } from "@/components/loading-icon"
 import { Navbar } from "@/components/navbar"
-import { SubscriptionCard, SubscriptionTier } from "@/components/subscription-card"
+import { SubscriptionCard } from "@/components/subscription-card"
+import { useAuth } from "@/context/auth-context"
+import { SubscriptionTier } from "@/types/subscription"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 function Subscription() {
 
-  const tiers: SubscriptionTier[] = [
-    {
-      title: "Basic",
-      desc: "Perfect for casual supporters",
-      details: [
-        "Game recommendations for 7 days",
-        "Based on popularity and high ratings",
-        "Includes some randomized picks for variety"
-      ],
-      price: 2
-    },
-    {
-      title: "Pro",
-      desc: "For regular players & supporters",
-      details: [
-        "Game recommendations for 30 days",
-        "More focus on top-rated indie games",
-        "Less randomness for more consistent picks"
-      ],
-      price: 5
-    },
-    {
-      title: "Premium",
-      desc: "The ultimate supporter tier",
-      details: [
-        "Game recommendations for 90 days",
-        "Weighted mix of top-rated & rising titles",
-        "Occasional hidden gems surfaced smartly"
-      ],
-      price: 12
-    }
-  ]
+  const [tiers, setTiers] = useState<SubscriptionTier[]>([])
+  const [currTier, setCurrTier] = useState<string>("")
+  const [loading, setLoading] = useState(false)
 
-  const auth = true // TEMP
-  const curr_tier = "Basic" // TEMP
+  const { isAuthenticated } = useAuth()
+
+  async function getTiersAndCurrent() {
+    setLoading(true)
+
+    try {
+      const subscriptionTierResponse = await getSubscriptionTypes()
+      setTiers(subscriptionTierResponse)
+      if (isAuthenticated) {
+        const currentTierResponse = await getCurrentSubscription()
+        if (currentTierResponse && currentTierResponse[0]) setCurrTier(currentTierResponse[0].subscriptionTypeId)
+      }
+    } catch (err: any) {
+      console.log(err)
+      toast.error(err.message || "Fetch subscription failed. Please try again later.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getTiersAndCurrent()
+  }, [isAuthenticated])
 
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
@@ -54,7 +52,9 @@ function Subscription() {
         </div>
         <div className="flex flex-grow items-center justify-center mb-4">
           <div className="flex flex-wrap justify-center gap-8">
-            {tiers.map((tier, index) => (<SubscriptionCard key={index} auth={auth} bought={auth && curr_tier === tier.title} tier={tier} />))}
+            {loading ? (
+              <LoadingIcon size={50} className="text-primary" />
+            ) : (tiers.map((tier, index) => (<SubscriptionCard key={index} bought={isAuthenticated && currTier === tier.id} tier={tier} />)))}
           </div>
         </div>
       </main >

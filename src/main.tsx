@@ -48,18 +48,18 @@ createRoot(document.getElementById('root')!).render(
               } />
 
               <Route path="/developer" element={
-                <RequireAuth allowedRoles={["developer"]}>
+                <RequireAuth allowedRoles={["Developer"]}>
                   <DeveloperHub />
                 </RequireAuth>
               } />
               <Route path="/developer/game/:id?" element={
-                <RequireAuth allowedRoles={["developer"]}>
+                <RequireAuth allowedRoles={["Developer"]}>
                   <DeveloperGameForm />
                 </RequireAuth>
               } />
 
               <Route path="/admin" element={
-                <RequireAuth allowedRoles={["admin"]}>
+                <RequireAuth allowedRoles={["Admin"]}>
                   <AdminHub />
                 </RequireAuth>
               } />

@@ -16,8 +16,8 @@ export function Navbar() {
   const nav = useNavigate()
 
   const auth = isAuthenticated
-  const dev = user?.role.includes("developer") || false
-  const admin = user?.role.includes("admin") || false
+  const dev = user?.role.includes("Developer") || false
+  const admin = user?.role.includes("Admin") || false
 
   useEffect(() => {
     const handleScroll = () => {

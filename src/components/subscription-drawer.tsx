@@ -15,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { SubscriptionTier } from "./subscription-card"
 import { Separator } from "./ui/separator"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -29,6 +28,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { SubscriptionTier } from "@/types/subscription"
+import { buySubscription } from "@/api/subscription-api"
+import { LoadingIcon } from "./loading-icon"
 
 const SubscriptionSchema = z.object({
   full_name: z.string().min(1, "Full Name cannot be empty"),
@@ -42,8 +44,8 @@ const SubscriptionSchema = z.object({
   })
 
 export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
-
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const handleDrawerClose = () => {
     setDrawerOpen(false)
@@ -59,12 +61,25 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
     }
   })
 
-  function onSubscriptionSubmit(data: z.infer<typeof SubscriptionSchema>) {
-    console.log(JSON.stringify(data, null, 2))
-    handleDrawerClose()
-    toast.success("Your payment is currectly being processed", {
-      description: "Please refresh this page in a few seconds. ",
-    })
+  async function onSubscriptionSubmit() {
+    setLoading(true)
+
+    const formattedData = {
+      subscriptionTypeId: tier.id
+    }
+
+    try {
+      await buySubscription(formattedData)
+      toast.success("Your payment is currently being processed", {
+        description: "Please refresh this page in a few seconds.",
+      })
+    } catch (err: any) {
+      if (err.status == 403) toast.error("You've already bought a subscription. Please wait until it has expired.")
+      else toast.error(err.message || "Purchase failed. Please try again later.")
+    } finally {
+      setLoading(false)
+      handleDrawerClose()
+    }
   }
 
   interface Country {
@@ -93,9 +108,9 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
       </DrawerTrigger>
       <DrawerContent className="flex flex-col items-center">
         <DrawerHeader className="w-full">
-          <DrawerTitle className="text-3xl">Subscribe to {tier.title} Package</DrawerTitle>
+          <DrawerTitle className="text-3xl">Subscribe to {tier.name} Package</DrawerTitle>
           <DrawerDescription className="text-lg">
-            Unlock all features available in the {tier.title} plan with a single payment.
+            Unlock all features available in the {tier.name} plan with a single payment.
           </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="h-full w-full px-8 overflow-auto">
@@ -103,7 +118,7 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
             <div className="w-full xl:w-lg space-y-4">
               <div className="flex justify-between">
                 <span className="font-medium">Subscription</span>
-                <span>{tier.title}</span>
+                <span>{tier.name}</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-medium">Price</span>
@@ -155,7 +170,7 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
                     name="country"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Country</FormLabel>
+                        <FormLabel>Country (Optional)</FormLabel>
                         <FormControl>
                           <div className="w-full">
                             <Select
@@ -214,7 +229,10 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="mt-1 w-full">Confirm Payment</Button>
+                <Button type="submit" className="mt-1 w-full" disabled={loading}>
+                  {loading && <LoadingIcon />}
+                  {loading ? "Purchasing..." : "Purchase"}
+                </Button>
               </form>
             </Form>
           </div>

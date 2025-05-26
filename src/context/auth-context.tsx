@@ -32,7 +32,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error("No access token found")
       }
       const res = await axios.get("/Users/me")
-      return res.data
+      const { token: newToken, user } = res.data
+
+      if (newToken) {
+        localStorage.setItem("access_token", newToken)
+      }
+
+      return user
     },
     enabled: !!localStorage.getItem("access_token"),
     staleTime: 1000 * 60 * 5,
