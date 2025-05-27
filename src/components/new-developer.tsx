@@ -26,6 +26,9 @@ import { Checkbox } from "./ui/checkbox"
 import { TermsConditionsDeveloperDialogueContent } from "./terms-conditions-developer-dialog-content"
 import { ReactNode, useEffect, useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { becomeNewDeveloper } from "@/api/developer-api"
+import { toast } from "sonner"
+import { LoadingIcon } from "./loading-icon"
 
 interface MyComponentProps {
   button: ReactNode
@@ -33,9 +36,9 @@ interface MyComponentProps {
 
 const DeveloperFormSchema = z.object({
   name: z.string().min(1, "Name cannot be empty"),
-  full_name: z.string().min(1, "Full Name cannot be empty"),
-  tax_id: z.string(),
-  country: z.string(),
+  full_name: z.string().min(1, "Full name cannot be empty"),
+  tax_id: z.string().min(1, "Tax ID cannot be empty"),
+  country: z.string().min(1, "Country cannot be empty"),
   terms: z.boolean().default(false),
 })
   .refine(({ terms }) => terms === true, {
@@ -45,6 +48,7 @@ const DeveloperFormSchema = z.object({
 
 export function NewDeveloper({ button }: MyComponentProps) {
 
+  const [loading, setLoading] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleDialogClose = () => {
@@ -62,10 +66,27 @@ export function NewDeveloper({ button }: MyComponentProps) {
     }
   })
 
-  function onDeveloperSubmit(data: z.infer<typeof DeveloperFormSchema>) {
-    console.log(JSON.stringify(data, null, 2))
-    window.open("/developer", "_blank")
-    handleDialogClose()
+  async function onDeveloperSubmit(data: z.infer<typeof DeveloperFormSchema>) {
+    setLoading(true)
+
+    const formattedData = {
+      devName: data.name,
+      fullName: data.full_name,
+      taxId: data.tax_id,
+      country: data.country
+    }
+
+    try {
+      await becomeNewDeveloper(formattedData)
+      window.open("/developer", "_blank")
+      window.location.reload()
+    } catch (err: any) {
+      if (err.status == 403) toast.error("You've already become a developer.")
+      toast.error(err.message || "Registration failed. Please try again later.")
+    } finally {
+      setLoading(false)
+      handleDialogClose()
+    }
   }
 
   interface Country {
@@ -130,13 +151,13 @@ export function NewDeveloper({ button }: MyComponentProps) {
                 </FormItem>
               )}
             />
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-start">
               <FormField
                 control={developerForm.control}
                 name="tax_id"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Tax ID (Optional)</FormLabel>
+                    <FormLabel>Tax ID</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -156,10 +177,10 @@ export function NewDeveloper({ button }: MyComponentProps) {
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
-                          <SelectTrigger className="w-full">
+                          <SelectTrigger className={`w-full ${developerForm.formState.errors.country && "!border-red-500"}`}>
                             <SelectValue placeholder="Select your country" />
                           </SelectTrigger>
-                          <SelectContent className="max-h-120">
+                          <SelectContent className="max-h-120" >
                             {countries.map(country => (
                               <SelectItem key={country.value} value={country.label} className="cursor-pointer hover:bg-muted">{country.label}</SelectItem>
                             ))}
@@ -208,7 +229,10 @@ export function NewDeveloper({ button }: MyComponentProps) {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="mt-1">Submit</Button>
+            <Button type="submit" className="mt-1 w-full" disabled={loading}>
+              {loading && <LoadingIcon />}
+              {loading ? "Registering..." : "Register"}
+            </Button>
           </form>
         </Form>
       </DialogContent>

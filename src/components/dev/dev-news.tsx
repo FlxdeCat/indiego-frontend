@@ -21,43 +21,9 @@ import { DeleteNewsDialog } from "./delete-news-dialog"
 import { NewsForm } from "./news-form"
 import { useState } from "react"
 import { usePagination } from "@/hooks/use-pagination"
+import { News } from "@/types/news"
 
-export function DevNews() {
-
-  const newss = [
-    {
-      title: "Some Updates",
-      dev: "Hololive",
-      image: "holocure-banner.png",
-      date: "1742963482",
-      content:
-        `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7`
-    },
-    {
-      title: "Some Updates",
-      dev: "Hololive",
-      image: "holocure-banner.png",
-      date: "1742963482",
-      content:
-        `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7.`
-    },
-    {
-      title: "Some Updates",
-      dev: "Hololive",
-      image: "holocure-banner.png",
-      date: "1742963482",
-      content:
-        `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7.`
-    },
-    {
-      title: "Some Updates",
-      dev: "Hololive",
-      image: "holocure-banner.png",
-      date: "1742963482",
-      content:
-        `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7.`
-    },
-  ]
+export function DevNews({ newss }: { newss: News[] }) {
 
   const itemsPerPage = 10
   const [currentPage, setCurrentPage] = useState(1)
@@ -76,15 +42,15 @@ export function DevNews() {
               <DialogTrigger asChild>
                 <div className="flex flex-col sm:flex-row justify-center items-center w-full hover:bg-muted/50 cursor-pointer border-2 rounded-md">
                   <div className="flex-2 lg:flex-1">
-                    <img src={news.image} alt={news.dev} className="object-cover h-auto rounded-l-sm" />
+                    <img loading="lazy" src={URL.createObjectURL(news.image)} alt={news.devName} className="object-cover h-auto rounded-l-sm" />
                   </div>
                   <div className="flex-2 text-start flex flex-col gap-2 py-2 pl-8 pr-12 w-full">
                     <div className="flex flex-col gap-1">
                       <div className="font-bold text-xl md:text-2xl line-clamp-1">{news.title}</div>
-                      <div className="text-sm text-muted-foreground">{convertDate(news.date)}</div>
+                      <div className="text-sm text-muted-foreground">{convertDate(news.createdAt)}</div>
                     </div>
                     <div className="text-sm md:text-base line-clamp-3">
-                      {news.content.split("\n").map((line, i) => (
+                      {news.text.split("\n").map((line: string, i: number) => (
                         <p key={i} className="whitespace-pre-wrap">
                           {line.trim() === "" ? <br /> : line}
                         </p>
@@ -95,15 +61,15 @@ export function DevNews() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-xl md:max-w-2xl max-h-[90vh] flex flex-col gap-2 justify-start">
                 <DialogHeader>
-                  <DialogTitle>{news.dev}</DialogTitle>
-                  <DialogDescription>{convertDate(news.date)}</DialogDescription>
+                  <DialogTitle>{news.devName}</DialogTitle>
+                  <DialogDescription>{convertDate(news.createdAt)}</DialogDescription>
                 </DialogHeader>
                 <ScrollArea className="flex-1 max-h-[90vh] overflow-auto pr-4">
                   <div className="flex flex-col space-y-4">
                     <div className="font-bold text-2xl">{news.title}</div>
-                    <img src={news.image} alt={news.dev} className="aspect-[2/1] object-cover rounded-md" />
+                    <img loading="lazy" src={URL.createObjectURL(news.image)} alt={news.devName} className="aspect-[2/1] object-cover rounded-md" />
                     <div>
-                      {news.content.split("\n").map((line, i) => (
+                      {news.text.split("\n").map((line: string, i: number) => (
                         <p key={i} className="whitespace-pre-wrap">
                           {line.trim() === "" ? <br /> : line}
                         </p>
@@ -162,8 +128,9 @@ export function DevNews() {
               </DropdownMenu>
             </div>
           </div>
-        ))}
-      </div>
+        ))
+        }
+      </div >
 
       <Pagination className="mt-6">
         <PaginationContent>
@@ -226,6 +193,6 @@ export function DevNews() {
           if (!open) setDeleteIndex(null)
         }}
       />
-    </div>
+    </div >
   )
 }

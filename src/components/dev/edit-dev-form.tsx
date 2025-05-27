@@ -23,7 +23,10 @@ import { z } from "zod"
 import { useEffect, useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Pencil } from "lucide-react"
-import { Developer } from "./dev-profile"
+import { Developer } from "@/types/developer"
+import { updateDeveloper } from "@/api/developer-api"
+import { toast } from "sonner"
+import { LoadingIcon } from "../loading-icon"
 
 const DeveloperFormSchema = z.object({
   name: z.string().min(1, "Name cannot be empty"),
@@ -34,6 +37,7 @@ const DeveloperFormSchema = z.object({
 
 export function EditDeveloperForm({ dev }: { dev: Developer }) {
 
+  const [loading, setLoading] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleDialogClose = () => {
@@ -43,16 +47,32 @@ export function EditDeveloperForm({ dev }: { dev: Developer }) {
   const developerForm = useForm<z.infer<typeof DeveloperFormSchema>>({
     resolver: zodResolver(DeveloperFormSchema),
     defaultValues: {
-      name: dev.name,
-      full_name: dev.full_name,
-      tax_id: dev.tax_id,
+      name: dev.devName,
+      full_name: dev.fullName,
+      tax_id: dev.taxId,
       country: dev.country
     }
   })
 
-  function onDeveloperSubmit(data: z.infer<typeof DeveloperFormSchema>) {
-    console.log(JSON.stringify(data, null, 2))
-    handleDialogClose()
+  async function onDeveloperSubmit(data: z.infer<typeof DeveloperFormSchema>) {
+    setLoading(true)
+
+    const formattedData = {
+      devName: data.name,
+      fullName: data.full_name,
+      taxId: data.tax_id,
+      country: data.country
+    }
+
+    try {
+      await updateDeveloper(formattedData)
+      window.location.reload()
+    } catch (err: any) {
+      toast.error(err.message || "Update failed. Please try again later.")
+    } finally {
+      setLoading(false)
+      handleDialogClose()
+    }
   }
 
   interface Country {
@@ -159,7 +179,10 @@ export function EditDeveloperForm({ dev }: { dev: Developer }) {
                 )}
               />
             </div>
-            <Button type="submit" className="mt-1">Submit</Button>
+            <Button type="submit" className="mt-1" disabled={loading}>
+              {loading && <LoadingIcon />}
+              {loading ? "Saving..." : "Save"}
+            </Button>
           </form>
         </Form>
       </DialogContent>

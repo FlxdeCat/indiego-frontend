@@ -1,4 +1,3 @@
-import * as React from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -64,6 +63,12 @@ import { DeleteGameDialog } from "./delete-game-dialog"
 import { NewsForm } from "./news-form"
 import { Dialog } from "../ui/dialog"
 import { schema } from '../../schemas/data-table.schema'
+import { useEffect, useState } from "react"
+import { News } from "@/types/news"
+import { useAuth } from "@/context/auth-context"
+import { getSelfNews } from "@/api/news-api"
+import { toast } from "sonner"
+import { LoadingIcon } from "../loading-icon"
 
 function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<z.infer<typeof schema>>[] {
   return [
@@ -209,20 +214,20 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[]
 }) {
-  const [data, _] = React.useState(() => initialData)
-  const [activeTab, setActiveTab] = React.useState<"games" | "news">("games")
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [data, _] = useState(() => initialData)
+  const [activeTab, setActiveTab] = useState<"games" | "news">("games")
+  const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     []
   )
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [pagination, setPagination] = React.useState({
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   })
-  const [deleteGameIndex, setDeleteGameIndex] = React.useState<number | null>(null)
+  const [deleteGameIndex, setDeleteGameIndex] = useState<number | null>(null)
 
   const nav = useNavigate()
   const columns = getGameTableColumns(nav, setDeleteGameIndex)
@@ -252,7 +257,28 @@ export function DataTable({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-  const [isAddNewsOpen, setAddNewsOpen] = React.useState(false)
+  const [isAddNewsOpen, setAddNewsOpen] = useState(false)
+
+  const [newsLoading, setNewsLoading] = useState(false)
+  const [newss, setNewss] = useState<News[]>([])
+  const { user } = useAuth()
+
+  async function getNewsData() {
+    setNewsLoading(true)
+
+    try {
+      const selfNewsResponse = await getSelfNews({ userId: user!.id })
+      setNewss(selfNewsResponse)
+    } catch (err: any) {
+      toast.error(err.message || "Fetch news failed. Please try again later.")
+    } finally {
+      setNewsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getNewsData()
+  }, [])
 
   return (
     <>
@@ -468,7 +494,14 @@ export function DataTable({
         </TabsContent>
         <TabsContent value="news" className="px-4 lg:px-6">
           <div className="border rounded-lg p-4 text-center">
-            <DevNews />
+            {newsLoading ? (
+              <div className="flex flex-1 items-center justify-center">
+                <LoadingIcon size={50} className="text-primary" />
+              </div>
+            ) : (
+              <DevNews newss={newss} />
+            )
+            }
           </div>
         </TabsContent>
       </Tabs>

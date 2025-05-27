@@ -19,44 +19,59 @@ import { z } from "zod"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Textarea } from "../ui/textarea"
-
-interface News {
-  title: string
-  image: string
-  content: string
-}
+import { postNews, updateNews } from "@/api/news-api"
+import { toast } from "sonner"
+import { LoadingIcon } from "../loading-icon"
+import { News } from "@/types/news"
 
 const NewsFormSchema = z.object({
   title: z.string().min(1, "Title must not be empty"),
-  image: z.string().min(1, "An image must be provided"),
+  image: z.any().refine((file) => file instanceof File, "An image must be provided"),
   content: z.string().min(1, "Content must not be empty"),
 })
 
 export function NewsForm({ news, onSubmit }: { news?: News, onSubmit?: () => void }) {
 
+  const [loading, setLoading] = useState(false)
+
   const newsForm = useForm<z.infer<typeof NewsFormSchema>>({
     resolver: zodResolver(NewsFormSchema),
     defaultValues: {
       title: news?.title || "",
-      image: news?.image || "",
-      content: news?.content || ""
+      image: news?.image || undefined,
+      content: news?.text || ""
     }
   })
 
-  const [imageUrl, setImageUrl] = useState<string | null>(news?.image || null)
+  const [imageUrl, setImageUrl] = useState<string | null>(news ? URL.createObjectURL(news.image) : null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       const url = URL.createObjectURL(file)
-      newsForm.setValue("image", url, { shouldValidate: true })
       setImageUrl(url)
+      newsForm.setValue("image", file, { shouldValidate: true })
     }
   }
 
-  function onNewsFormSubmit(data: z.infer<typeof NewsFormSchema>) {
-    console.log(JSON.stringify(data, null, 2))
-    onSubmit?.()
+  async function onNewsFormSubmit(data: z.infer<typeof NewsFormSchema>) {
+    setLoading(true)
+
+    const formattedData = {
+      title: data.title,
+      text: data.content,
+    }
+
+    try {
+      if (news) await updateNews(news.id, formattedData, data.image)
+      else await postNews(formattedData, data.image)
+      window.location.reload()
+    } catch (err: any) {
+      toast.error(err.message || "Post failed. Please try again later.")
+    } finally {
+      setLoading(false)
+      onSubmit?.()
+    }
   }
 
   return (
@@ -109,7 +124,10 @@ export function NewsForm({ news, onSubmit }: { news?: News, onSubmit?: () => voi
               </FormItem>
             )}
           />
-          <Button type="submit" className="mt-1">Submit</Button>
+          <Button type="submit" className="mt-1" disabled={loading}>
+            {loading && <LoadingIcon />}
+            {loading ? "Posting..." : "Post"}
+          </Button>
         </form>
       </Form>
     </DialogContent>

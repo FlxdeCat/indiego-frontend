@@ -27,7 +27,6 @@ function Subscription() {
         if (currentTierResponse && currentTierResponse[0]) setCurrTier(currentTierResponse[0].subscriptionTypeId)
       }
     } catch (err: any) {
-      console.log(err)
       toast.error(err.message || "Fetch subscription failed. Please try again later.")
     } finally {
       setLoading(false)

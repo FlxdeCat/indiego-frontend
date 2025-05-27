@@ -4,11 +4,14 @@ import { Footer } from "@/components/footer"
 import { GameCarousel } from "@/components/game-carousel"
 import { GenreCarousel } from "@/components/genre-carousel"
 import { Navbar } from "@/components/navbar"
+import { useAuth } from "@/context/auth-context"
 
 function Home() {
 
-  const auth = true // TEMP
-  const dev = false // TEMP
+  const { user, isAuthenticated } = useAuth()
+
+  const auth = isAuthenticated
+  const dev = user?.role.includes("Developer") || false
 
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
