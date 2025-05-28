@@ -30,6 +30,11 @@ export const updateNews = async (postId: string, data: { title: string, text: st
   return postResponse.data
 }
 
+export const deleteNews = async (postId: string) => {
+  const postResponse = await axios.delete(`/Posts/${postId}`)
+  return postResponse.data
+}
+
 export const getSelfNews = async (data: { userId: string }) => {
   const postsResponse = await axios.get("/Posts", {
     params: data,

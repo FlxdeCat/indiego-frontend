@@ -187,6 +187,7 @@ export function DevNews({ newss }: { newss: News[] }) {
       </Dialog>
 
       <DeleteNewsDialog
+        id={deleteIndex !== null ? newss[deleteIndex].id : ""}
         open={deleteIndex !== null}
         title={deleteIndex !== null ? newss[deleteIndex].title : ""}
         onOpenChange={(open) => {
