@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { useNavigate } from "react-router"
+import { Button } from "../ui/button"
+import { useAuth } from "@/context/auth-context"
 
 export function AdminNavbar() {
   const [scrolled, setScrolled] = useState(false)
 
   const nav = useNavigate()
+  const { logout } = useAuth()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,8 +29,9 @@ export function AdminNavbar() {
           <u onClick={() => nav("/")} className="font-bold text-primary">Indie</u>go
         </a>
       </div>
-      <div className="flex">
+      <div className="flex gap-4">
         <ModeToggle />
+        <Button variant="destructive" onClick={logout}>Logout</Button>
       </div>
     </nav>
   )

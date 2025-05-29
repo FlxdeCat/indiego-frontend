@@ -1,3 +1,4 @@
+import { News } from "@/types/news"
 import axios from "./axios-instance"
 
 export const postNews = async (data: { title: string, text: string }, image: File) => {
@@ -35,6 +36,38 @@ export const deleteNews = async (postId: string) => {
   return postResponse.data
 }
 
+export const getNews = async () => {
+  const postsResponse = await axios.get("/Posts")
+
+  const posts = postsResponse.data
+
+  const enhancedPosts = await Promise.all(
+    posts.map(async (post: News) => {
+      const [imageRes, userRes] = await Promise.all([
+        axios.get(`/Posts/image/${post.id}`, { responseType: "blob" }),
+        axios.get("/Users/developer", {
+          params: { id: post.userId },
+        })
+      ])
+
+      const mimeType = imageRes.headers["content-type"]
+      const extension = mimeType?.split("/")[1] || "jpg"
+
+      const imageFile = new File([imageRes.data], `image.${extension}`, {
+        type: mimeType,
+      })
+
+      return {
+        ...post,
+        image: imageFile,
+        devName: userRes.data[0].devName,
+      }
+    })
+  )
+
+  return enhancedPosts
+}
+
 export const getSelfNews = async (data: { userId: string }) => {
   const postsResponse = await axios.get("/Posts", {
     params: data,
@@ -43,7 +76,7 @@ export const getSelfNews = async (data: { userId: string }) => {
   const posts = postsResponse.data
 
   const enhancedPosts = await Promise.all(
-    posts.map(async (post: any) => {
+    posts.map(async (post: News) => {
       const [imageRes, userRes] = await Promise.all([
         axios.get(`/Posts/image/${post.id}`, { responseType: "blob" }),
         axios.get("/Users/developer", {

@@ -35,102 +35,108 @@ export function DevNews({ newss }: { newss: News[] }) {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        {paginatedNews.map((news, index) => (
-          <div key={index} className="relative m-0 p-0">
-            <Dialog>
-              <DialogTrigger asChild>
-                <div className="flex flex-col sm:flex-row justify-center items-center w-full hover:bg-muted/50 cursor-pointer border-2 rounded-md">
-                  <div className="flex-2 lg:flex-1">
-                    <img loading="lazy" src={URL.createObjectURL(news.image)} alt={news.devName} className="object-cover h-auto rounded-l-sm" />
-                  </div>
-                  <div className="flex-2 text-start flex flex-col gap-2 py-2 pl-8 pr-12 w-full">
-                    <div className="flex flex-col gap-1">
-                      <div className="font-bold text-xl md:text-2xl line-clamp-1">{news.title}</div>
-                      <div className="text-sm text-muted-foreground">{convertDate(news.createdAt)}</div>
+      {paginatedNews.length === 0 ? (
+        <div className="flex flex-col items-center text-center text-muted-foreground pt-4">
+          You have no news yet.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+          {paginatedNews.map((news, index) => (
+            <div key={index} className="relative m-0 p-0">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <div className="flex flex-col sm:flex-row justify-center items-center w-full hover:bg-muted/50 cursor-pointer border-2 rounded-md">
+                    <div className="flex-2 lg:flex-1">
+                      <img loading="lazy" src={URL.createObjectURL(news.image)} alt={news.devName} className="object-cover h-auto rounded-l-sm" />
                     </div>
-                    <div className="text-sm md:text-base line-clamp-3">
-                      {news.text.split("\n").map((line: string, i: number) => (
-                        <p key={i} className="whitespace-pre-wrap">
-                          {line.trim() === "" ? <br /> : line}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-xl md:max-w-2xl max-h-[90vh] flex flex-col gap-2 justify-start">
-                <DialogHeader>
-                  <DialogTitle>{news.devName}</DialogTitle>
-                  <DialogDescription>{convertDate(news.createdAt)}</DialogDescription>
-                </DialogHeader>
-                <ScrollArea className="flex-1 max-h-[90vh] overflow-auto pr-4">
-                  <div className="flex flex-col space-y-4">
-                    <div className="font-bold text-2xl">{news.title}</div>
-                    <img loading="lazy" src={URL.createObjectURL(news.image)} alt={news.devName} className="aspect-[2/1] object-cover rounded-md" />
-                    <div>
-                      {news.text.split("\n").map((line: string, i: number) => (
-                        <p key={i} className="whitespace-pre-wrap">
-                          {line.trim() === "" ? <br /> : line}
-                        </p>
-                      ))}
+                    <div className="flex-2 text-start flex flex-col gap-2 py-2 pl-8 pr-12 w-full">
+                      <div className="flex flex-col gap-1">
+                        <div className="font-bold text-xl md:text-2xl line-clamp-1">{news.title}</div>
+                        <div className="text-sm text-muted-foreground">{convertDate(news.createdAt)}</div>
+                      </div>
+                      <div className="text-sm md:text-base line-clamp-3">
+                        {news.text.split("\n").map((line: string, i: number) => (
+                          <p key={i} className="whitespace-pre-wrap">
+                            {line.trim() === "" ? <br /> : line}
+                          </p>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </ScrollArea>
-              </DialogContent>
-            </Dialog>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-xl md:max-w-2xl max-h-[90vh] flex flex-col gap-2 justify-start">
+                  <DialogHeader>
+                    <DialogTitle>{news.devName}</DialogTitle>
+                    <DialogDescription>{convertDate(news.createdAt)}</DialogDescription>
+                  </DialogHeader>
+                  <ScrollArea className="flex-1 max-h-[90vh] overflow-auto pr-4">
+                    <div className="flex flex-col space-y-4">
+                      <div className="font-bold text-2xl">{news.title}</div>
+                      <img loading="lazy" src={URL.createObjectURL(news.image)} alt={news.devName} className="aspect-[2/1] object-cover rounded-md" />
+                      <div>
+                        {news.text.split("\n").map((line: string, i: number) => (
+                          <p key={i} className="whitespace-pre-wrap">
+                            {line.trim() === "" ? <br /> : line}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  </ScrollArea>
+                </DialogContent>
+              </Dialog>
 
-            <div className="flex justify-center absolute bottom-2 sm:top-2 right-2">
-              <DropdownMenu
-                open={openDropdownIndex === index}
-                onOpenChange={(open) => {
-                  setOpenDropdownIndex(open ? index : null)
-                }}
-              >
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="flex text-muted-foreground data-[state=open]:bg-muted"
-                    size="icon"
-                  >
-                    <MoreVerticalIcon />
-                    <span className="sr-only">Open menu</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="mr-4 -mt-4">
-                  <DropdownMenuItem asChild>
-                    <button
-                      className="w-full text-left"
-                      onClick={() => {
-                        setOpenDropdownIndex(null)
-                        setTimeout(() => {
-                          setEditingIndex(index)
-                        }, 10)
-                      }}
+              <div className="flex justify-center absolute bottom-2 sm:top-2 right-2">
+                <DropdownMenu
+                  open={openDropdownIndex === index}
+                  onOpenChange={(open) => {
+                    setOpenDropdownIndex(open ? index : null)
+                  }}
+                >
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="flex text-muted-foreground data-[state=open]:bg-muted"
+                      size="icon"
                     >
-                      Edit
-                    </button>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <button
-                      className="w-full text-left"
-                      onClick={() => {
-                        setOpenDropdownIndex(null)
-                        setTimeout(() => {
-                          setDeleteIndex(index)
-                        }, 10)
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                      <MoreVerticalIcon />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="mr-4 -mt-4">
+                    <DropdownMenuItem asChild>
+                      <button
+                        className="w-full text-left"
+                        onClick={() => {
+                          setOpenDropdownIndex(null)
+                          setTimeout(() => {
+                            setEditingIndex(index)
+                          }, 10)
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <button
+                        className="w-full text-left"
+                        onClick={() => {
+                          setOpenDropdownIndex(null)
+                          setTimeout(() => {
+                            setDeleteIndex(index)
+                          }, 10)
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
-          </div>
-        ))
-        }
-      </div >
+          ))
+          }
+        </div >
+      )}
 
       <Pagination className="mt-6">
         <PaginationContent>

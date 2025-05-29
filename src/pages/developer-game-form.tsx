@@ -119,7 +119,7 @@ function DeveloperGameForm() {
                   control={gameForm.control}
                   name="cover"
                   render={() => (
-                    <FormItem className="w-full flex flex-col justify-center">
+                    <FormItem className="w-full flex flex-col items-center">
                       <FormControl>
                         <label className="w-full relative cursor-pointer max-w-76">
                           {coverUrl ? (

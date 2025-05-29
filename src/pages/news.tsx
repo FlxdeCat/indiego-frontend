@@ -12,44 +12,33 @@ import {
 import { convertDate, paginationNumbers } from "@/utils/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { usePagination } from "@/hooks/use-pagination"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { getNews } from "@/api/news-api"
+import { toast } from "sonner"
+import { News as NewsType } from "@/types/news"
+import { LoadingIcon } from "@/components/loading-icon"
 
 function News() {
 
-  const newss = [
-    {
-      title: "Some Updates",
-      dev: "Hololive",
-      image: "holocure-banner.png",
-      date: "1742963482",
-      content:
-        `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7`
-    },
-    {
-      title: "Some Updates",
-      dev: "Hololive",
-      image: "holocure-banner.png",
-      date: "1742963482",
-      content:
-        `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7.`
-    },
-    {
-      title: "Some Updates",
-      dev: "Hololive",
-      image: "holocure-banner.png",
-      date: "1742963482",
-      content:
-        `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7.`
-    },
-    {
-      title: "Some Updates",
-      dev: "Hololive",
-      image: "holocure-banner.png",
-      date: "1742963482",
-      content:
-        `A whole bunch of bug fixes and some minor balance adjustments!\n\nCharacter 1\n-Increased base SPD slightly.\n-Increased damage and chance of Skill 1 slightly.\n\nCharacter 3\n-Increased damage for Skill 2\n-Increased hitbox size for Summon at level 7.`
-    },
-  ]
+  const [loading, setLoading] = useState(false)
+  const [newss, setNewss] = useState<NewsType[]>([])
+
+  async function getAllNews() {
+    setLoading(true)
+
+    try {
+      const subscriptionTierResponse = await getNews()
+      setNewss(subscriptionTierResponse)
+    } catch (err: any) {
+      toast.error(err.message || "Fetch news failed. Please try again later.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getAllNews()
+  }, [])
 
   const itemsPerPage = 10
   const [currentPage, setCurrentPage] = useState(1)
@@ -61,51 +50,61 @@ function News() {
       <main className="flex flex-col items-center flex-1 mx-16">
         <div className="flex flex-col space-y-4 items-center w-full max-w-5xl mt-4">
           <div className="text-3xl font-bold text-center w-full py-4 border-y-1">Recent News</div>
-          <div className="flex flex-col space-y-8 w-full">
-            {paginatedNews.map((news, index) => (
-              <Dialog key={index}>
-                <DialogTrigger asChild>
-                  <div className="flex flex-col sm:flex-row justify-center items-center w-full hover:bg-muted/50 cursor-pointer border-2 rounded-md">
-                    <div className="flex-2 lg:flex-1">
-                      <img src={news.image} alt="Holocure" className="object-cover h-auto rounded-l-sm" />
-                    </div>
-                    <div className="flex-2 text-start flex flex-col gap-2 py-2 px-8">
-                      <div className="flex flex-col gap-1">
-                        <div className="font-bold text-xl md:text-2xl line-clamp-1">{news.title}</div>
-                        <div className="text-sm text-muted-foreground">{convertDate(news.date)}</div>
+          {loading ? (
+            <LoadingIcon size={50} className="text-primary" />
+          ) : (
+            paginatedNews.length === 0 ? (
+              <div className="flex flex-col items-center text-center text-muted-foreground pt-4">
+                There are no news yet.
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-8 w-full">
+                {paginatedNews.map((news, index) => (
+                  <Dialog key={index}>
+                    <DialogTrigger asChild>
+                      <div className="flex flex-col sm:flex-row justify-center items-center w-full hover:bg-muted/50 cursor-pointer border-2 rounded-md">
+                        <div className="flex-2 lg:flex-1">
+                          <img loading="lazy" src={URL.createObjectURL(news.image)} alt="Holocure" className="object-cover h-auto rounded-l-sm" />
+                        </div>
+                        <div className="flex-2 text-start flex flex-col gap-2 py-2 px-8">
+                          <div className="flex flex-col gap-1">
+                            <div className="font-bold text-xl md:text-2xl line-clamp-1">{news.title}</div>
+                            <div className="text-sm text-muted-foreground">{convertDate(news.createdAt)}</div>
+                          </div>
+                          <div className="text-sm md:text-base line-clamp-3">
+                            {news.text.split("\n").map((line: string, i: number) => (
+                              <p key={i} className="whitespace-pre-wrap">
+                                {line.trim() === "" ? <br /> : line}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-sm md:text-base line-clamp-3">
-                        {news.content.split("\n").map((line, i) => (
-                          <p key={i} className="whitespace-pre-wrap">
-                            {line.trim() === "" ? <br /> : line}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-xl md:max-w-2xl max-h-[90vh] flex flex-col gap-2 justify-start">
-                  <DialogHeader>
-                    <DialogTitle>{news.dev}</DialogTitle>
-                    <DialogDescription>{convertDate(news.date)}</DialogDescription>
-                  </DialogHeader>
-                  <ScrollArea className="flex-1 max-h-[90vh] overflow-auto pr-4">
-                    <div className="flex flex-col space-y-4">
-                      <div className="font-bold text-2xl">{news.title}</div>
-                      <img src={news.image} alt="Holocure" className="aspect-[2/1] object-cover rounded-md" />
-                      <div>
-                        {news.content.split("\n").map((line, i) => (
-                          <p key={i} className="whitespace-pre-wrap">
-                            {line.trim() === "" ? <br /> : line}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                  </ScrollArea>
-                </DialogContent>
-              </Dialog>
-            ))}
-          </div>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-xl md:max-w-2xl max-h-[90vh] flex flex-col gap-2 justify-start">
+                      <DialogHeader>
+                        <DialogTitle>{news.devName}</DialogTitle>
+                        <DialogDescription>{convertDate(news.createdAt)}</DialogDescription>
+                      </DialogHeader>
+                      <ScrollArea className="flex-1 max-h-[90vh] overflow-auto pr-4">
+                        <div className="flex flex-col space-y-4">
+                          <div className="font-bold text-2xl">{news.title}</div>
+                          <img src={URL.createObjectURL(news.image)} alt="Holocure" className="aspect-[2/1] object-cover rounded-md" />
+                          <div>
+                            {news.text.split("\n").map((line: string, i: number) => (
+                              <p key={i} className="whitespace-pre-wrap">
+                                {line.trim() === "" ? <br /> : line}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      </ScrollArea>
+                    </DialogContent>
+                  </Dialog>
+                ))}
+              </div>
+            )
+          )}
           <Pagination>
             <PaginationContent>
               <PaginationItem>

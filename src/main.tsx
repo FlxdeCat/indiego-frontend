@@ -17,7 +17,7 @@ import DeveloperHub from './pages/developer-hub.tsx'
 import DeveloperGameForm from './pages/developer-game-form.tsx'
 import AdminHub from './pages/admin-hub.tsx'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { RedirectIfAuthenticated, RequireAuth } from './components/middleware.tsx'
+import { BlockAdmin, RedirectIfAuthenticated, RequireAuth } from './components/middleware.tsx'
 import { AuthProvider } from './context/auth-context.tsx'
 
 const queryClient = new QueryClient()
@@ -35,11 +35,35 @@ createRoot(document.getElementById('root')!).render(
                 </RedirectIfAuthenticated>
               } />
 
-              <Route path="/" element={<Home />} />
-              <Route path="/browse" element={<Browse />} />
-              <Route path="/news" element={<News />} />
-              <Route path="/subscription" element={<Subscription />} />
-              <Route path="/game/:id" element={<Game />} />
+              <Route path="/" element={
+                <BlockAdmin>
+                  <Home />
+                </BlockAdmin>
+              } />
+
+              <Route path="/browse" element={
+                <BlockAdmin>
+                  <Browse />
+                </BlockAdmin>
+              } />
+
+              <Route path="/news" element={
+                <BlockAdmin>
+                  <News />
+                </BlockAdmin>
+              } />
+
+              <Route path="/subscription" element={
+                <BlockAdmin>
+                  <Subscription />
+                </BlockAdmin>
+              } />
+
+              <Route path="/game/:id" element={
+                <BlockAdmin>
+                  <Game />
+                </BlockAdmin>
+              } />
 
               <Route path="/profile" element={
                 <RequireAuth>

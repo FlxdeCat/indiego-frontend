@@ -27,7 +27,24 @@ export const RequireAuth = ({ children, allowedRoles }: Props) => {
 
   if (!isAuthenticated) return <Navigate to="/auth" state={{ from: location }} replace />
 
+  if (user?.role === "Admin" && location.pathname !== "/admin") {
+    return <Navigate to="/admin" replace />
+  }
+
   if (allowedRoles && (!user || !allowedRoles.includes(user.role))) return <Navigate to="/" replace />
+
+  return <>{children}</>
+}
+
+export const BlockAdmin = ({ children }: { children: ReactNode }) => {
+  const { user, isLoading } = useAuth()
+  const location = useLocation()
+
+  if (isLoading) return <Loading />
+
+  if (user?.role === "Admin" && location.pathname !== "/admin") {
+    return <Navigate to="/admin" replace />
+  }
 
   return <>{children}</>
 }

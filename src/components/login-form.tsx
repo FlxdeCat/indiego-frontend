@@ -18,11 +18,12 @@ import {
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { loginApi } from "@/api/auth-api"
 import { toast } from "sonner"
 import { LoadingIcon } from "./loading-icon"
 import { useAuth } from "@/context/auth-context"
+import { useNavigate } from "react-router"
 
 const LoginFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -31,7 +32,8 @@ const LoginFormSchema = z.object({
 
 export function LoginForm() {
 
-  const { login } = useAuth()
+  const { isAuthenticated, user, login } = useAuth()
+  const nav = useNavigate()
 
   const [loading, setLoading] = useState(false)
 
@@ -56,6 +58,16 @@ export function LoginForm() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === "Admin") {
+        nav("/admin", { replace: true })
+      } else {
+        nav("/", { replace: true })
+      }
+    }
+  }, [isAuthenticated, user, nav])
 
   return (
     <Card>
