@@ -55,7 +55,7 @@ function Browse() {
                 return (
                   <Card onClick={() => nav(`/game/${(currentPage - 1) * itemsPerPage + index + 1}`)} key={index} className="p-0 bg-transparent border-0 shadow-transparent transition-transform duration-300 hover:-translate-y-2 cursor-pointer">
                     <CardContent className="flex flex-col justify-center p-2">
-                      <img src={game.image} alt={game.title} className="w-full aspect-[4/5] object-cover rounded-md" />
+                      <img loading="lazy" src={game.image} alt={game.title} className="w-full aspect-[4/5] object-cover rounded-md" />
                       <div className="text-xl font-semibold text-start mt-2 line-clamp-1">{game.title} {(currentPage - 1) * itemsPerPage + index + 1}</div>
                       <div className="text-base text-start line-clamp-1">{game.dev}</div>
                       <div className="flex mt-2 space-x-2">

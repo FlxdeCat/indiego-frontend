@@ -25,7 +25,7 @@ export function DeleteNewsDialog({ id, open, onOpenChange, title }: { id: string
       onOpenChange(false)
       window.location.reload()
     } catch (err: any) {
-      toast.error(err.message || "Post failed. Please try again later.")
+      toast.error(err.message || "Delete failed. Please try again later.")
     } finally {
       setLoading(false)
       onOpenChange(false)

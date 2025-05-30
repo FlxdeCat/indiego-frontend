@@ -60,7 +60,7 @@ function Game() {
             <GameBannerCarousel banners={game.banners} />
           </div>
           <div className="flex-1 flex flex-col space-y-4 items-center">
-            <img src={game.cover} alt={game.title} className="aspect-[4/5] object-cover rounded-md w-full max-w-76" />
+            <img loading="lazy" src={game.cover} alt={game.title} className="aspect-[4/5] object-cover rounded-md w-full max-w-76" />
             <div className="flex flex-col space-y-1 items-center lg:items-start">
               <h1 className="font-bold text-xl">{game.title} {id} ({game.stars} ★)</h1>
               <h4 className="font-bold">{game.dev}</h4>

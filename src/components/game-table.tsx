@@ -67,6 +67,7 @@ export function GameTable({ games }: GameTableProps) {
                 >
                   <TableCell className="flex flex-col sm:flex-row items-center space-x-8 space-y-2">
                     <img
+                      loading="lazy"
                       src={game.image}
                       alt={game.title}
                       className="max-w-[200px] aspect-[2/1] object-cover rounded-md"

@@ -96,7 +96,7 @@ export function NewsForm({ news, onSubmit }: { news?: News, onSubmit?: () => voi
             )}
           />
           {imageUrl &&
-            <img src={imageUrl} alt="Image" className="aspect-[2/1] object-cover rounded-md" />
+            <img loading="lazy" src={imageUrl} alt="Image" className="aspect-[2/1] object-cover rounded-md" />
           }
           <FormField
             control={newsForm.control}

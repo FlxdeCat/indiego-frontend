@@ -24,7 +24,6 @@ import {
   MoreVerticalIcon,
   PlusIcon,
 } from "lucide-react"
-import { z } from "zod"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -62,15 +61,15 @@ import { DevNews } from "./dev-news"
 import { DeleteGameDialog } from "./delete-game-dialog"
 import { NewsForm } from "./news-form"
 import { Dialog } from "../ui/dialog"
-import { schema } from '../../schemas/data-table.schema'
 import { useEffect, useState } from "react"
 import { News } from "@/types/news"
 import { useAuth } from "@/context/auth-context"
 import { getSelfNews } from "@/api/news-api"
 import { toast } from "sonner"
 import { LoadingIcon } from "../loading-icon"
+import { Game } from "@/types/game"
 
-function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<z.infer<typeof schema>>[] {
+function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<Game>[] {
   return [
     {
       accessorKey: "cover",
@@ -80,8 +79,9 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
       cell: ({ row }) => (
         <div className="flex justify-center items-center">
           <img
-            src={"/" + row.original.cover}
-            alt={row.original.title}
+            loading="lazy"
+            src={URL.createObjectURL(row.original.cover)}
+            alt={row.original.name}
             className="h-48 max-w-full object-contain min-w-32"
           />
         </div>
@@ -95,7 +95,7 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
         <div className="w-full text-center flex-1">Title</div>
       ),
       cell: ({ row }) => (
-        <div className="text-center flex-1 text-lg font-bold">{row.original.title}</div>
+        <div className="text-center flex-1 text-lg font-bold">{row.original.name}</div>
       ),
       enableHiding: false,
     },
@@ -107,7 +107,7 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
       cell: ({ row }) => (
         <div className="w-full flex justify-center">
           <div className="flex flex-wrap gap-2 justify-center items-center max-w-60">
-            {row.original.genre.map((genre, idx) => (
+            {row.original.genres.map((genre, idx) => (
               <Badge
                 key={idx}
                 variant="outline"
@@ -144,7 +144,7 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
         <div className="w-full text-center flex-1">Reviews</div>
       ),
       cell: ({ row }) => (
-        <div className="text-center flex-1">{row.original.reviews}</div>
+        <div className="text-center flex-1">{row.original.reviewIds.length}</div>
       ),
     },
     {
@@ -194,7 +194,7 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
   ]
 }
 
-function MainTableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
+function MainTableRow({ row }: { row: Row<Game> }) {
   return (
     <TableRow
       data-state={row.getIsSelected() && "selected"}
@@ -212,7 +212,7 @@ function MainTableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
 export function DataTable({
   data: initialData,
 }: {
-  data: z.infer<typeof schema>[]
+  data: Game[]
 }) {
   const [data, _] = useState(() => initialData)
   const [activeTab, setActiveTab] = useState<"games" | "news">("games")
@@ -411,7 +411,7 @@ export function DataTable({
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      You have no games yet.
                     </TableCell>
                   </TableRow>
                 )}
@@ -507,8 +507,9 @@ export function DataTable({
       </Tabs>
 
       <DeleteGameDialog
+        id={deleteGameIndex !== null ? data[deleteGameIndex].id : ""}
         open={deleteGameIndex !== null}
-        title={deleteGameIndex !== null ? data[deleteGameIndex].title : ""}
+        title={deleteGameIndex !== null ? data[deleteGameIndex].name : ""}
         onOpenChange={(open) => {
           if (!open) setDeleteGameIndex(null)
         }}

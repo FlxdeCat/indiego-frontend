@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Sidebar,
   SidebarContent,
@@ -12,23 +12,47 @@ import {
 } from "@/components/ui/sidebar"
 import { Search } from "lucide-react"
 import { Checkbox } from "./ui/checkbox"
-import { genres } from "../schemas/temp"
+import { Genre } from "@/types/genre"
+import { getGenres } from "@/api/genre-api"
+import { toast } from "sonner"
+import { LoadingIcon } from "./loading-icon"
 
 export function BrowseSidebar() {
+
+  const [genres, setGenres] = useState<Genre[]>([])
+  const [genreLoading, setGenreLoading] = useState(false)
+
+  async function getAllGenres() {
+    setGenreLoading(true)
+
+    try {
+      const genreResponse = await getGenres()
+      setGenres(genreResponse)
+    } catch (err: any) {
+      toast.error(err.message || "Fetch genre failed. Please try again later.")
+    } finally {
+      setGenreLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getAllGenres()
+  }, [])
+
   const [genreSearch, setGenreSearch] = useState("")
   const [checkedGenres, setCheckedGenres] = useState(new Set())
 
-  const filteredGenres = genres.filter((genre: string) =>
-    genre.toLowerCase().includes(genreSearch.toLowerCase())
+  const filteredGenres = genres.filter((genre: Genre) =>
+    genre.name.toLowerCase().includes(genreSearch.toLowerCase())
   )
 
-  const toggleGenre = (genre: string) => {
+  const toggleGenre = (genreId: string) => {
     setCheckedGenres((prev) => {
       const checked = new Set(prev)
-      if (checked.has(genre)) {
-        checked.delete(genre)
+      if (checked.has(genreId)) {
+        checked.delete(genreId)
       } else {
-        checked.add(genre)
+        checked.add(genreId)
       }
       return checked
     })
@@ -56,22 +80,28 @@ export function BrowseSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {filteredGenres.map((genre) => (
-                <label key={genre} htmlFor={genre} className="cursor-pointer">
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <div className="flex space-x-2">
-                        <Checkbox
-                          id={genre}
-                          checked={checkedGenres.has(genre)}
-                          onCheckedChange={() => toggleGenre(genre)}
-                        />
-                        <div>{genre}</div>
-                      </div>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </label>
-              ))}
+              {genreLoading ? (
+                <div className="w-full flex justify-center items-center">
+                  <LoadingIcon size={30} className="text-primary" />
+                </div>
+              ) : (
+                filteredGenres.map((genre) => (
+                  <label key={genre.id} htmlFor={genre.name} className="cursor-pointer">
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild>
+                        <div className="flex space-x-2">
+                          <Checkbox
+                            id={genre.name}
+                            checked={checkedGenres.has(genre)}
+                            onCheckedChange={() => toggleGenre(genre.id)}
+                          />
+                          <div>{genre.name}</div>
+                        </div>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </label>
+                ))
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -1,4 +1,5 @@
 import { getDeveloper } from "@/api/developer-api"
+import { getSelfGames } from "@/api/game-api"
 import { ChartAreaInteractive } from "@/components/dev/chart-area-interactive"
 import { DataTable } from "@/components/dev/data-table"
 import { DevNavbar } from "@/components/dev/dev-navbar"
@@ -6,55 +7,24 @@ import { DevProfile } from "@/components/dev/dev-profile"
 import { SectionCards } from "@/components/dev/section-cards"
 import { Footer } from "@/components/footer"
 import { LoadingIcon } from "@/components/loading-icon"
+import { useAuth } from "@/context/auth-context"
 import { Developer } from "@/types/developer"
+import { Game } from "@/types/game"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 function DeveloperHub() {
 
-  const data = [
-    {
-      "id": 1,
-      "cover": "holocure.png",
-      "title": "Holocure",
-      "developer": "Hololive",
-      "genre": ["Action", "Comedy"],
-      "rating": 4.5,
-      "downloads": 15,
-      "reviews": 0,
-    },
-    {
-      "id": 2,
-      "cover": "holocure.png",
-      "title": "Holocure",
-      "developer": "Hololive",
-      "genre": ["Action"],
-      "rating": 4.7,
-      "downloads": 20,
-      "reviews": 9,
-    },
-    {
-      "id": 3,
-      "cover": "holocure.png",
-      "title": "Holocure",
-      "developer": "Hololive",
-      "genre": ["Action"],
-      "rating": 3.9,
-      "downloads": 13,
-      "reviews": 3,
-    },
-  ]
-
-  const [loading, setLoading] = useState(false)
+  const [loadingDev, setLoadingDev] = useState(false)
   const [dev, setDev] = useState<Developer>({
-    devName: "Hololive",
-    fullName: "Hololive",
-    country: "Indonesia",
-    taxId: "1234-1234-1234"
-  }) // TODO: Change to null
+    devName: "",
+    fullName: "",
+    country: "",
+    taxId: ""
+  })
 
   async function getDevData() {
-    setLoading(true)
+    setLoadingDev(true)
 
     try {
       const developerResponse = await getDeveloper()
@@ -62,37 +32,61 @@ function DeveloperHub() {
     } catch (err: any) {
       toast.error(err.message || "Fetch developer data failed. Please try again later.")
     } finally {
-      setLoading(false)
+      setLoadingDev(false)
+    }
+  }
+
+  const [loadingGames, setLoadingGames] = useState(false)
+  const [games, setGames] = useState<Game[]>([])
+  const { user } = useAuth()
+
+  async function getGamesData() {
+    setLoadingGames(true)
+    try {
+      const gamesResponse = await getSelfGames({ userId: user!.id })
+      setGames(gamesResponse)
+    } catch (err: any) {
+      toast.error(err.message || "Fetch game data failed. Please try again later.")
+    } finally {
+      setLoadingGames(false)
     }
   }
 
   useEffect(() => {
     getDevData()
+    getGamesData()
   }, [])
 
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
       <DevNavbar />
       <div className="flex flex-1 flex-col">
-        {loading ? (
-          <div className="flex flex-1 items-center justify-center">
-            <LoadingIcon size={50} className="text-primary" />
-          </div>
-        ) : (
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        <div className="@container/main flex flex-1 flex-col gap-2">
+          <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+            {loadingDev ? (
+              <div className="flex flex-1 items-center justify-center">
+                <LoadingIcon size={50} className="text-primary" />
+              </div>
+            ) : (
               <div className="px-4 lg:px-6">
                 <DevProfile dev={dev} />
               </div>
+            )}
 
-              <SectionCards />
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
-              </div>
-              <DataTable data={data} />
+            <SectionCards />
+            <div className="px-4 lg:px-6">
+              <ChartAreaInteractive />
             </div>
-          </div >
-        )}
+
+            {loadingGames ? (
+              <div className="flex flex-1 items-center justify-center">
+                <LoadingIcon size={50} className="text-primary" />
+              </div>
+            ) : (
+              <DataTable data={games} />
+            )}
+          </div>
+        </div >
       </div >
       <Footer />
     </div >

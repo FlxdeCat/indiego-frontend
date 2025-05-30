@@ -1,30 +1,10 @@
-import { useEffect, useState } from "react";
+import { LoadingIcon } from "@/components/loading-icon";
 
 export default function Loading() {
-  const [loadingText, setLoadingText] = useState('Loading');
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLoadingText((prev) => {
-        if (prev === 'Loading...') {
-          return 'Loading'
-        } else {
-          return prev + '.'
-        }
-      })
-    }, 300)
-
-    return () => clearInterval(interval)
-  }, [])
-
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col items-center space-y-4">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-
-        <p className="text-xl font-bold">
-          {loadingText}
-        </p>
+        <LoadingIcon size={50} className="text-primary" />
       </div>
     </div>
   )

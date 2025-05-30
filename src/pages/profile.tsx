@@ -46,7 +46,7 @@ function Profile() {
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-12">
             <div className="relative group w-[240px] h-[240px]">
               {imageUrl ? (
-                <img src={imageUrl} alt="Profile" className="w-full h-full object-cover rounded-md border-2" />
+                <img loading="lazy" src={imageUrl} alt="Profile" className="w-full h-full object-cover rounded-md border-2" />
               ) : (
                 <User className="w-full h-full rounded-md border-2" />
               )}

@@ -1,5 +1,7 @@
+import { Genre } from "@/types/genre"
+
 interface GenreListProps {
-  genres: string[],
+  genres: Genre[],
   selected: string[],
   onToggle: (genre: string) => void,
   search: string
@@ -7,7 +9,7 @@ interface GenreListProps {
 
 export function GenreList({ genres, selected, onToggle, search }: GenreListProps) {
   const filtered = genres.filter((g) =>
-    g.toLowerCase().includes(search.toLowerCase())
+    g.name.toLowerCase().includes(search.toLowerCase())
   )
 
   if (filtered.length === 0) {
@@ -21,19 +23,19 @@ export function GenreList({ genres, selected, onToggle, search }: GenreListProps
   return (
     <>
       {filtered.map((genre) => {
-        const isSelected = selected.includes(genre)
+        const isSelected = selected.includes(genre.id)
         return (
           <div
-            key={genre}
+            key={genre.id}
             className={`
               p-2 rounded cursor-pointer text-center font-bold
               ${isSelected
                 ? "bg-primary text-primary-foreground hover:bg-primary/80"
                 : "bg-muted/50 hover:bg-muted"}
             `}
-            onClick={() => onToggle(genre)}
+            onClick={() => onToggle(genre.id)}
           >
-            {genre}
+            {genre.name}
           </div>
         )
       })}

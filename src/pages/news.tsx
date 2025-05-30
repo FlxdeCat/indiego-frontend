@@ -89,7 +89,7 @@ function News() {
                       <ScrollArea className="flex-1 max-h-[90vh] overflow-auto pr-4">
                         <div className="flex flex-col space-y-4">
                           <div className="font-bold text-2xl">{news.title}</div>
-                          <img src={URL.createObjectURL(news.image)} alt="Holocure" className="aspect-[2/1] object-cover rounded-md" />
+                          <img loading="lazy" src={URL.createObjectURL(news.image)} alt="Holocure" className="aspect-[2/1] object-cover rounded-md" />
                           <div>
                             {news.text.split("\n").map((line: string, i: number) => (
                               <p key={i} className="whitespace-pre-wrap">

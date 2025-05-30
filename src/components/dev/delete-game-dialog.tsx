@@ -1,3 +1,4 @@
+import { deleteGames } from "@/api/game-api"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,9 +9,29 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useState } from "react"
 import { toast } from "sonner"
+import { LoadingIcon } from "../loading-icon"
 
-export function DeleteGameDialog({ open, onOpenChange, title }: { open: boolean, onOpenChange: (open: boolean) => void, title: string }) {
+export function DeleteGameDialog({ id, open, onOpenChange, title }: { id: string, open: boolean, onOpenChange: (open: boolean) => void, title: string }) {
+
+  const [loading, setLoading] = useState(false)
+
+  async function onDeleteGames() {
+    setLoading(true)
+
+    try {
+      await deleteGames(id)
+      onOpenChange(false)
+      window.location.reload()
+    } catch (err: any) {
+      toast.error(err.message || "Delete failed. Please try again later.")
+    } finally {
+      setLoading(false)
+      onOpenChange(false)
+    }
+  }
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -22,11 +43,10 @@ export function DeleteGameDialog({ open, onOpenChange, title }: { open: boolean,
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() =>
-            toast.info("Game has been deleted", {
-              description: "The game and its data have been permanently removed.",
-            })
-          }>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={onDeleteGames} disabled={loading}>
+            {loading && <LoadingIcon />}
+            {loading ? "Deleting..." : "Continue"}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

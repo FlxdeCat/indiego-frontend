@@ -77,6 +77,7 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
       cell: ({ row }) => (
         <div className="flex justify-center items-center">
           <img
+            loading="lazy"
             src={"/" + row.original.cover}
             alt={row.original.title}
             className="h-48 max-w-full object-contain min-w-32"
@@ -394,7 +395,7 @@ export function AdminDataTable({
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No results.
+                      There are no games yet.
                     </TableCell>
                   </TableRow>
                 )}
