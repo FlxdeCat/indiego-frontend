@@ -8,4 +8,5 @@ export interface User {
   role: Role
   birthDate: string
   isSubscribed: boolean
+  favorites: string[]
 }

@@ -1,27 +1,40 @@
+import { getFavorites } from "@/api/favorite-api"
 import { ChangePasswordForm } from "@/components/change-password-form"
 import { EditProfileForm } from "@/components/edit-profile-form"
 import { Footer } from "@/components/footer"
 import { GameTable } from "@/components/game-table"
+import { LoadingIcon } from "@/components/loading-icon"
 import { Navbar } from "@/components/navbar"
 import { useAuth } from "@/context/auth-context"
+import { Game } from "@/types/game"
 import { convertDate } from "@/utils/utils"
 import { User } from "lucide-react"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { toast } from "sonner"
 // import { Camera } from "lucide-react"
 
 function Profile() {
 
   const { user } = useAuth()
+  const [favoriteLoading, setFavoriteLoading] = useState(false)
+  const [favorites, setFavorites] = useState<Game[]>([])
 
-  const games: { title: string; image: string, genres: string[] }[] = [
-    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
-    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
-    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
-    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
-    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
-    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] },
-    { title: "Holocure", image: "holocure.png", genres: ["Action", "Comedy"] }
-  ]
+  async function getGameFavoritesData() {
+    setFavoriteLoading(true)
+
+    try {
+      const favoriteResponse = await getFavorites()
+      setFavorites(favoriteResponse)
+    } catch (err: any) {
+      toast.error(err.message || "Fetch favorites failed. Please try again later.")
+    } finally {
+      setFavoriteLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getGameFavoritesData()
+  }, [])
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
@@ -68,11 +81,17 @@ function Profile() {
         </div>
         <div className="w-full max-w-7xl">
           <h1 className="font-bold text-3xl p-4 mt-2">My Favorites</h1>
-          <GameTable games={games} />
+          {favoriteLoading ? (
+            <div className="w-full flex justify-center">
+              <LoadingIcon size={50} className="text-primary" />
+            </div>
+          ) : (
+            <GameTable games={favorites} />
+          )}
         </div>
-      </main>
+      </main >
       <Footer />
-    </div>
+    </div >
   )
 }
 

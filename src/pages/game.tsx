@@ -1,3 +1,4 @@
+import { favoriteGame, unfavoriteGame } from "@/api/favorite-api"
 import { getGame } from "@/api/game-api"
 import { getCurrentSubscription } from "@/api/subscription-api"
 import { AddReview } from "@/components/add-review"
@@ -20,7 +21,7 @@ function Game() {
 
   const [subLoading, setSubLoading] = useState(false)
   const [sub, setSub] = useState(false)
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
 
   async function getTiersAndCurrent() {
     setSubLoading(true)
@@ -68,6 +69,11 @@ function Game() {
     getGameData()
   }, [])
 
+  useEffect(() => {
+    if (!id) return
+    if (user) setFavorite(user?.favorites.includes(id))
+  }, [user])
+
   function downloadGame() {
     if (!(game?.file)) return
     const url = URL.createObjectURL(game.file)
@@ -76,6 +82,38 @@ function Game() {
     a.download = game.file.name
     a.click()
     URL.revokeObjectURL(url)
+  }
+
+  const [favoriteLoading, setFavoriteLoading] = useState(false)
+
+  async function onFavoriteGame() {
+    setFavoriteLoading(true)
+
+    try {
+      if (!id) return
+      await favoriteGame(id)
+      toast.success(`${game?.name} has been added to your favorites.`)
+      setFavorite(true)
+    } catch (err: any) {
+      toast.error(err.message || "Set favorite failed. Please try again later.")
+    } finally {
+      setFavoriteLoading(false)
+    }
+  }
+
+  async function onUnfavoriteGame() {
+    setFavoriteLoading(true)
+
+    try {
+      if (!id) return
+      await unfavoriteGame(id)
+      toast.success(`${game?.name} has been removed from your favorites.`)
+      setFavorite(false)
+    } catch (err: any) {
+      toast.error(err.message || "Set unfavorite failed. Please try again later.")
+    } finally {
+      setFavoriteLoading(false)
+    }
   }
 
   return (
@@ -138,8 +176,14 @@ function Game() {
                 }
               </div>
               {auth && (favorite ?
-                <Button variant="secondary" onClick={() => setFavorite(false)}><Star className="fill-black dark:fill-white" />Remove from My Favorites</Button> :
-                <Button variant="outline" onClick={() => setFavorite(true)}><Star />Save to My Favorites</Button>
+                (<Button variant="secondary" onClick={onUnfavoriteGame} disabled={favoriteLoading}>
+                  {favoriteLoading ? <LoadingIcon /> : <Star className="fill-black dark:fill-white" />}
+                  Remove from My Favorites
+                </Button>) :
+                (<Button variant="outline" onClick={onFavoriteGame} disabled={favoriteLoading}>
+                  {favoriteLoading ? <LoadingIcon /> : <Star />}
+                  Save to My Favorites
+                </Button>)
               )}
             </div>
           </div>

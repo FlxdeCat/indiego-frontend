@@ -26,12 +26,9 @@ import { Button } from "./ui/button"
 import { useState } from "react"
 import { usePagination } from "@/hooks/use-pagination"
 import { paginationNumbers } from "@/utils/utils"
-
-interface Game {
-  title: string
-  image: string
-  genres: string[]
-}
+import { Game } from "@/types/game"
+import { unfavoriteGame } from "@/api/favorite-api"
+import { toast } from "sonner"
 
 interface GameTableProps {
   games: Game[]
@@ -46,10 +43,19 @@ export function GameTable({ games }: GameTableProps) {
 
   const maxGenres = 5
 
+  async function onUnfavoriteGame(gameId: string) {
+    try {
+      await unfavoriteGame(gameId)
+      window.location.reload()
+    } catch (err: any) {
+      toast.error(err.message || "Set unfavorite failed. Please try again later.")
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4">
       {games.length === 0 ? (
-        <div className="flex flex-col items-center text-center text-muted-foreground p-4">
+        <div className="flex flex-col items-center text-center text-muted-foreground p-2">
           You have no favorite games yet.
         </div>
       ) : (
@@ -61,20 +67,21 @@ export function GameTable({ games }: GameTableProps) {
 
               return (
                 <TableRow
-                  onClick={() => nav(`/game/${index + 1}`)}
+                  onClick={() => nav(`/game/${game.id}`)}
                   key={index}
                   className="flex items-center justify-between cursor-pointer transition-all duration-200 p-2 hover:px-1"
                 >
-                  <TableCell className="flex flex-col sm:flex-row items-center space-x-8 space-y-2">
+                  <TableCell className="h-full flex flex-col sm:flex-row items-center space-x-8 space-y-2 sm:space-y-0">
                     <img
                       loading="lazy"
-                      src={game.image}
-                      alt={game.title}
+                      src={URL.createObjectURL(game.cover)}
+                      alt={game.name}
                       className="max-w-[200px] aspect-[2/1] object-cover rounded-md"
                     />
-                    <div className="flex flex-col space-y-2 w-full">
-                      <div className="font-bold text-2xl">{game.title}</div>
-                      <div className="flex gap-2 flex-wrap max-w-[300px]">
+                    <div className="flex flex-col gap-1 w-full">
+                      <div className="font-bold text-2xl">{game.name}</div>
+                      <div className="font-semibold text-lg">{game.devName}</div>
+                      <div className="flex gap-2 flex-wrap max-w-[300px] mt-1">
                         {displayedGenres.map((genre, index) => (
                           <Badge key={index} variant="secondary">
                             {genre}
@@ -92,7 +99,7 @@ export function GameTable({ games }: GameTableProps) {
                       <DropdownMenuContent className="sm:ml-48 mr-4 -mt-4">
                         <DropdownMenuItem onClick={(e) => {
                           e.stopPropagation()
-                          nav("/profile")
+                          onUnfavoriteGame(game.id)
                         }}>Remove from My Favorites</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
