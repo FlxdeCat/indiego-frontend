@@ -68,6 +68,16 @@ function Game() {
     getGameData()
   }, [])
 
+  function downloadGame() {
+    if (!(game?.file)) return
+    const url = URL.createObjectURL(game.file)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = game.file.name
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="m-0 p-0 flex flex-col min-h-screen">
       <Navbar />
@@ -118,7 +128,7 @@ function Game() {
                 }
                 {auth ?
                   sub ?
-                    <Button><Download />Download</Button> :
+                    <Button onClick={downloadGame}><Download />Download</Button> :
                     <div className="cursor-not-allowed">
                       <Button disabled><Download />Subscribe to Download</Button>
                     </div> :
