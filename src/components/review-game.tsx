@@ -14,19 +14,11 @@ import {
 } from "@/components/ui/popover"
 import { useState, useMemo } from "react"
 import { cn } from "@/lib/utils"
+import { Review } from "@/types/review"
 
-interface Review {
-  username: string
-  review: string
-  stars: number
-  date: string
-}
+export function ReviewGame({ id }: { id: string }) {
 
-interface ReviewGameProps {
-  reviews: Review[]
-}
-
-export function ReviewGame({ reviews }: ReviewGameProps) {
+  const [reviews, setReviews] = useState<Review[]>([])
 
   const sorters = ["Recent", "Rated"]
 
@@ -103,28 +95,34 @@ export function ReviewGame({ reviews }: ReviewGameProps) {
           </Button>
         </div>
       </div>
-      <div className="flex flex-col gap-6">
-        {sortedReviews.map((review, index) => (
-          <div
-            key={index}
-            className="flex flex-col gap-2 px-8 py-4 border-2 rounded-md"
-          >
-            <div className="flex flex-col items-start md:flex-row gap-2 md:gap-20">
-              <div className="flex flex-col gap-2 items-start">
-                <div className="flex items-center gap-4">
-                  <User size={44} />
-                  <div className="flex flex-col items-start">
-                    <h4 className="font-bold text-xl text-start">{review.username}</h4>
-                    <h4 className="text-lg text-start">{review.stars} ★</h4>
+      {reviews.length == 0 ? (
+        <div className="flex flex-col items-center text-center text-muted-foreground pt-4">
+          There are no reviews yet.
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6">
+          {sortedReviews.map((review, index) => (
+            <div
+              key={index}
+              className="flex flex-col gap-2 px-8 py-4 border-2 rounded-md"
+            >
+              <div className="flex flex-col items-start md:flex-row gap-2 md:gap-20">
+                <div className="flex flex-col gap-2 items-start">
+                  <div className="flex items-center gap-4">
+                    <User size={44} />
+                    <div className="flex flex-col items-start">
+                      <h4 className="font-bold text-xl text-start">{review.username}</h4>
+                      <h4 className="text-lg text-start">{review.stars} ★</h4>
+                    </div>
                   </div>
+                  <div>{convertDate(review.date)}</div>
                 </div>
-                <div>{convertDate(review.date)}</div>
+                <div>{review.review}</div>
               </div>
-              <div>{review.review}</div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

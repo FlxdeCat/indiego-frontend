@@ -176,7 +176,7 @@ function DeveloperGameForm() {
         ) : (
           <Form {...gameForm}>
             <form onSubmit={gameForm.handleSubmit(onGameFormSubmit)} className="flex flex-col gap-4 items-center w-full max-w-7xl mb-4">
-              <div className="flex flex-col lg:flex-row items-center gap-8 w-full mt-4">
+              <div className="flex flex-col lg:flex-row items-start gap-8 w-full mt-4">
                 <div className="flex-3 w-full min-w-0">
                   <FormField
                     control={gameForm.control}

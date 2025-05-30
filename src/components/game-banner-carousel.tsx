@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel"
 import { smoothScroll } from "@/utils/utils"
 
-export function GameBannerCarousel({ banners }: { banners: string[] }) {
+export function GameBannerCarousel({ banners }: { banners: File[] }) {
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false })
   )
@@ -56,7 +56,7 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
                 <Card className="p-0 border-0">
                   <CardContent className="rounded-md p-0">
                     <img
-                      src={image}
+                      src={URL.createObjectURL(image)}
                       className="w-full rounded-md object-cover aspect-[7/4]"
                       alt={`Game banner ${index + 1}`}
                       loading="lazy"
@@ -86,7 +86,7 @@ export function GameBannerCarousel({ banners }: { banners: string[] }) {
                 aria-label={`View banner ${index + 1}`}
               >
                 <img
-                  src={image}
+                  src={URL.createObjectURL(image)}
                   className="object-cover w-full h-full"
                   alt={`Thumbnail ${index + 1}`}
                   loading="lazy"
