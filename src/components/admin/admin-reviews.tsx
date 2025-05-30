@@ -5,32 +5,9 @@ import { Button } from "../ui/button"
 import { Trash2, User } from "lucide-react"
 import { DeleteReviewsDialog } from "./delete-reviews-dialog"
 import { usePagination } from "@/hooks/use-pagination"
+import { Review } from "@/types/review"
 
-export function AdminReviews() {
-
-  const reviews = [
-    {
-      username: "Username 1",
-      title: "Holocure",
-      review: "Very good game!",
-      stars: 4,
-      date: "1742963480"
-    },
-    {
-      username: "Username 2",
-      title: "Holocure",
-      review: "Very nice game!",
-      stars: 5,
-      date: "1742963481"
-    },
-    {
-      username: "Username 3",
-      title: "Holocure",
-      review: "Good game!",
-      stars: 4,
-      date: "1742963482"
-    }
-  ]
+export function AdminReviews({ reviews }: { reviews: Review[] }) {
 
   const itemsPerPage = 10
   const [currentPage, setCurrentPage] = useState(1)
@@ -53,13 +30,19 @@ export function AdminReviews() {
                     <User size={77} />
                     <div className="flex flex-col items-start">
                       <h4 className="font-bold text-xl text-start">{review.username}</h4>
-                      <h4 className="font-bold text-lg text-start">{review.title}</h4>
-                      <h4 className="text-lg text-start">{review.stars} ★</h4>
+                      <h4 className="font-bold text-lg text-start">{review.gameName}</h4>
+                      <h4 className="text-lg text-start">{review.rating} ★</h4>
                     </div>
                   </div>
-                  <div>{convertDate(review.date)}</div>
+                  <div>{convertDate(review.createdAt)}</div>
                 </div>
-                <div className="text-start">{review.review}</div>
+                <div className="text-start">
+                  {review.text.split("\n").map((line: string, i: number) => (
+                    <p key={i} className="whitespace-pre-wrap">
+                      {line.trim() === "" ? <br /> : line}
+                    </p>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -113,9 +96,10 @@ export function AdminReviews() {
       </Pagination>
 
       <DeleteReviewsDialog
+        id={deleteIndex !== null ? reviews[deleteIndex].id : ""}
         open={deleteIndex !== null}
         username={deleteIndex !== null ? reviews[deleteIndex].username : ""}
-        title={deleteIndex !== null ? reviews[deleteIndex].title : ""}
+        title={deleteIndex !== null ? reviews[deleteIndex].gameName : ""}
         onOpenChange={(open) => {
           if (!open) setDeleteIndex(null)
         }}

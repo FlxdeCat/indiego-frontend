@@ -7,4 +7,5 @@ export interface User {
   password: string
   role: Role
   birthDate: string
+  isSubscribed: boolean
 }

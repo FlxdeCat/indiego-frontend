@@ -1,6 +1,10 @@
 export interface Review {
-  username: string
-  review: string
-  stars: number
-  date: string
+  id: string,
+  gameId: string,
+  gameName: string,
+  userId: string,
+  username: string,
+  text: string,
+  rating: number,
+  createdAt: string
 }

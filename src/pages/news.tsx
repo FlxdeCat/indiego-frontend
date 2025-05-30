@@ -54,7 +54,7 @@ function News() {
             <LoadingIcon size={50} className="text-primary" />
           ) : (
             paginatedNews.length === 0 ? (
-              <div className="flex flex-col items-center text-center text-muted-foreground pt-4">
+              <div className="flex flex-col items-center text-center text-muted-foreground pt-2">
                 There are no news yet.
               </div>
             ) : (

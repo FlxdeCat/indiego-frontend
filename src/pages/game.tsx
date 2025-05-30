@@ -82,7 +82,7 @@ function Game() {
               <GameBannerCarousel banners={game?.banners ?? []} />
             </div>
             <div className="w-full flex-1 flex flex-col space-y-4 items-center">
-              <img loading="lazy" src={game?.cover ? URL.createObjectURL(game.cover) : ""} alt={game?.name} className="aspect-[4/5] object-cover rounded-md w-full max-w-76" />
+              <img loading="lazy" src={game?.cover ? URL.createObjectURL(game.cover) : undefined} alt={game?.name} className="aspect-[4/5] object-cover rounded-md w-full max-w-76" />
               <div className="w-full flex flex-col space-y-1 items-center lg:items-start">
                 <h1 className="w-full font-bold text-xl">{game?.name} ({game?.rating} ★)</h1>
                 <h4 className="w-full font-bold">{game?.devName}</h4>
@@ -134,7 +134,7 @@ function Game() {
             </div>
           </div>
           {auth && <div className="w-full max-w-7xl gap-2 p-4 border-b-2">
-            <AddReview id={id!} />
+            <AddReview id={id!} name={game?.name ?? ""} />
           </div>}
           <ReviewGame id={id!} />
         </main>

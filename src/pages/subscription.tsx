@@ -14,7 +14,7 @@ function Subscription() {
   const [currTier, setCurrTier] = useState<string>("")
   const [loading, setLoading] = useState(false)
 
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
 
   async function getTiersAndCurrent() {
     setLoading(true)
@@ -22,7 +22,7 @@ function Subscription() {
     try {
       const subscriptionTierResponse = await getSubscriptionTypes()
       setTiers(subscriptionTierResponse)
-      if (isAuthenticated) {
+      if (isAuthenticated && user?.isSubscribed) {
         const currentTierResponse = await getCurrentSubscription()
         if (currentTierResponse && currentTierResponse[0]) setCurrTier(currentTierResponse[0].subscriptionTypeId)
       }

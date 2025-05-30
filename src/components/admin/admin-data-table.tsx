@@ -21,7 +21,7 @@ import {
   ChevronsRightIcon,
   ChevronUpIcon,
   ColumnsIcon,
-  MoreVerticalIcon,
+  Trash2,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -29,7 +29,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
@@ -54,7 +53,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { useNavigate } from "react-router"
 import { Input } from "../ui/input"
 import { DeleteGameDialog } from "@/components/dev/delete-game-dialog"
 import { AdminNews } from "./admin-news"
@@ -65,8 +63,10 @@ import { News } from "@/types/news"
 import { toast } from "sonner"
 import { LoadingIcon } from "../loading-icon"
 import { Game } from "@/types/game"
+import { Review } from "@/types/review"
+import { getAllReviews } from "@/api/review-api"
 
-function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<Game>[] {
+function getGameTableColumns(setDeleteGameIndex: React.Dispatch<React.SetStateAction<number | null>>): ColumnDef<Game>[] {
   return [
     {
       accessorKey: "cover",
@@ -158,37 +158,9 @@ function getGameTableColumns(nav: ReturnType<typeof useNavigate>, setDeleteGameI
       id: "actions",
       cell: ({ row }) => (
         <div className="flex justify-center">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="flex text-muted-foreground data-[state=open]:bg-muted"
-                size="icon"
-              >
-                <MoreVerticalIcon />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="mr-4 -mt-4">
-              <DropdownMenuItem
-                onClick={() => nav(`/game/${row.original.id}`)}
-              >
-                Go to Game Page
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <button
-                  className="w-full text-left"
-                  onClick={() => {
-                    setTimeout(() => {
-                      setDeleteGameIndex(row.index)
-                    }, 10)
-                  }}
-                >
-                  Delete
-                </button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button variant="destructive" onClick={() => {
+            setDeleteGameIndex(row.index)
+          }}><Trash2 /></Button>
         </div>
       ),
       enableSorting: false,
@@ -231,8 +203,7 @@ export function AdminDataTable({
   })
   const [deleteGameIndex, setDeleteGameIndex] = useState<number | null>(null)
 
-  const nav = useNavigate()
-  const columns = getGameTableColumns(nav, setDeleteGameIndex)
+  const columns = getGameTableColumns(setDeleteGameIndex)
 
   const table = useReactTable({
     data,
@@ -275,8 +246,25 @@ export function AdminDataTable({
     }
   }
 
+  const [reviewsLoading, setReviewsLoading] = useState(false)
+  const [reviews, setReviews] = useState<Review[]>([])
+
+  async function getReviewsData() {
+    setReviewsLoading(true)
+
+    try {
+      const allReviewsResponse = await getAllReviews()
+      setReviews(allReviewsResponse)
+    } catch (err: any) {
+      toast.error(err.message || "Fetch reviews failed. Please try again later.")
+    } finally {
+      setReviewsLoading(false)
+    }
+  }
+
   useEffect(() => {
     getNewsData()
+    getReviewsData()
   }, [])
 
   return (
@@ -483,13 +471,18 @@ export function AdminDataTable({
               </div>
             ) : (
               <AdminNews newss={newss} />
-            )
-            }
+            )}
           </div>
         </TabsContent>
         <TabsContent value="reviews" className="px-4 lg:px-6">
           <div className="border rounded-lg p-4 text-center">
-            <AdminReviews />
+            {reviewsLoading ? (
+              <div className="flex flex-1 items-center justify-center">
+                <LoadingIcon size={50} className="text-primary" />
+              </div>
+            ) : (
+              <AdminReviews reviews={reviews} />
+            )}
           </div>
         </TabsContent>
       </Tabs>

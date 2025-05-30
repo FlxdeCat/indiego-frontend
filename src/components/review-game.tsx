@@ -12,13 +12,34 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { Review } from "@/types/review"
+import { toast } from "sonner"
+import { getGameReviews } from "@/api/review-api"
+import { LoadingIcon } from "./loading-icon"
 
 export function ReviewGame({ id }: { id: string }) {
 
+  const [loading, setLoading] = useState(false)
   const [reviews, setReviews] = useState<Review[]>([])
+
+  async function getGameReviewData() {
+    setLoading(true)
+
+    try {
+      const reviewResponse = await getGameReviews({ gameId: id })
+      setReviews(reviewResponse)
+    } catch (err: any) {
+      toast.error(err.message || "Fetch review data failed. Please try again later")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getGameReviewData()
+  }, [])
 
   const sorters = ["Recent", "Rated"]
 
@@ -28,14 +49,14 @@ export function ReviewGame({ id }: { id: string }) {
 
   const sortedReviews = useMemo(() => {
     return [...reviews].sort((a, b) => {
-      const a_date = Number(a.date)
-      const b_date = Number(b.date)
+      const a_date = Number(a.createdAt)
+      const b_date = Number(b.createdAt)
       if (sort === "Recent") {
-        if (a_date === b_date) return b.stars - a.stars
+        if (a_date === b_date) return b.rating - a.rating
         return ascending ? a_date - b_date : b_date - a_date
       } else {
-        if (a.stars === b.stars) return b_date - a_date
-        return ascending ? a.stars - b.stars : b.stars - a.stars
+        if (a.rating === b.rating) return b_date - a_date
+        return ascending ? a.rating - b.rating : b.rating - a.rating
       }
     })
   }, [reviews, sort, ascending])
@@ -95,7 +116,11 @@ export function ReviewGame({ id }: { id: string }) {
           </Button>
         </div>
       </div>
-      {reviews.length == 0 ? (
+      {loading ? (
+        <div className="w-full flex justify-center">
+          <LoadingIcon size={50} className="text-primary" />
+        </div>
+      ) : reviews.length == 0 ? (
         <div className="flex flex-col items-center text-center text-muted-foreground pt-4">
           There are no reviews yet.
         </div>
@@ -112,12 +137,18 @@ export function ReviewGame({ id }: { id: string }) {
                     <User size={44} />
                     <div className="flex flex-col items-start">
                       <h4 className="font-bold text-xl text-start">{review.username}</h4>
-                      <h4 className="text-lg text-start">{review.stars} ★</h4>
+                      <h4 className="text-lg text-start">{review.rating} ★</h4>
                     </div>
                   </div>
-                  <div>{convertDate(review.date)}</div>
+                  <div>{convertDate(review.createdAt)}</div>
                 </div>
-                <div>{review.review}</div>
+                <div>
+                  {review.text.split("\n").map((line: string, i: number) => (
+                    <p key={i} className="whitespace-pre-wrap">
+                      {line.trim() === "" ? <br /> : line}
+                    </p>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
