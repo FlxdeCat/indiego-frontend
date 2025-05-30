@@ -2,6 +2,60 @@ import { Game } from "@/types/game"
 import JSZip from "jszip"
 import axios from "./axios-instance"
 
+export const getAllGames = async () => {
+  const gamesResponse = await axios.get("/Games")
+
+  const games = gamesResponse.data
+
+  const enhancedGames = await Promise.all(
+    games.map(async (game: Game) => {
+      const [imageRes, userRes] = await Promise.all([
+        axios.get(`/Games/image/${game.id}`, { responseType: "blob" }),
+        axios.get("/Users/developer", {
+          params: { id: game.userId },
+        })
+      ])
+
+      const zip = await JSZip.loadAsync(imageRes.data)
+      const files = Object.values(zip.files)
+      const firstFile = files[0]
+
+      if (!firstFile) throw new Error("ZIP is empty or corrupted")
+
+      const extension = firstFile.name.split(".").pop() || "jpg"
+      const mimeType = {
+        jpg: "image/jpeg",
+        jpeg: "image/jpeg",
+        png: "image/png",
+        webp: "image/webp",
+        gif: "image/gif",
+      }[extension.toLowerCase()] || "application/octet-stream"
+
+      const fileContent = await firstFile.async("blob")
+      const imageFile = new File([fileContent], firstFile.name, {
+        type: mimeType,
+      })
+
+      const genreResponses = await Promise.all(
+        game.genreIds.map((genreId) =>
+          axios.get("/Genres", { params: { id: genreId } })
+        )
+      )
+
+      const genres = genreResponses.map((res) => res.data[0]?.name).filter(Boolean)
+
+      return {
+        ...game,
+        cover: imageFile,
+        devName: userRes.data[0].devName,
+        genres,
+      }
+    })
+  )
+
+  return enhancedGames
+}
+
 export const getSelfGames = async (data: { userId: string }) => {
   const gamesResponse = await axios.get("/Games", {
     params: data,
