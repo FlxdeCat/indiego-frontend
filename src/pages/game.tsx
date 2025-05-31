@@ -1,5 +1,5 @@
 import { favoriteGame, unfavoriteGame } from "@/api/favorite-api"
-import { getGame } from "@/api/game-api"
+import { downloadGame, getGame } from "@/api/game-api"
 import { getCurrentSubscription } from "@/api/subscription-api"
 import { AddReview } from "@/components/add-review"
 import { Footer } from "@/components/footer"
@@ -39,7 +39,7 @@ function Game() {
   }
 
   useEffect(() => {
-    if (isAuthenticated !== undefined) {
+    if (user?.isSubscribed) {
       getTiersAndCurrent()
     }
   }, [isAuthenticated])
@@ -74,14 +74,19 @@ function Game() {
     if (user) setFavorite(user?.favorites.includes(id))
   }, [user])
 
-  function downloadGame() {
-    if (!(game?.file)) return
-    const url = URL.createObjectURL(game.file)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = game.file.name
-    a.click()
-    URL.revokeObjectURL(url)
+  async function onDownloadGame() {
+    try {
+      const file = await downloadGame(game!.name, game!.id)
+      if (!(file)) return
+      const url = URL.createObjectURL(file)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = file.name
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (err: any) {
+      toast.error(err.message || "Fetch game data failed. Please try again later.")
+    }
   }
 
   const [favoriteLoading, setFavoriteLoading] = useState(false)
@@ -166,7 +171,7 @@ function Game() {
                 }
                 {auth ?
                   sub ?
-                    <Button onClick={downloadGame}><Download />Download</Button> :
+                    <Button onClick={onDownloadGame}><Download />Download</Button> :
                     <div className="cursor-not-allowed">
                       <Button disabled><Download />Subscribe to Download</Button>
                     </div> :

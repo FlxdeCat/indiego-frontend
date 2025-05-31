@@ -137,12 +137,11 @@ export const getGame = async (data: { id: string }) => {
 
   const game: Game = gameResponse.data[0]
 
-  const [imageRes, userRes, fileRes] = await Promise.all([
+  const [imageRes, userRes] = await Promise.all([
     axios.get(`/Games/image/${game.id}`, { responseType: "blob" }),
     axios.get("/Users/developer", {
       params: { id: game.userId },
-    }),
-    axios.get(`/Games/${game.id}`, { responseType: "blob" }),
+    })
   ])
 
   const zip = await JSZip.loadAsync(imageRes.data)
@@ -190,7 +189,20 @@ export const getGame = async (data: { id: string }) => {
   )
   const genres = genreResponses.map((res) => res.data[0]?.name).filter(Boolean)
 
-  const contentType = fileRes.headers["content-type"] || "application/octet-stream"
+  return {
+    ...game,
+    cover,
+    banners,
+    devName: userRes.data[0].devName,
+    genres
+  }
+}
+
+export const downloadGame = async (gameName: string, gameId: string) => {
+  const response = await axios.get(`/Games/${gameId}`, { responseType: "blob" })
+  const fileRes = response.data
+
+  const contentType = fileRes["type"] || "application/octet-stream"
   const extensionMap: Record<string, string> = {
     "application/zip": "zip",
     "application/x-rar-compressed": "rar",
@@ -199,19 +211,12 @@ export const getGame = async (data: { id: string }) => {
     "application/x-msdownload": "exe",
   }
   const extension = extensionMap[contentType] || "bin"
-  const gameFileName = `${game.name}.${extension}`
+  const gameFileName = `${gameName}.${extension}`
   const file = new File([fileRes.data], gameFileName, {
     type: contentType,
   })
 
-  return {
-    ...game,
-    cover,
-    banners,
-    devName: userRes.data[0].devName,
-    genres,
-    file
-  }
+  return file
 }
 
 export const uploadGame = async (data: { name: string, description: string, genreIds: string[], link: string }, cover: File, banners: File[], file: File) => {

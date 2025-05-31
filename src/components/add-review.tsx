@@ -48,7 +48,7 @@ export function AddReview({ id, name }: { id: string, name: string }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:flex-row items-center gap-4 md:gap-10">
       <div className="flex flex-col items-center px-2 mb-2 md:mb-0">
-        <h1 className="text-start font-semibold text-xl">Rate {name}</h1>
+        <h1 className="text-center font-semibold text-xl">Rate {name}</h1>
         <div className="flex gap-1 text-4xl cursor-pointer">
           {[1, 2, 3, 4, 5].map((star) => (
             <span
