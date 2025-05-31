@@ -10,7 +10,7 @@ import { postReview } from "@/api/review-api"
 import { LoadingIcon } from "./loading-icon"
 
 const ReviewSchema = z.object({
-  rating: z.number().min(1, "Please provide a rating"),
+  rating: z.number().min(1, "Please provide a rating").max(500, "Rating must be at most 500 characters long"),
   review: z.string().min(1, "Review must not be empty"),
 })
 

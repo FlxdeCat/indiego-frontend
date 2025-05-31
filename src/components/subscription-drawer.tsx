@@ -34,7 +34,7 @@ import { LoadingIcon } from "./loading-icon"
 import { formatIDRCurrency } from "@/utils/utils"
 
 const SubscriptionSchema = z.object({
-  full_name: z.string().min(1, "Full Name cannot be empty"),
+  full_name: z.string().min(1, "Full Name cannot be empty").max(100, "Full Name must be at most 100 characters long."),
   tax_id: z.string(),
   country: z.string(),
   terms: z.boolean().default(false),

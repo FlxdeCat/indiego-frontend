@@ -38,8 +38,8 @@ import { useState } from "react"
 export const RegisterFormSchema = z.object({
   username: z
     .string()
-    .min(3, "Name must be between 3 and 100 characters long.")
-    .max(100, "Name must be between 3 and 100 characters long.")
+    .min(3, "Name must be at least 3 characters long.")
+    .max(100, "Name must be at most 100 characters long.")
     .regex(/^[a-zA-Z0-9 ]+$/, "Name can only contain letters, numbers, and spaces."),
   email: z
     .string()

@@ -25,9 +25,9 @@ import { LoadingIcon } from "../loading-icon"
 import { News } from "@/types/news"
 
 const NewsFormSchema = z.object({
-  title: z.string().min(1, "Title must not be empty"),
+  title: z.string().min(3, "Title must be at least 3 characters long").max(100, "Title must be at most 100 characters long"),
   image: z.any().refine((file) => file instanceof File, "An image must be provided"),
-  content: z.string().min(1, "Content must not be empty"),
+  content: z.string().min(1, "Content must not be empty").max(500, "Content must be at most 500 characters long"),
 })
 
 export function NewsForm({ news, onSubmit }: { news?: News, onSubmit?: () => void }) {

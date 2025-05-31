@@ -22,8 +22,9 @@ import { getGame, updateGame, uploadGame } from "@/api/game-api"
 import { Game } from "@/types/game"
 
 const GameFormSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters").max(100, "Title must be at most 100 characters"),
-  desc: z.string().min(10, "Description must be at least 10 characters").max(500, "Description must be at most 100 characters"),
+  title: z.string().min(3, "Title must be at least 3 characters long").max(100, "Title must be at most 100 characters long")
+    .regex(/^[a-zA-Z0-9 ]+$/, "Title can only contain letters, numbers, and spaces."),
+  desc: z.string().min(10, "Description must be at least 10 characters long").max(500, "Description must be at most 100 characters long"),
   cover: z.instanceof(File, { message: "Cover image must be provided" }),
   banners: z
     .array(z.instanceof(File, { message: "Each banner must be an image" }))

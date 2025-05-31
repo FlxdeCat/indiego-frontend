@@ -35,10 +35,10 @@ interface MyComponentProps {
 }
 
 const DeveloperFormSchema = z.object({
-  name: z.string().min(1, "Name cannot be empty"),
-  full_name: z.string().min(1, "Full name cannot be empty"),
-  tax_id: z.string().min(1, "Tax ID cannot be empty"),
-  country: z.string().min(1, "Country cannot be empty"),
+  name: z.string().min(1, "Name cannot be empty").max(50, "Name must be at most 50 characters long"),
+  full_name: z.string().min(1, "Full name cannot be empty").max(100, "Full name must be at most 100 characters long"),
+  tax_id: z.string().min(1, "Tax ID cannot be empty").max(20, "Tax ID must be at most 20 characters long"),
+  country: z.string().min(1, "Country cannot be empty").max(50, "Country must be at most 50 characters long"),
   terms: z.boolean().default(false),
 })
   .refine(({ terms }) => terms === true, {

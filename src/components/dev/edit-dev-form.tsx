@@ -29,10 +29,10 @@ import { toast } from "sonner"
 import { LoadingIcon } from "../loading-icon"
 
 const DeveloperFormSchema = z.object({
-  name: z.string().min(1, "Name cannot be empty"),
-  full_name: z.string().min(1, "Full Name cannot be empty"),
-  tax_id: z.string(),
-  country: z.string(),
+  name: z.string().min(1, "Name cannot be empty").max(50, "Name must be at most 50 characters long"),
+  full_name: z.string().min(1, "Full name cannot be empty").max(100, "Full name must be at most 100 characters long"),
+  tax_id: z.string().min(1, "Tax ID cannot be empty").max(20, "Tax ID must be at most 20 characters long"),
+  country: z.string().min(1, "Country cannot be empty").max(50, "Country must be at most 50 characters long"),
 })
 
 export function EditDeveloperForm({ dev }: { dev: Developer }) {
@@ -143,7 +143,7 @@ export function EditDeveloperForm({ dev }: { dev: Developer }) {
                 name="tax_id"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Tax ID (Optional)</FormLabel>
+                    <FormLabel>Tax ID</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
