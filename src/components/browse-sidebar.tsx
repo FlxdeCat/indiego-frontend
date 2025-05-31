@@ -17,7 +17,14 @@ import { getGenres } from "@/api/genre-api"
 import { toast } from "sonner"
 import { LoadingIcon } from "./loading-icon"
 
-export function BrowseSidebar() {
+interface BrowseSidebarProps {
+  checkedGenres: Set<string>
+  setCheckedGenres: React.Dispatch<React.SetStateAction<Set<string>>>
+  genreSearch: string
+  setGenreSearch: React.Dispatch<React.SetStateAction<string>>
+}
+
+export function BrowseSidebar({ checkedGenres, setCheckedGenres, genreSearch, setGenreSearch }: BrowseSidebarProps) {
 
   const [genres, setGenres] = useState<Genre[]>([])
   const [genreLoading, setGenreLoading] = useState(false)
@@ -38,9 +45,6 @@ export function BrowseSidebar() {
   useEffect(() => {
     getAllGenres()
   }, [])
-
-  const [genreSearch, setGenreSearch] = useState("")
-  const [checkedGenres, setCheckedGenres] = useState(new Set())
 
   const filteredGenres = genres.filter((genre: Genre) =>
     genre.name.toLowerCase().includes(genreSearch.toLowerCase())
@@ -92,7 +96,7 @@ export function BrowseSidebar() {
                         <div className="flex space-x-2">
                           <Checkbox
                             id={genre.name}
-                            checked={checkedGenres.has(genre)}
+                            checked={checkedGenres.has(genre.id)}
                             onCheckedChange={() => toggleGenre(genre.id)}
                           />
                           <div>{genre.name}</div>

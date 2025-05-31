@@ -9,4 +9,5 @@ export interface User {
   birthDate: string
   isSubscribed: boolean
   favorites: string[]
+  balance: number
 }

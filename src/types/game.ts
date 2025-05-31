@@ -13,6 +13,7 @@ export interface Game {
   createdAt: string,
   devName: string,
   cover: File,
+  banner: File,
   banners: File[],
   file: File
 }

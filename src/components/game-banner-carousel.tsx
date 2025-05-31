@@ -58,7 +58,7 @@ export function GameBannerCarousel({ banners }: { banners: File[] }) {
                     <img
                       src={URL.createObjectURL(image)}
                       className="w-full rounded-md object-cover aspect-[7/4]"
-                      alt={`Game banner ${index + 1}`}
+                      alt={image.name}
                       loading="lazy"
                     />
                   </CardContent>
@@ -83,12 +83,12 @@ export function GameBannerCarousel({ banners }: { banners: File[] }) {
                 onClick={() => api?.scrollTo(index)}
                 className={`relative h-12 min-w-20 overflow-hidden rounded-md transition-opacity outline-none ${index === current ? "opacity-100" : "opacity-50 hover:opacity-75 focus:opacity-75"
                   }`}
-                aria-label={`View banner ${index + 1}`}
+                aria-label={`View banner ${image.name}`}
               >
                 <img
                   src={URL.createObjectURL(image)}
                   className="object-cover w-full h-full"
-                  alt={`Thumbnail ${index + 1}`}
+                  alt={`Thumbnail ${image.name}`}
                   loading="lazy"
                 />
                 {index === current && (

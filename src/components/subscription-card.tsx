@@ -10,6 +10,7 @@ import { Button } from "./ui/button"
 import { SubscriptionDrawer } from "./subscription-drawer"
 import { SubscriptionTier } from "@/types/subscription"
 import { useAuth } from "@/context/auth-context"
+import { formatIDRCurrency } from "@/utils/utils"
 
 interface SubscriptionCardProps {
   bought: boolean
@@ -34,11 +35,11 @@ export function SubscriptionCard({ bought, tier }: SubscriptionCardProps) {
       <CardFooter className="flex flex-col gap-2 justify-around items-center">
         {isAuthenticated ? bought ?
           <div className="cursor-not-allowed">
-            <Button disabled className="text-white">Subscribe for ${tier.price}</Button>
+            <Button disabled className="text-white">Subscribe for {formatIDRCurrency(tier.price)}</Button>
           </div> :
           <SubscriptionDrawer tier={tier} /> :
           <div className="cursor-not-allowed">
-            <Button disabled className="text-white">Login to Subscribe for ${tier.price}</Button>
+            <Button disabled className="text-white">Login to Subscribe for {formatIDRCurrency(tier.price)}</Button>
           </div>
         }
       </CardFooter>

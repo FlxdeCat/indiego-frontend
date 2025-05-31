@@ -11,8 +11,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { useNavigate } from "react-router"
+import { Game } from "@/types/game"
 
-export function BannerCarousel() {
+export function BannerCarousel({ games }: { games: Game[] }) {
   const nav = useNavigate()
 
   const plugin = React.useRef(
@@ -37,14 +38,6 @@ export function BannerCarousel() {
     }
   }, [api])
 
-  const banners: { title: string; image: string }[] = [
-    { title: "Holocure", image: "holocure-banner.png" },
-    { title: "Holocure", image: "holocure-banner.png" },
-    { title: "Holocure", image: "holocure-banner.png" },
-    { title: "Holocure", image: "holocure-banner.png" },
-    { title: "Holocure", image: "holocure-banner.png" }
-  ]
-
   React.useEffect(() => {
     plugin.current = Autoplay({ delay: 5000, stopOnInteraction: false })
   }, [])
@@ -59,17 +52,17 @@ export function BannerCarousel() {
           className="w-full max-w-5xl rounded-md bg-background"
         >
           <CarouselContent>
-            {banners.map((banner, index) => (
+            {games.map((game, index) => (
               <CarouselItem key={index}>
-                <Card onClick={() => nav(`/game/${index + 1}`)} className="p-0 border-0 cursor-pointer">
-                  <CardContent className="relative flex rounded-md aspect-[2/1] items-end justify-end bg-cover bg-center group overflow-hidden">
+                <Card onClick={() => nav(`/game/${game.id}`)} className="p-0 border-0 cursor-pointer">
+                  <CardContent className="relative flex rounded-md aspect-[7/4] items-end justify-end bg-cover bg-center group overflow-hidden">
                     <div
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-500 scale-100 group-hover:scale-105"
-                      style={{ backgroundImage: `url(${banner.image})` }}
+                      style={{ backgroundImage: `url(${URL.createObjectURL(game.banner)})` }}
                     />
                     <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-dark-background/90 to-transparent pt-16 pb-8 px-10 text-right opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                       <span className="text-white text-3xl font-semibold">
-                        {banner.title} {index + 1}
+                        {game.name}
                       </span>
                     </div>
                   </CardContent>

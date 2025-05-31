@@ -7,6 +7,13 @@ export function convertDate(unix: string): string {
   })
 }
 
+export function convertRealDate(unix: string): string {
+  if (unix == "") return "Error: Invalid Date"
+  const timestamp = parseInt(unix, 10) * 1000
+  const date = new Date(timestamp)
+  return date.toISOString().split('T')[0]
+}
+
 export function smoothScroll(element: HTMLElement, target: number, duration: number) {
   const start = element.scrollLeft
   const startTime = performance.now()
@@ -26,8 +33,12 @@ export function smoothScroll(element: HTMLElement, target: number, duration: num
   requestAnimationFrame(scrollStep)
 }
 
+export function formatIDRCurrency(amount: number): string {
+  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(amount)
+}
+
 export function formatThousand(amount: number): string {
-  return new Intl.NumberFormat("en-US").format(amount)
+  return new Intl.NumberFormat("id-ID").format(amount)
 }
 
 export const paginationNumbers = (totalPages: number, currentPage: number) => {

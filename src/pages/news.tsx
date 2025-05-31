@@ -64,7 +64,7 @@ function News() {
                     <DialogTrigger asChild>
                       <div className="flex flex-col sm:flex-row justify-center items-center w-full hover:bg-muted/50 cursor-pointer border-2 rounded-md">
                         <div className="flex-2 lg:flex-1">
-                          <img loading="lazy" src={URL.createObjectURL(news.image)} alt="Holocure" className="object-cover h-auto rounded-l-sm" />
+                          <img loading="lazy" src={URL.createObjectURL(news.image)} alt={news.title} className="object-cover h-auto rounded-l-sm" />
                         </div>
                         <div className="flex-2 text-start flex flex-col gap-2 py-2 px-8">
                           <div className="flex flex-col gap-1">
@@ -89,7 +89,7 @@ function News() {
                       <ScrollArea className="flex-1 max-h-[90vh] overflow-auto pr-4">
                         <div className="flex flex-col space-y-4">
                           <div className="font-bold text-2xl">{news.title}</div>
-                          <img loading="lazy" src={URL.createObjectURL(news.image)} alt="Holocure" className="aspect-[2/1] object-cover rounded-md" />
+                          <img loading="lazy" src={URL.createObjectURL(news.image)} alt={news.title} className="aspect-[2/1] object-cover rounded-md" />
                           <div>
                             {news.text.split("\n").map((line: string, i: number) => (
                               <p key={i} className="whitespace-pre-wrap">

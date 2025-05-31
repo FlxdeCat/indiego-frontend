@@ -5,22 +5,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { formatThousand } from "@/utils/utils"
+import { formatIDRCurrency, formatThousand } from "@/utils/utils"
+import { LoadingIcon } from "../loading-icon"
 
-export function SectionCards() {
-
-  const revenue = 1234.56
-  const games = 78
-  const downloads = 1098
+export function SectionCards({ revenue, totalDownloads, loading }: { revenue: number, totalDownloads: number, loading: boolean }) {
 
   return (
-    <div className="*:data-[slot=card]:shadow-xs @3xl/main:grid-cols-3 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
+    <div className="*:data-[slot=card]:shadow-xs @3xl/main:grid-cols-2 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
 
       <Card className="@container/card">
         <CardHeader className="relative">
           <CardDescription>Total Revenue</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            ${formatThousand(revenue)}
+            {formatIDRCurrency(revenue)}
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1 text-sm">
@@ -32,23 +29,12 @@ export function SectionCards() {
 
       <Card className="@container/card">
         <CardHeader className="relative">
-          <CardDescription>Games Featured</CardDescription>
-          <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            {games}
-          </CardTitle>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1 text-sm">
-          <div className="text-muted-foreground">
-            Amount of times your games have been in a subscription
-          </div>
-        </CardFooter>
-      </Card>
-
-      <Card className="@container/card">
-        <CardHeader className="relative">
           <CardDescription>Total Downloads</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            {formatThousand(downloads)}
+            {loading ? (
+              <LoadingIcon size={30} className="mt-2" />
+            ) : (formatThousand(totalDownloads))
+            }
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1 text-sm">

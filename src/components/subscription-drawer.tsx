@@ -31,6 +31,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { SubscriptionTier } from "@/types/subscription"
 import { buySubscription } from "@/api/subscription-api"
 import { LoadingIcon } from "./loading-icon"
+import { formatIDRCurrency } from "@/utils/utils"
 
 const SubscriptionSchema = z.object({
   full_name: z.string().min(1, "Full Name cannot be empty"),
@@ -104,7 +105,7 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
   return (
     <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
       <DrawerTrigger className="text-white text-sm font-semibold bg-primary py-2 px-4 rounded-md outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] shadow-xs hover:bg-primary/90">
-        Subscribe for ${tier.price}
+        Subscribe for {formatIDRCurrency(tier.price)}
       </DrawerTrigger>
       <DrawerContent className="flex flex-col items-center">
         <DrawerHeader className="w-full">
@@ -122,12 +123,12 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
               </div>
               <div className="flex justify-between">
                 <span className="font-medium">Price</span>
-                <span>${tier.price}</span>
+                <span>{formatIDRCurrency(tier.price)}</span>
               </div>
               <Separator />
               <div className="flex justify-between text-lg font-semibold">
                 <span>Total</span>
-                <span>${tier.price}</span>
+                <span>{formatIDRCurrency(tier.price)}</span>
               </div>
             </div>
 

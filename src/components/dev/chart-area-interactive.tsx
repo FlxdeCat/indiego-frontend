@@ -26,100 +26,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@/components/ui/toggle-group"
-
-const chartData = [
-  { date: "2024-04-01", downloads: 222 },
-  { date: "2024-04-02", downloads: 97 },
-  { date: "2024-04-03", downloads: 167 },
-  { date: "2024-04-04", downloads: 242 },
-  { date: "2024-04-05", downloads: 373 },
-  { date: "2024-04-06", downloads: 301 },
-  { date: "2024-04-07", downloads: 245 },
-  { date: "2024-04-08", downloads: 409 },
-  { date: "2024-04-09", downloads: 59 },
-  { date: "2024-04-10", downloads: 261 },
-  { date: "2024-04-11", downloads: 327 },
-  { date: "2024-04-12", downloads: 292 },
-  { date: "2024-04-13", downloads: 342 },
-  { date: "2024-04-14", downloads: 137 },
-  { date: "2024-04-15", downloads: 120 },
-  { date: "2024-04-16", downloads: 138 },
-  { date: "2024-04-17", downloads: 446 },
-  { date: "2024-04-18", downloads: 364 },
-  { date: "2024-04-19", downloads: 243 },
-  { date: "2024-04-20", downloads: 89 },
-  { date: "2024-04-21", downloads: 137 },
-  { date: "2024-04-22", downloads: 224 },
-  { date: "2024-04-23", downloads: 138 },
-  { date: "2024-04-24", downloads: 387 },
-  { date: "2024-04-25", downloads: 215 },
-  { date: "2024-04-26", downloads: 75 },
-  { date: "2024-04-27", downloads: 383 },
-  { date: "2024-04-28", downloads: 122 },
-  { date: "2024-04-29", downloads: 315 },
-  { date: "2024-04-30", downloads: 454 },
-  { date: "2024-05-01", downloads: 165 },
-  { date: "2024-05-02", downloads: 293 },
-  { date: "2024-05-03", downloads: 247 },
-  { date: "2024-05-04", downloads: 385 },
-  { date: "2024-05-05", downloads: 481 },
-  { date: "2024-05-06", downloads: 498 },
-  { date: "2024-05-07", downloads: 388 },
-  { date: "2024-05-08", downloads: 149 },
-  { date: "2024-05-09", downloads: 227 },
-  { date: "2024-05-10", downloads: 293 },
-  { date: "2024-05-11", downloads: 335 },
-  { date: "2024-05-12", downloads: 197 },
-  { date: "2024-05-13", downloads: 197 },
-  { date: "2024-05-14", downloads: 448 },
-  { date: "2024-05-15", downloads: 473 },
-  { date: "2024-05-16", downloads: 338 },
-  { date: "2024-05-17", downloads: 499 },
-  { date: "2024-05-18", downloads: 315 },
-  { date: "2024-05-19", downloads: 235 },
-  { date: "2024-05-20", downloads: 177 },
-  { date: "2024-05-21", downloads: 82 },
-  { date: "2024-05-22", downloads: 81 },
-  { date: "2024-05-23", downloads: 252 },
-  { date: "2024-05-24", downloads: 294 },
-  { date: "2024-05-25", downloads: 201 },
-  { date: "2024-05-26", downloads: 213 },
-  { date: "2024-05-27", downloads: 420 },
-  { date: "2024-05-28", downloads: 233 },
-  { date: "2024-05-29", downloads: 78 },
-  { date: "2024-05-30", downloads: 340 },
-  { date: "2024-05-31", downloads: 178 },
-  { date: "2024-06-01", downloads: 178 },
-  { date: "2024-06-02", downloads: 470 },
-  { date: "2024-06-03", downloads: 103 },
-  { date: "2024-06-04", downloads: 439 },
-  { date: "2024-06-05", downloads: 88 },
-  { date: "2024-06-06", downloads: 294 },
-  { date: "2024-06-07", downloads: 323 },
-  { date: "2024-06-08", downloads: 385 },
-  { date: "2024-06-09", downloads: 438 },
-  { date: "2024-06-10", downloads: 155 },
-  { date: "2024-06-11", downloads: 92 },
-  { date: "2024-06-12", downloads: 492 },
-  { date: "2024-06-13", downloads: 81 },
-  { date: "2024-06-14", downloads: 426 },
-  { date: "2024-06-15", downloads: 307 },
-  { date: "2024-06-16", downloads: 371 },
-  { date: "2024-06-17", downloads: 475 },
-  { date: "2024-06-18", downloads: 107 },
-  { date: "2024-06-19", downloads: 341 },
-  { date: "2024-06-20", downloads: 408 },
-  { date: "2024-06-21", downloads: 169 },
-  { date: "2024-06-22", downloads: 317 },
-  { date: "2024-06-23", downloads: 480 },
-  { date: "2024-06-24", downloads: 132 },
-  { date: "2024-06-25", downloads: 141 },
-  { date: "2024-06-26", downloads: 434 },
-  { date: "2024-06-27", downloads: 448 },
-  { date: "2024-06-28", downloads: 149 },
-  { date: "2024-06-29", downloads: 103 },
-  { date: "2024-06-30", downloads: 446 },
-]
+import { Download } from "@/types/download"
 
 const chartConfig = {
   downloads: {
@@ -128,7 +35,7 @@ const chartConfig = {
   }
 } satisfies ChartConfig
 
-export function ChartAreaInteractive() {
+export function ChartAreaInteractive({ timeSeries }: { timeSeries: Download[] }) {
   const isMobile = useIsMobile()
   const [timeRange, setTimeRange] = React.useState("30d")
 
@@ -138,9 +45,9 @@ export function ChartAreaInteractive() {
     }
   }, [isMobile])
 
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date)
-    const referenceDate = new Date("2024-06-30")
+  const filteredData = timeSeries.filter((item) => {
+    const date = new Date(item.Date)
+    const referenceDate = new Date()
     let daysToSubtract = 90
     if (timeRange === "30d") {
       daysToSubtract = 30
@@ -223,7 +130,7 @@ export function ChartAreaInteractive() {
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="date"
+              dataKey="Date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -251,8 +158,8 @@ export function ChartAreaInteractive() {
               }
             />
             <Area
-              dataKey="downloads"
-              type="natural"
+              dataKey="Downloads"
+              type="monotone"
               fill="url(#fillDownloads)"
               stroke="var(--color-downloads)"
               stackId="a"

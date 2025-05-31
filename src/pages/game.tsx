@@ -45,7 +45,7 @@ function Game() {
   }, [isAuthenticated])
 
   const auth = isAuthenticated
-  const [favorite, setFavorite] = useState(false) //TEMP
+  const [favorite, setFavorite] = useState(false)
 
   const { id } = useParams()
   const [game, setGame] = useState<GameType>()

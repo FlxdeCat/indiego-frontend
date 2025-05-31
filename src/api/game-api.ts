@@ -36,6 +36,23 @@ export const getAllGames = async () => {
         type: mimeType,
       })
 
+      const bannerFiles = files.slice(1)
+      const bannerFile = bannerFiles[0]
+
+      const banner: File = await (async () => {
+        const content = await bannerFile.async("blob")
+        const ext = bannerFile.name.split(".").pop() || "jpg"
+        const mime = {
+          jpg: "image/jpeg",
+          jpeg: "image/jpeg",
+          png: "image/png",
+          webp: "image/webp",
+          gif: "image/gif",
+        }[ext.toLowerCase()] || "application/octet-stream"
+
+        return new File([content], bannerFile.name, { type: mime })
+      })()
+
       const genreResponses = await Promise.all(
         game.genreIds.map((genreId) =>
           axios.get("/Genres", { params: { id: genreId } })
@@ -47,6 +64,7 @@ export const getAllGames = async () => {
       return {
         ...game,
         cover: imageFile,
+        banner,
         devName: userRes.data[0].devName,
         genres,
       }
