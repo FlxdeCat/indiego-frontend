@@ -69,6 +69,10 @@ function Home() {
         <div className="flex flex-1 items-center justify-center">
           <LoadingIcon size={50} className="text-primary" />
         </div>
+      ) : games.length == 0 ? (
+        <main className="flex flex-col items-center flex-1 mx-16 pt-4 text-muted-foreground">
+          There are no games yet.
+        </main>
       ) : (
         <main className="flex flex-col items-center flex-1 mx-16">
           <div className="flex mt-4 mb-4 justify-center w-full">
