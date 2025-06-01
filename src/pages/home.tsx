@@ -15,7 +15,7 @@ function Home() {
   const { user, isAuthenticated } = useAuth()
 
   const auth = isAuthenticated
-  const dev = user?.role.includes("Developer") || false
+  const dev = isAuthenticated && user?.role.includes("Developer") || false
 
   const [loadingGames, setLoadingGames] = useState(false)
   const [loadingFilter, setLoadingFilter] = useState(false)

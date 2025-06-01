@@ -48,10 +48,8 @@ export function ChartAreaInteractive({ timeSeries }: { timeSeries: Download[] })
   const filteredData = timeSeries.filter((item) => {
     const date = new Date(item.Date)
     const referenceDate = new Date()
-    let daysToSubtract = 90
-    if (timeRange === "30d") {
-      daysToSubtract = 30
-    } else if (timeRange === "7d") {
+    let daysToSubtract = 30
+    if (timeRange === "7d") {
       daysToSubtract = 7
     }
     const startDate = new Date(referenceDate)
@@ -65,9 +63,9 @@ export function ChartAreaInteractive({ timeSeries }: { timeSeries: Download[] })
         <CardTitle>Total Downloads</CardTitle>
         <CardDescription>
           <span className="@[540px]/card:block hidden">
-            Total game downloads for the last 3 months
+            Total game downloads for the last 30 days
           </span>
-          <span className="@[540px]/card:hidden">Last 3 months</span>
+          <span className="@[540px]/card:hidden">Last 30 days</span>
         </CardDescription>
         <div className="absolute right-4 top-4">
           <ToggleGroup
@@ -77,9 +75,6 @@ export function ChartAreaInteractive({ timeSeries }: { timeSeries: Download[] })
             variant="outline"
             className="@[767px]/card:flex hidden"
           >
-            <ToggleGroupItem value="90d" className="h-8 px-4">
-              Last 3 months
-            </ToggleGroupItem>
             <ToggleGroupItem value="30d" className="h-8 px-4">
               Last 30 days
             </ToggleGroupItem>
@@ -92,12 +87,9 @@ export function ChartAreaInteractive({ timeSeries }: { timeSeries: Download[] })
               className="@[767px]/card:hidden flex"
               aria-label="Select a value"
             >
-              <SelectValue placeholder="Last 3 months" />
+              <SelectValue placeholder="Last 30 days" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
-              <SelectItem value="90d" className="rounded-lg">
-                Last 3 months
-              </SelectItem>
               <SelectItem value="30d" className="rounded-lg">
                 Last 30 days
               </SelectItem>
