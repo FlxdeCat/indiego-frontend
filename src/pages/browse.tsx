@@ -107,6 +107,7 @@ function Browse() {
                           <img loading="lazy" src={URL.createObjectURL(game.cover)} alt={game.name} className="w-full aspect-[4/5] object-cover rounded-md" />
                           <div className="text-xl font-semibold text-start mt-2 line-clamp-1">{game.name}</div>
                           <div className="text-base text-start line-clamp-1">{game.devName}</div>
+                          <div className="text-sm text-start line-clamp-1">{game.downloads} Download(s)</div>
                           <div className="flex mt-2 space-x-2">
                             {displayedGenres.map((genre, index) => (
                               <Badge key={index} variant="secondary">

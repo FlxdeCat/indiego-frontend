@@ -147,6 +147,7 @@ function Game() {
                     </p>
                   ))}
                 </h4>
+                <h4 className="text-sm w-full">{game?.downloads} Download(s)</h4>
                 <div className="w-full flex flex-wrap gap-2 mt-2">
                   {game?.genres.map((genre, index) => (
                     <Badge key={index} variant="secondary">
