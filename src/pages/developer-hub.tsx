@@ -30,7 +30,7 @@ function DeveloperHub() {
     setLoadingDev(true)
 
     try {
-      const developerResponse = await getDeveloper()
+      const developerResponse = await getDeveloper({ id: user!.id })
       setDev(developerResponse[0])
     } catch (err: any) {
       toast.error(err.message || "Fetch developer data failed. Please try again later.")
