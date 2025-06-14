@@ -91,7 +91,7 @@ export function SubscriptionDrawer({ tier }: { tier: SubscriptionTier }) {
   const [countries, setCountries] = useState<Country[]>([])
 
   useEffect(() => {
-    fetch('https://restcountries.com/v3.1/all')
+    fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
       .then(response => response.json())
       .then(data => {
         const countryList = data.map((country: any) => ({
