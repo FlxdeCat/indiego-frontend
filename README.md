@@ -24,6 +24,12 @@
 
 ---
 
+## 🔗 Related Repositories
+
+- **Backend API**: https://github.com/Lawrance-Cancerlon/indiego-backend
+
+---
+
 ## 🚀 Features
 
 - ⚛️ React 18
