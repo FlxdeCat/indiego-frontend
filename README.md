@@ -69,6 +69,27 @@ indiego-frontend/
 
 ---
 
+## 🔧 Environment Variables
+
+This project uses environment variables for API configuration.
+
+An example file is provided in `.env.example`
+
+Before running the application, create a `.env` file in the project root and fill it using the same format:
+
+VITE_API_BASE_URL="http://localhost:port/api"
+
+### Notes:
+- Replace `port` with the backend port (e.g. `5000`)
+- The backend must be running for API-dependent features
+- Environment variables prefixed with `VITE_` are required by Vite
+
+Example:
+
+VITE_API_BASE_URL="http://localhost:5000/api"
+
+---
+
 ## 🛠 Installation
 
 Before running the project, make sure you have **Node.js** installed.
